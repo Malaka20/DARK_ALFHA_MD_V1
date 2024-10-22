@@ -17,7 +17,7 @@ const data = search.videos[0];
 const url = data.url
 
 let desc = `
-⭐ *DARK_ALFHA_MD SONG DOWNLOADER* ⭐
+⭐ *DARKALFHAMD SONG DOWNLOADER* ⭐
 
 title: ${data.title}
 description: ${data.description}
@@ -25,7 +25,7 @@ time: ${data.timestamp}
 ago: ${data.ago}
 views: ${data.views}
 
-MADE BY DARK_ALFHA_MD ✅
+MADE BY DARKALFHAMD ✅
 `
 await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
 
@@ -62,7 +62,7 @@ const data = search.videos[0];
 const url = data.url
 
 let desc = `
-⭐ *DARK_ALFHA_MD VIDEO DOWNLOADER* ⭐
+⭐ *DARKALFHAMD VIDEO DOWNLOADER* ⭐
 
 title: ${data.title}
 description: ${data.description}
@@ -70,7 +70,7 @@ time: ${data.timestamp}
 ago: ${data.ago}
 views: ${data.views}
 
-MADE BY DARK_ALFHA_MD ✅
+MADE BY DARKALFHAMD ✅
 `
 await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
 
