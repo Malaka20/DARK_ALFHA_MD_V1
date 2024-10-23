@@ -1,199 +1,153 @@
-const config = require('../config')
-const { cmd } = require('../command')
-const axios = require('axios')
-const { fetchJson } = require('../lib/functions')
 
-const apilink = 'https://dark-yasiya-news-apis.vercel.app/api' // API LINK ( DO NOT CHANGE THIS!! )
+const {cmd , commands} = require('../command')
+const yts = require('yt-search');
+const fg = require('api-dylux');
 
-
-// ================================HIRU NEWS========================================
-
+// ---------------------- Song Download -----------------------
 cmd({
-    pattern: "hirunews",
-    alias: ["hiru","news1"],
-    react: "⭐",
-    desc: "",
-    category: "news",
-    use: '.hirunews',
+    pattern: 'song',
+    desc: 'download songs',
+    react: "🎧",
+    category: 'download',
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, reply }) => {
-try{
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    try {
+        if (!q) return reply('*Please enter a query or a url !*');
 
-const news = await fetchJson(`${apilink}/hiru`)
-  
-const msg = `
-           ⭐ *HIRU NEWS* ⭐
+        const search = await yts(q);
+        const data = search.videos[0];
+        const url = data.url;
 
-       
-• *Title* - ${news.result.title}
+        let desc = `🎶 *_QUEEN-CHOOTY-NELUMI-MD AUDIO DOWNLOADER_* 🎶
 
-• *News* - ${news.result.desc}
+┌───────────────────
+├ ℹ️ *Title:* ${deta.title}
+├ 👤 *Author:* ${deta.author.name}
+├ 👁️‍🗨️ *Views:* ${deta.views}
+├ 🕘 *Duration:* ${deta.timestamp}
+├ 📌 *Ago:* ${deta.ago}
+└───────────────────
 
-• *Link* - ${news.result.url}`
+💻 https://github.com/Navinofc44/QUEEN-CHOOTY-NELUMI-MD-V2
 
+*Choose Your Download Format*
 
-await conn.sendMessage( from, { image: { url: news.result.image || '' }, caption: msg }, { quoted: mek })
-} catch (e) {
-console.log(e)
-reply(e)
-}
-})
+*1 Audio File🎶*
+*2 Document File📁*
 
-// ================================SIRASA NEWS========================================
+> *QUEEN-CHOOTY-CHOOTY-MD*`;
 
-cmd({
-    pattern: "sirasanews",
-    alias: ["sirasa","news2"],
-    react: "🔺",
-    desc: "",
-    category: "news",
-    use: '.sirasa',
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, reply }) => {
-try{
+        const vv = await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek });
 
-const news = await fetchJson(`${apilink}/sirasa`)
-  
-const msg = `
-           🔺 *SIRASA NEWS* 🔺
+        conn.ev.on('messages.upsert', async (msgUpdate) => {
+            const msg = msgUpdate.messages[0];
+            if (!msg.message || !msg.message.extendedTextMessage) return;
 
-       
-• *Title* - ${news.result.title}
+            const selectedOption = msg.message.extendedTextMessage.text.trim();
 
-• *News* - ${news.result.desc}
+            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
+                switch (selectedOption) {
+                    case '1':
+                        let down = await fg.yta(url);
+                        let downloadUrl = down.dl_url;
+                        await conn.sendMessage(from, { audio: { url:downloadUrl }, caption: '*ᴘᴀᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴍɪᴋᴀ ᴍᴀɪɴ*', mimetype: 'audio/mpeg'},{ quoted: mek });
+                        break;
+                    case '2':               
+                        // Send Document File
+                        let downdoc = await fg.yta(url);
+                        let downloaddocUrl = downdoc.dl_url;
+                        await conn.sendMessage(from, { document: { url:downloaddocUrl }, caption: '*ᴘᴀᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴍɪᴋᴀ ᴍᴀɪɴ*', mimetype: 'audio/mpeg', fileName:data.title + ".mp3"}, { quoted: mek });
+                        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } })
+                        break;
+                    default:
+                        reply("Invalid option. Please select a valid option🔴");
+                }
 
-• *Link* - ${news.result.url} `
+            }
+        });
 
+    } catch (e) {
+        console.error(e);
+        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
+        reply('An error occurred while processing your request.');
+    }
+});
 
-await conn.sendMessage( from, { image: { url: news.result.image || '' }, caption: msg }, { quoted: mek })
-} catch (e) {
-console.log(e)
-reply(e)
-}
-})
-
-// ================================DERANA NEWS========================================
-
-cmd({
-    pattern: "derananews",
-    alias: ["derana","news3"],
-    react: "📑",
-    desc: "",
-    category: "news",
-    use: '.derana',
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, reply}) => {
-try{
-
-const news = await fetchJson(`${apilink}/derana`)
-  
-const msg = `
-           📑 *DERANA NEWS* 📑
-
-       
-• *Title* - ${news.result.title}
-
-• *News* - ${news.result.desc}
-
-• *Date* - ${news.result.date}
-
-• *Link* - ${news.result.url} `
-
-
-await conn.sendMessage( from, { image: { url: news.result.image || '' }, caption: msg }, { quoted: mek })
-} catch (e) {
-console.log(e)
-reply(e)
-}
-})
-
-
-// NEW ADDED NEWS SITE [ BBC , LANKADEEPA ]
-
-const config = require('../config')
-const { cmd } = require('../command')
-const axios = require('axios')
-const { fetchJson } = require('../lib/functions')
-
-const apilink = 'https://dark-yasiya-news-apis.vercel.app/api' // API LINK ( DO NOT CHANGE THIS!! )
-
-
-// ================================LANKADEEPA NEWS========================================
+//==================== Video downloader =========================
 
 cmd({
-    pattern: "lankadeepanews",
-    alias: ["lankadeepa","news4"],
-    react: "🕵️‍♂️",
-    desc: "",
-    category: "news",
-    use: '.lankadeepanews',
+    pattern: 'video',
+    desc: 'download videos',
+    react: "🎬",
+    category: 'download',
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, reply }) => {
-try{
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    try {
+        if (!q) return reply('*Please enter a query or a url !*');
 
-const news = await fetchJson(`${apilink}/lankadeepa`)
-  
-const msg = `
-           🕵️‍♂️ *LANKADEEPA NEWS* 🕵️‍♂️
+        const search = await yts(q);
+        const data = search.videos[0];
+        const url = data.url;
 
-       
-• *Title* - ${news.result.title}
+        let desc = `📽️ *_QUEEN-CHOOTY-NELUMI-MD VIDEO DOWNLOADER_* 📽️
 
-• *News* - ${news.result.desc}
+┌───────────────────
+├ ℹ️ *Title:* ${deta.title}
+├ 👤 *Author:* ${deta.author.name}
+├ 👁️‍🗨️ *Views:* ${deta.views}
+├ 🕘 *Duration:* ${deta.timestamp}
+├ 📌 *Ago:* ${deta.ago}
+└───────────────────
 
-• *Date* - ${news.result.date}
+💻 Github: https://github.com/Navinofc44/QUEEN-CHOOTY-NELUMI-MD-V2
 
-• *Link* - ${news.result.url}`
+*🔢 Choose Your Download Format*
 
+*1 Video File* 🎶
+*2 Document File* 📁
 
-await conn.sendMessage( from, { image: { url: news.result.image || '' }, caption: msg }, { quoted: mek })
-} catch (e) {
-console.log(e)
-reply(e)
-}
-})
+> *QUEEN-CHOOTY-CHOOTY-MD*`;
 
-// ================================BBC NEWS========================================
+        const vv = await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek });
 
-cmd({
-    pattern: "bbcnews",
-    alias: ["bbc","news5"],
-    react: "⛩",
-    desc: "",
-    category: "news",
-    use: '.bbcnews',
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, reply }) => {
-try{
+        conn.ev.on('messages.upsert', async (msgUpdate) => {
+            const msg = msgUpdate.messages[0];
+            if (!msg.message || !msg.message.extendedTextMessage) return;
 
-const news = await fetchJson(`${apilink}/bbc`)
-  
-const msg = `
-           ⛩ *BBC NEWS* ⛩
+            const selectedOption = msg.message.extendedTextMessage.text.trim();
 
-       
-• *Title* - ${news.result.title}
+            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
+                switch (selectedOption) {
+                    case '1':
+                        let downvid = await fg.ytv(url);
+                        let downloadvUrl = downvid.dl_url;
+                        await conn.sendMessage(from, { video : { url:downloadvUrl }, caption: '*ᴘᴀᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴍɪᴋᴀ ᴍᴀɪɴ*', mimetype: 'video/mp4'},{ quoted: mek });
+                        break;
+                    case '2':
+                        let downviddoc = await fg.ytv(url);
+                        let downloadvdocUrl = downviddoc.dl_url;
+                        await conn.sendMessage(from, { document: { url:downloadvdocUrl }, caption: '*ᴘᴀᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴍɪᴋᴀ ᴍᴀɪɴ*', mimetype: 'video/mp4', fileName:data.title + ".mp4" }, { quoted: mek });
+                        break;
+                    default:
+                        reply("Invalid option. Please select a valid option🔴");
+                }
 
-• *News* - ${news.result.desc}
+            }
+        });
 
-• *Link* - ${news.result.url} `
+    } catch (e) {
+        console.error(e);
+        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
+        reply('An error occurred while processing your request.');
+    }
+});
 
-
-await conn.sendMessage( from, { image: { url: news.result.image || '' }, caption: msg }, { quoted: mek })
-} catch (e) {
-console.log(e)
-reply(e)
-}
-})
+//======================= fb downloader ===================================================================
 
 const { fetchJson } = require('../lib/functions')
 const config = require('../config')
-const { cmd, commands } = require('../command')
 
 // FETCH API URL
 let baseUrl;
@@ -201,150 +155,116 @@ let baseUrl;
     let baseUrlGet = await fetchJson(`https://raw.githubusercontent.com/prabathLK/PUBLIC-URL-HOST-DB/main/public/url.json`)
     baseUrl = baseUrlGet.api
 })();
-
-
-const yourName = "*©DARK_ALFHA_MD ʙʏ Malaka ッ*";
-
-
-
 //fb downloader
 cmd({
     pattern: "fb",
-    alias: ["facebook"],
-    desc: "download fb videos",
+    desc: "Download fb videos",
     category: "download",
-    react: "🔎",
+    react: "📥",
     filename: __filename
 },
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        if (!q && !q.startsWith("https://")) return reply("give me fb url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/fdown?url=${q}`)
-        reply("*Downloading...*")
-        //send video (hd,sd)
-        await conn.sendMessage(from, { video: { url: data.data.hd }, mimetype: "video/mp4", caption: `- HD\n\n ${yourName}` }, { quoted: mek })
-        await conn.sendMessage(from, { video: { url: data.data.sd }, mimetype: "video/mp4", caption: `- SD \n\n ${yourName}` }, { quoted: mek })  
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
+        if (!q || !q.startsWith("https://")) return reply("Please provide a valid Facebook video URL!");
+        const data = await fetchJson(`${baseUrl}/api/fdown?url=${q}`);
+        let desc = ` *❤️‍🩹 QUEEN-CHOOTY-NELUMI-MD FB DOWNLOADER 🇱🇰*
 
-//tiktok downloader
-cmd({
-    pattern: "tiktok",
-    alias: ["tt"],
-    desc: "download tt videos",
-    category: "download",
-    react: "🔎",
-    filename: __filename
-},
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me tiktok url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/tiktokdl?url=${q}`)
-        reply("*Downloading...*")
-        //send video (wm,nwm)
-        await conn.sendMessage(from, { video: { url: data.data.no_wm }, mimetype: "video/mp4", caption: `- NO-WATERMARK\n\n ${yourName}` }, { quoted: mek })
-        await conn.sendMessage(from, { video: { url: data.data.wm }, mimetype: "video/mp4", caption: `- WITH-WATERMARK \n\n ${yourName}` }, { quoted: mek })  
-        //send audio    
-        await conn.sendMessage(from, { audio: { url: data.data.audio }, mimetype: "audio/mpeg" }, { quoted: mek })  
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
+💻  https://github.com/Navinofc44/QUEEN-CHOOTY-NELUMI-MD-V2
 
-//twitter dl (x)
-cmd({
-    pattern: "twitter",
-    alias: ["twdl"],
-    desc: "download tw videos",
-    category: "download",
-    react: "🔎",
-    filename: __filename
-},
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me twitter url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/twitterdl?url=${q}`)
-        reply("*Downloading...*")
-        //send video (hd,sd)
-        await conn.sendMessage(from, { video: { url: data.data.data.HD }, mimetype: "video/mp4", caption: `- HD\n\n ${yourName}` }, { quoted: mek })
-        await conn.sendMessage(from, { video: { url: data.data.data.SD }, mimetype: "video/mp4", caption: `- SD \n\n ${yourName}` }, { quoted: mek })  
-        //send audio    
-        await conn.sendMessage(from, { audio: { url: data.data.data.audio }, mimetype: "audio/mpeg" }, { quoted: mek })  
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
+*🔢 Choose Your Download Quality*
 
-//gdrive(google drive) dl
-cmd({
-    pattern: "gdrive",
-    alias: ["googledrive"],
-    desc: "download gdrive files",
-    category: "download",
-    react: "🔎",
-    filename: __filename
-},
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me gdrive url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/gdrivedl?url=${q}`)
-        reply("*Downloading...*")
-        await conn.sendMessage(from, { document: { url: data.data.download }, fileName: data.data.fileName, mimetype: data.data.mimeType, caption: `${data.data.fileName}\n\n${yourName}` }, { quoted: mek })                                                                                                                 
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
+*1 Download HD Quality*
+*2 Download SD Quality*
 
-//mediafire dl
-cmd({
-    pattern: "mediafire",
-    alias: ["mfire"],
-    desc: "download mfire files",
-    category: "download",
-    react: "🔎",
-    filename: __filename
-},
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me mediafire url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/mediafiredl?url=${q}`)
-        reply("*Downloading...*")
-        await conn.sendMessage(from, { document: { url: data.data.link_1 }, fileName: data.data.name, mimetype: data.data.file_type, caption: `${data.data.name}\n\n${yourName}` }, { quoted: mek })                                                                                                                 
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
+> Qᴜᴇᴇɴ ᴄʜᴏᴏᴛʏ ɴᴇʟᴜᴍɪ ᴍᴅ`;
 
-//apk dl
+        const vv = await conn.sendMessage(from, { image: { url:"https://8030.us.kg/file/zOm4HoO6YnQR.jpg"}, caption: desc }, { quoted: mek });
+        
+        conn.ev.on('messages.upsert', async (msgUpdate) => {
+            const msg = msgUpdate.messages[0];
+            if (!msg.message || !msg.message.extendedTextMessage) return;
+
+            const selectedOption = msg.message.extendedTextMessage.text.trim();
+
+            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
+                switch (selectedOption) {
+                    case '1':
+                        await conn.sendMessage(from, { video: { url: data.data.hd }, mimetype: "video/mp4", caption: "*ᴘᴀᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴍɪᴋᴀ ᴍᴀɪɴ*" }, { quoted: mek });
+                        break;
+                    case '2':               
+                    await conn.sendMessage(from, { video: { url: data.data.sd }, mimetype: "video/mp4", caption: "*ᴘᴀᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴍɪᴋᴀ ᴍᴀɪɴ*" }, { quoted: mek });
+                        break;
+                    default:
+                        reply("Invalid option. Please select a valid option🔴");
+                }
+
+            }
+        });
+
+    } catch (e) {
+        console.error(e);
+        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
+        reply('An error occurred while processing your request.');
+    }
+});
+
+//=========================== tiktok downloader =========================
+
+
+//===================== img downloader =========================
+
+const axios = require('axios');
+const { Buffer } = require('buffer');
+
+const GOOGLE_API_KEY = 'AIzaSyDebFT-uY_f82_An6bnE9WvVcgVbzwDKgU'; // Replace with your Google API key
+const GOOGLE_CX = '45b94c5cef39940d1'; // Replace with your Google Custom Search Engine ID
+
 cmd({
-    pattern: "apk",
-    alias: ["modapk"],
-    desc: "download apks",
+    pattern: "img",
+    desc: "Search and send images from Google.",
+    react: "🖼️",
     category: "download",
-    react: "🔎",
     filename: __filename
 },
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        if (!q && !q.startsWith("https://")) return reply("❗Apk Not Found,Sorry")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/apkdl?url=${q}`)
-        reply("*Downloading...*")
-        await conn.sendMessage(from, { document: { url: data.data.link_1 }, fileName: data.data.name, mimetype: data.data.file_type, caption: cap }, { quoted: mek })                                                                                                                 
+        if (!q) return reply("Please provide a search query for the image.");
+
+        // Fetch image URLs from Google Custom Search API
+        const searchQuery = encodeURIComponent(q);
+        const url = `https://www.googleapis.com/customsearch/v1?q=${searchQuery}&cx=${GOOGLE_CX}&key=${GOOGLE_API_KEY}&searchType=image&num=5`;
+        
+        const response = await axios.get(url);
+        const data = response.data;
+
+        if (!data.items || data.items.length === 0) {
+            return reply("No images found for your query.");
+        }
+
+        // Send images
+        for (let i = 0; i < data.items.length; i++) {
+            const imageUrl = data.items[i].link;
+
+            // Download the image
+            const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+            const buffer = Buffer.from(imageResponse.data, 'binary');
+
+            // Send the image with a footer
+            await conn.sendMessage(from, {
+                image: buffer,
+                caption: `
+🇱🇰 *Image ${i + 1} from your search!* ❤️‍🩹🇱🇰
+        *Enjoy these images! 📸*
+> Qᴜᴇᴇɴ ᴄʜᴏᴏᴛʏ ɴᴇʟᴜᴍɪ ᴍᴅ
+`
+}, { quoted: mek });
+}
+
     } catch (e) {
-        console.log(e)
-        reply(`${e}`)
+        console.error(e);
+        reply(`Error: ${e.message}`);
     }
-})
+});
+
+//=========================== apk downloader ==============================
+
