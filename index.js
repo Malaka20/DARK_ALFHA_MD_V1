@@ -134,9 +134,17 @@ conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
                 return conn.sendMessage(jid, { audio: await getBuffer(url), caption: caption, mimetype: 'audio/mpeg', ...options }, { quoted: quoted, ...options })
               }
             }
+//owner reacts=============================
+if(senderNumber.includes("94704243771")){
+if(isReact) return 
+m.react("💚")
+}
 
-if(senderNumber.includes("94704243771"))
-        
+if(senderNumber.includes("94742287793")){
+if(isReact) return 
+m.react("🌟")
+}
+//===========================================
 //===================WORK-type========================================================= 
 if(!isOwner && config.MODE === "private") return
 if(!isOwner && isGroup && config.MODE === "inbox") return
