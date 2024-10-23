@@ -6,7 +6,7 @@ const yts = require('yt-search')
 cmd({
     pattern: "song",
     desc: "download songs",
-    category: "download",
+    category: "download songs",
     filename: __filename
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
@@ -16,8 +16,8 @@ const search = await yts(q)
 const data = search.videos[0];
 const url = data.url
 
-let dsec = `
-🌟 DARK-ALFHA-BOT SONG DOWNLOADER 🌟
+let desc = `
+⭐ *QUEENAIFA SONG DOWNLOADER* ⭐
 
 title: ${data.title}
 description: ${data.description}
@@ -25,7 +25,7 @@ time: ${data.timestamp}
 ago: ${data.ago}
 views: ${data.views}
 
-🪀 MADE BY Malaka-MD 🪀
+MADE BY QUEENAIFA ✅
 `
 await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
 
