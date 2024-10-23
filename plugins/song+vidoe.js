@@ -62,15 +62,24 @@ const data = search.videos[0];
 const url = data.url
 
 let desc = `
-⭐ *DARKALFHAMD VIDEO DOWNLOADER* ⭐
+📽️ *_DARK_ALFHA_MD VIDEO DOWNLOADER_* 📽️
 
-title: ${data.title}
-description: ${data.description}
-time: ${data.timestamp}
-ago: ${data.ago}
-views: ${data.views}
+┌───────────────────
+├ ℹ️ *Title:* ${deta.title}
+├ 👤 *Author:* ${deta.author.name}
+├ 👁️‍🗨️ *Views:* ${deta.views}
+├ 🕘 *Duration:* ${deta.timestamp}
+├ 📌 *Ago:* ${deta.ago}
+└───────────────────
 
-MADE BY DARKALFHAMD ✅
+💻 Github: https://github.com/Navinofc44/QUEEN-CHOOTY-NELUMI-MD-V2
+
+*🔢 Choose Your Download Format*
+
+*1 Video File* 🎶
+*2 Document File* 📁
+
+> *DARK_ALFHA_MD😉*
 `
 await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
 
