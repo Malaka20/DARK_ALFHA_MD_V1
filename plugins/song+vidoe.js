@@ -17,10 +17,19 @@ const data = search.videos[0];
 const url = data.url
 
 let dsec = `
-DARK-ALFHA-BOT SONG DOWNLOADER 🌟
+🌟 DARK-ALFHA-BOT SONG DOWNLOADER 🌟
+
+title: ${data.title}
+description: ${data.description}
+time: ${data.timestamp}
+ago: ${data.ago}
+views: ${data.views}
+
+🪀 MADE BY Malaka-MD 🪀
 `
+await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
 
-
+//download audio
 
 
 }catch(e){
@@ -28,4 +37,7 @@ console.log(e)
 reply(`${e}`)
 }
 })
+
+
+
 
