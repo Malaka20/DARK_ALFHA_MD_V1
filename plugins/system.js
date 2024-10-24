@@ -14,7 +14,7 @@ try{
 let status = `😻*Uptime:*  ${runtime(process.uptime())}
 😾*Ram usage:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
 😉*HostName:* ${os.hostname()}
-👋*Owner:* Prabath Kumara & DARK_ALFHA_MD
+👋*Owner:* Malaka & DARK_ALFHA_MD
 `
 return reply(`${status}`)
 
