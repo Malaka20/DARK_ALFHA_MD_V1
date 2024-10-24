@@ -1,47 +1,72 @@
 const {cmd , commands} = require('../command')
-const fg = require('api-dylux')
 const yts = require('yt-search')
+const fg = require('api-dylux')
 
-
+// ---------------------- Song Download -----------------------
 cmd({
-    pattern: "song",
-    desc: "download songs",
-    category: "download songs",
+    pattern: 'song',
+    desc: 'download songs',
     react: "🎧",
+    category: 'download',
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("Please give me url or title")
-const search = await yts(q)
-const data = search.videos[0];
-const url = data.url
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    try {
+        if (!q) return reply('*Please enter a query or a url !*');
 
-let desc = `
-⭐ *DARK_ALFHA_MD SONG DOWNLOADER* ⭐
+        const search = await yts(q);
+        const data = search.videos[0];
+        const url = data.url;
 
-title: ${data.title}
-description: ${data.description}
-time: ${data.timestamp}
-ago: ${data.ago}
-views: ${data.views}
+        let desc = `🎶 *_QUEEN-CHOOTY-NELUMI-MD AUDIO DOWNLOADER_* 🎶
 
-MADE BY DARK_ALFHA_MD ✅
-`
-await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
+┌───────────────────
+├ ℹ️ *Title:* ${deta.title}
+├ 👤 *Author:* ${deta.author.name}
+├ 👁️‍🗨️ *Views:* ${deta.views}
+├ 🕘 *Duration:* ${deta.timestamp}
+├ 📌 *Ago:* ${deta.ago}
+└───────────────────
 
-//download audio
+💻 https://github.com/Navinofc44/QUEEN-CHOOTY-NELUMI-MD-V2
 
-let down = await fg.yta(url)
-let downloadUrl = down.dl_url
+*Choose Your Download Format*
 
-//send audio + document message
-await conn.sendMessage(from,{audio: {url:downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
-await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"audio/mpeg",fileName:data.title + ".mp3",caption:"MADE BY MALAKA"},{quoted:mek})
+*1 Audio File🎶*
+*2 Document File📁*
 
+> *QUEEN-CHOOTY-CHOOTY-MD*`;
 
-  
-}catch(e){
+        const vv = await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek });
+
+        conn.ev.on('messages.upsert', async (msgUpdate) => {
+            const msg = msgUpdate.messages[0];
+            if (!msg.message || !msg.message.extendedTextMessage) return;
+
+            const selectedOption = msg.message.extendedTextMessage.text.trim();
+
+            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
+                switch (selectedOption) {
+                    case '1':
+                        let down = await fg.yta(url);
+                        let downloadUrl = down.dl_url;
+                        await conn.sendMessage(from, { audio: { url:downloadUrl }, caption: '*ᴘᴀᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴍɪᴋᴀ ᴍᴀɪɴ*', mimetype: 'audio/mpeg'},{ quoted: mek });
+                        break;
+                    case '2':               
+                        // Send Document File
+                        let downdoc = await fg.yta(url);
+                        let downloaddocUrl = downdoc.dl_url;
+                        await conn.sendMessage(from, { document: { url:downloaddocUrl }, caption: '*ᴘᴀᴡᴇʀᴇᴅ ʙʏ ɴᴇᴛʜᴍɪᴋᴀ ᴍᴀɪɴ*', mimetype: 'audio/mpeg', fileName:data.title + ".mp3"}, { quoted: mek });
+                        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } })
+                        break;
+                    default:
+                        reply("Invalid option. Please select a valid option🔴");
+                }
+
+            }
+        })
+
+    }catch(e){
 console.log(e)
 reply(`${e}`)
 }
