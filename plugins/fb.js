@@ -20,7 +20,7 @@ cmd({
     alias: ["facebook"],
     desc: "download fb videos",
     category: "download",
-    react: "🔎",
+    react: "📥",
     filename: __filename
 },
 async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
@@ -44,7 +44,7 @@ cmd({
     alias: ["tt"],
     desc: "download tt videos",
     category: "download",
-    react: "🔎",
+    react: "📥",
     filename: __filename
 },
 async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
@@ -70,7 +70,7 @@ cmd({
     alias: ["twdl"],
     desc: "download tw videos",
     category: "download",
-    react: "🔎",
+    react: "📥",
     filename: __filename
 },
 async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
@@ -96,7 +96,7 @@ cmd({
     alias: ["googledrive"],
     desc: "download gdrive files",
     category: "download",
-    react: "🔎",
+    react: "📥",
     filename: __filename
 },
 async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
@@ -118,7 +118,7 @@ cmd({
     alias: ["mfire"],
     desc: "download mfire files",
     category: "download",
-    react: "🔎",
+    react: "📥",
     filename: __filename
 },
 async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
@@ -140,7 +140,7 @@ cmd({
     alias: ["modapk"],
     desc: "download apks",
     category: "download",
-    react: "🔎",
+    react: "📥",
     filename: __filename
 },
 async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
