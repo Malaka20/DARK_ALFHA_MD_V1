@@ -2,12 +2,11 @@ const {cmd , commands} = require('../command')
 const yts = require('yt-search')
 const fg = require('api-dylux')
 
-// ---------------------- Song Download -----------------------
 cmd({
     pattern: 'song',
     desc: 'download songs',
-    react: "🎧",
     category: 'download',
+    react: "🎧",
     filename: __filename
 },
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
