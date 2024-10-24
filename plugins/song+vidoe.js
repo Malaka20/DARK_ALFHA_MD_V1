@@ -6,7 +6,7 @@ const yts = require('yt-search')
 cmd({
     pattern: "song",
     desc: "download songs",
-    category: "download songs",
+    category: "download",
     filename: __filename
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
@@ -37,10 +37,6 @@ let downloadUrl = down.dl_url
 //send audio + document message
 await conn.sendMessage(from,{audio: {url:downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
 
-
-
-
-    
 }catch(e){
 console.log(e)
 reply(`${e}`)
