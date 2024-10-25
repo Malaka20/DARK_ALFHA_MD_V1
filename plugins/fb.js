@@ -25,21 +25,7 @@ cmd({
 },
 async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        if (!q || !q.startsWith("https://")) return reply("Please provide a valid Facebook video URL!");
-        const data = await fetchJson(`${baseUrl}/api/fdown?url=${q}`);
-        let desc = ` *❤️‍🩹 DARK-ALFHA-MD FB DOWNLOADER 🇱🇰*
-
-💻  https://github.com/Navinofc44/QUEEN-CHOOTY-NELUMI-MD-V2
-
-*🔢 Choose Your Download Quality*
-
-*1 Download HD Quality*
-*2 Download SD Quality*
-
-> 𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝙈𝘿`;
-
-
-        
+                
         if (!q && !q.startsWith("https://")) return reply("give me fb url")
         //fetch data from api  
         let data = await fetchJson(`${baseUrl}/api/fdown?url=${q}`)
