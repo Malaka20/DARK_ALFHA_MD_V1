@@ -21,7 +21,7 @@ cmd({
     alias: ["yt"],
     desc: "download songs",
     category: "download",
-    react: "🔎",
+    react: "⬇️",
     filename: __filename
 },
 async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
@@ -31,8 +31,16 @@ async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, send
         let data = await fetchJson(`${baseUrl}/api/ytadown?url=${q}`)
         reply("*Downloading...*")
         //send video (hd,sd)
-        await conn.sendMessage(from, { song: { url: data.data.hd }, mimetype: "song/mp3", caption: `- HD\n\n ${yourName}` }, { quoted: mek })
-        await conn.sendMessage(from, { song: { url: data.data.sd }, mimetype: "song/mp3", caption: `- SD \n\n ${yourName}` }, { quoted: mek })  
+
+let down = await fg.yta(url)
+let downloadUrl = down.dl_url
+
+//send audio + document message
+await conn.sendMessage(from,{audio: {url:downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
+await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"audio/mpeg",fileName:data.title + ".mp3",caption:"MADE BY MALAKA"},{quoted:mek})
+
+
+        
     } catch (e) {
         console.log(e)
         reply(`${e}`)
