@@ -25,6 +25,23 @@ cmd({
 },
 async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
+
+                if (!q || !q.startsWith("https://")) return reply("Please provide a valid Facebook video URL!");
+        const data = await fetchJson(`${baseUrl}/api/fdown?url=${q}`);
+        let desc = ` *❤️‍🩹 QUEEN-CHOOTY-NELUMI-MD FB DOWNLOADER 🇱🇰*
+
+💻  https://github.com/Navinofc44/QUEEN-CHOOTY-NELUMI-MD-V2
+
+*🔢 Choose Your Download Quality*
+
+*1 Download HD Quality*
+*2 Download SD Quality*
+
+> Qᴜᴇᴇɴ ᴄʜᴏᴏᴛʏ ɴᴇʟᴜᴍɪ ᴍᴅ`;
+
+        const vv = await conn.sendMessage(from, { image: { url:"https://8030.us.kg/file/zOm4HoO6YnQR.jpg"}, caption: desc }, { quoted: mek });
+
+        
                 
         if (!q && !q.startsWith("https://")) return reply("give me fb url")
         //fetch data from api  
