@@ -1,60 +1,82 @@
 const {cmd , commands} = require('../command')
-const fetch = require('node-fetch')
-const yts = require("yt-search")
-const NodeID3 = require('node-id3')
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-const axios = require("axios")
-const {
-  AddMp3Meta
-} = require("../lib/functions.js");
-    
-Sparky(
-    {
-        name: "yt",
-        fromMe: isPublic,
-        category: "downloader",
-        desc: "To download yt vid/aud"
-    },
-async ({
+const fg = require('api-dylux')
+const yts = require('yt-search')
 
-        m, client, args
 
-    }) => {
+cmd({
+    pattern: "song",
+    desc: "download songs",
+    category: "download songs",
+    filename: __filename
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const search = await yts(q)
+const data = search.videos[0];
+const url = data.url
 
-    if (!args) return m.reply("_Enter Query !_")
-   let mes = await client.sendMessage(m.jid, { text : `_Searching..._`}, {quoted : m })
-    let datai = `_Youtube Downloader_\n\n`
-    let search = await yts(`${args}`)
-    let hdata = search.all
- 
-    for (let i=1; i<11; i++){
-        datai += `_${i} .${hdata[i].title}_\n`
-    }
-   return client.sendMessage(m.jid, { text : `${datai}` , edit : mes.key })
-      }
-    )
+//download audio
 
-        
-Sparky(
-    {
-        name: "song",
-        fromMe: isPublic,
-        category: "downloader",
-        desc: "To download song"
-    },
-    async ({
-        m, client, args
-    }) => {
-      args = args || m.quoted?.text;
-        if (!args) return m.reply("_Enter Query !_")
-      let mes = await client.sendMessage(m.jid, { text : `_Searching..._` } , { quoted : m })
-   const res = await axios.get(`https://viper.xasena.me/api/v1/yta?query=${args}`)
-    let response = await res.data
-    let coverBuffer = await (await fetch(`${response.data.thumbnail}`)).buffer()
-     client.sendMessage(m.jid, { text : `_Downloading : ${response.data.title}_` , edit : mes.key })
-   const songbuff = await (await fetch(`${response.data.downloadUrl}`)).buffer()
-   const song = await AddMp3Meta(songbuff , coverBuffer , { title : response.data.title , artist : response.data.channel.name } )
-     return await client.sendMessage(m.jid , {audio : song ,  mimetype : 'audio/mpeg'} , { quoted : m })
-      
-    })
+let down = await fg.yta(url)
+let downloadUrl = down.dl_url
+
+//send audio + document message
+await conn.sendMessage(from,{audio: {url:downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
+await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"audio/mpeg",fileName:data.title + ".mp3",caption:"MADE BY MALAKA"},{quoted:mek})
+
+
+  
+}catch(e){
+console.log(e)
+reply(`${e}`)
+}
+})
+
+//===========video-dl============
+
+cmd({
+    pattern: "video",
+    desc: "download videos",
+    category: "download songs",
+    filename: __filename
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+if(!q) return reply("Please give me url or title")
+const search = await yts(q)
+const data = search.videos[0];
+const url = data.url
+
+let desc = `
+⭐ *QUEENAIFA VIDEO DOWNLOADER* ⭐
+
+title: ${data.title}
+description: ${data.description}
+time: ${data.timestamp}
+ago: ${data.ago}
+views: ${data.views}
+
+MADE BY QUEENAIFA ✅
+`
+await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
+
+//download video
+
+let down = await fg.ytv(url)
+let downloadUrl = down.dl_url
+
+//send video+ document message
+await conn.sendMessage(from,{video: {url:downloadUrl},mimetype:"video/mp4"},{quoted:mek})
+await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"video/mp4",fileName:data.title + ".mp4",caption:"MADE BY MALAKA 💗"},{quoted:mek})
+
+
+  
+}catch(e){
+console.log(e)
+reply(`${e}`)
+}
+})
+
+  
+
 
