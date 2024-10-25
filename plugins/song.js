@@ -1,15 +1,4 @@
-const { 
-  Sparky, 
-  commands, 
-  isPublic 
-} = require("../lib/plugins.js");
-const { 
-  existsSync, 
-  mkdirSync, 
-  writeFileSync,
-  readFileSync,
-  createWriteStream
-} = require('fs');
+const {cmd , commands} = require('../command')
 const fetch = require('node-fetch')
 const yts = require("yt-search")
 const NodeID3 = require('node-id3')
@@ -69,9 +58,3 @@ Sparky(
       
     })
 
-  
-}catch(e){
-console.log(e)
-reply(`${e}`)
-}
-})
