@@ -1,5 +1,6 @@
 const {cmd , commands} = require('../command')
-const yts = require('yt-search')
+const fg = require('api-dylux');
+const yts = require('yt-search');
 
 
 cmd({
@@ -89,3 +90,7 @@ console.log(e)
 reply(`${e}`)
 }
 })
+
+  
+
+
