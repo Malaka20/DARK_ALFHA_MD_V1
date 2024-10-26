@@ -1,7 +1,7 @@
 const {cmd , commands} = require('../command')
 const fg = require('api-dylux')
 const yts = require('yt-search')
-const { fetchJson } = require("../lib/functions")
+
 
 
 cmd({
@@ -15,7 +15,7 @@ async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender
 try{
 if(!q) return reply("Please give me url or title")
 const search = await yts(q)
-const data = search.videos[0].url
+const data = search.videos[0];
 const url = data.url
 
 let desc = `
