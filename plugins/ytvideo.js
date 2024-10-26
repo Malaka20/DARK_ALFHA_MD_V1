@@ -18,25 +18,24 @@ let search = await yts(q)
 let link = search.all[0].url
 let desc = `
 *──────────────────*
-_*🌸 VIDEO DＯＷＮＬＯＤＥＲ 🌸*_
+_*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
 *──────────────────*
 
-🌸 *Title :* ${search.all[0].title}
+ *Title :* ${search.all[0].title}
 
-🌸 *Description :* ${search.all[0].description}
+ *Description :* ${search.all[0].description}
 
-🌸 *Duration :* ${search.all[0].timestamp}
+ *Duration :* ${search.all[0].timestamp}
 
-🌸 *Ago :* ${search.all[0].ago}
+ *Ago :* ${search.all[0].ago}
 
-🌸 *Views :* ${search.all[0].views}
+ *Views :* ${search.all[0].views}
 
-🌸 *URL :* ${search.all[0].url}
+ *URL :* ${search.all[0].url}
 
-_📤ᴜᴘʟᴏᴅɪɴɢ ʏᴏᴜʀ ᴀᴜᴅɪᴏ ꜰɪʟʟ📤_
+ _ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ ꜰɪʟʟ_
 
-
-> ALEXA-MD
+> MADE BY 𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝙈𝘿
 `
 
 await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
@@ -47,7 +46,7 @@ await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},
 await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
 mimetype: "video/mp4",
- fileName: `${data.result.title}.mp4`,caption: `*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·* 🧑🏻‍💻`}, { quoted: mek })
+ fileName: `${data.result.title}.mp4`,caption: `*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·* 👩‍💻`}, { quoted: mek })
 
 }catch(e){
     console.log(e)
