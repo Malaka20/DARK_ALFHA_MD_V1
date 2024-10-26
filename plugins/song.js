@@ -6,6 +6,7 @@ const yts = require('yt-search');
 cmd({
     pattern: "song",
     desc: "download songs",
+    react: "🎧",
     category: "download songs",
     filename: __filename
 },
@@ -17,7 +18,7 @@ const data = search.videos[0];
 const url = data.url
 
 let desc = `
-⭐ *QUEENAIFA SONG DOWNLOADER* ⭐
+⭐ *𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝙈𝘿 SONG DOWNLOADER* ⭐
 
 title: ${data.title}
 description: ${data.description}
@@ -25,18 +26,18 @@ time: ${data.timestamp}
 ago: ${data.ago}
 views: ${data.views}
 
-MADE BY QUEENAIFA ✅
+MADE BY 𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝙈𝘿 ✅
 `
 await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
 
-//download audio
+//===================download audio=======================
 
 let down = await fg.yta(url)
 let downloadUrl = down.dl_url
 
-//send audio + document message
-await conn.sendMessage(from,{audio: {url:downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
-await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"audio/mpeg",fileName:data.title + ".mp3",caption:"MADE BY MALAKA"},{quoted:mek})
+//==============send audio + document message===============
+await conn.sendMessage(from,{audio: {url:downloadUrl},mimetype:"audio/mpeg"},{quoted:mek});
+await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"audio/mpeg",fileName:data.title + ".mp3",caption:"MADE BY MALAKA"},{quoted:mek});
 
 
   
@@ -51,6 +52,7 @@ reply(`${e}`)
 cmd({
     pattern: "video",
     desc: "download videos",
+    react: "🎬",
     category: "download songs",
     filename: __filename
 },
@@ -62,7 +64,7 @@ const data = search.videos[0];
 const url = data.url
 
 let desc = `
-⭐ *QUEENAIFA VIDEO DOWNLOADER* ⭐
+⭐ *𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝙈𝘿 VIDEO DOWNLOADER* ⭐
 
 title: ${data.title}
 description: ${data.description}
@@ -70,18 +72,18 @@ time: ${data.timestamp}
 ago: ${data.ago}
 views: ${data.views}
 
-MADE BY QUEENAIFA ✅
+MADE BY 𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝙈𝘿 ✅
 `
 await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek});
 
-//download video
+//============download video============
 
 let down = await fg.ytv(url)
 let downloadUrl = down.dl_url
 
-//send video+ document message
-await conn.sendMessage(from,{video: {url:downloadUrl},mimetype:"video/mp4"},{quoted:mek})
-await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"video/mp4",fileName:data.title + ".mp4",caption:"MADE BY MALAKA 💗"},{quoted:mek})
+//============send video+ document message================
+await conn.sendMessage(from,{video: {url:downloadUrl},mimetype:"video/mp4"},{quoted:mek});
+await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"video/mp4",fileName:data.title + ".mp4",caption:"MADE BY MALAKA 💗"},{quoted:mek});
 
 
   
