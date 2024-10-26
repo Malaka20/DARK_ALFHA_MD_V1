@@ -17,6 +17,7 @@ try{
 if(!q) return reply("*Please give me a title*")
 let search = await yts(q)
 let link = search.all[0].url
+const url = data.url
 let desc = `
 *──────────────────*
 _*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
