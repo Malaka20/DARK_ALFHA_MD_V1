@@ -1,21 +1,10 @@
 
-const { tlang, ringtone, cmd,fetchJson, sleep, botpic,ffmpeg, getBuffer, pinterest, prefix, Config } = require('../lib')
-const { fetchJson } = require('../lib/functions')
-const config = require('../config')
 const { cmd, commands } = require('../command')
 const googleTTS = require("google-tts-api");
-const ytdl = require('ytdl-secktor')
-const fs = require('fs-extra')
-
-// FETCH API URL
-let baseUrl;
-(async () => {
-    let baseUrlGet = await fetchJson(`https://raw.githubusercontent.com/prabathLK/PUBLIC-URL-HOST-DB/main/public/url.json`)
-    baseUrl = baseUrlGet.api
-})();
+const ytdl = require('ytdl-secktor');
+const fs = require('fs-extra'):
 
 
-const yourName = "©ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅッ";
     //---------------------------------------------------------------------------
 cmd({
             pattern: "tgs",
