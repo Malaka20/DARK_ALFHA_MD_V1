@@ -1,4 +1,4 @@
-//Created by Sadeesha Coder 🙋
+//Malaka  by DARKALFHAMD 🙋
 
 const {cmd , commands} = require('../command')
 const yts = require('yt-search')
