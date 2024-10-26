@@ -1,7 +1,6 @@
 //Malaka  by DARKALFHAMD 🙋
 
 const {cmd , commands} = require('../command')
-const yts = require('yt-search')
 const fg = require('api-dylux')
 const { fetchJson } = require("../lib/functions")
 
@@ -44,11 +43,9 @@ await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},
 
         let data = await fetchJson (`https://api.dreaded.site/api/ytdl/song?url=${link}`)
 
-await conn.sendMessage(from, {
-  song: {url: data.result.downloadLink},
-mimetype: "song/mp3",
- fileName: `${data.result.title}.mp3`,caption: `*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·* 👩‍💻`}, { quoted: mek })
-
+await conn.sendMessage(from,{audio: {url:downloadUrl},mimetype:"audio/mpeg"},{quoted:mek})
+await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"audio/mpeg",fileName:data.title + ".mp3",caption:"MADE BY MALAKA"},{quoted:mek})
+    
 }catch(e){
     console.log(e)
     reply(`${e}`)
