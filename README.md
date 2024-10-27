@@ -1,6 +1,10 @@
 # DARK_ALFHA_MD_V1
 A ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ whatsapp bot
 
+</h3>
+<img src="https://i.ibb.co/XWggNqz/20241027-181936.jpg" width="300" height="190">
+</div>
+
 1. Get Session
    
     
