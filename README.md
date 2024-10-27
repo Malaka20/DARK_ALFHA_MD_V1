@@ -9,3 +9,9 @@ A ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ whatsapp bot
    
     
      <a href='https://toxic-alexa-qr92-4bcc7b3bfc2c.herokuapp.com' target="_blank"><img alt='SESSION ID' src='https://img.shields.io/badge/Session_id-100000?style=for-the-badge&logo=scan&logoColor=white&labelColor=black&color=black'/></a>
+
+
+     <hr>
+<h5>👩‍💻 Deploy Free Koyeb👇</h5>
+<a href="http://koyeb.com" ><img src="https://i.ibb.co/t4KftP0/images.png width="50" height="25"></a>
+<hr>
