@@ -8,7 +8,7 @@ const config = require('../config');
 const { igdl } = require('ruhend-scraper');
 
 cmd({
-    pattern: "movie",
+    pattern: "moviedl",
     desc: "Fetch detailed information about a movie.",
     category: "movie",
     react: "🎬",
@@ -22,7 +22,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
             return reply("📽️ Please provide the name of the movie.");
         }
 
-        const apiUrl = `http://www.omdbapi.com/?t=${encodeURIComponent(movieName)}&apikey=${config.OMDB_API_KEY}`;
+        
         const response = await axios.get(apiUrl);
 
         const data = response.data;
@@ -50,8 +50,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 🗳️ *IMDB Votes:* ${data.imdbVotes}
 `;
 
-        // Define the image URL
-        const imageUrl = data.Poster && data.Poster !== 'N/A' ? data.Poster : config.ALIVE_IMG;
+        
 
         // Send the movie information along with the poster image
         await conn.sendMessage(from, {
