@@ -1,11 +1,6 @@
-const crypto = require('crypto');
-const axios = require('axios');
-const { cmd, commands } = require('../command');
-const { exec } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const config = require('../config');
-const { igdl } = require('ruhend-scraper');
+const { fetchJson } = require('../lib/functions')
+const config = require('../config')
+const { cmd, commands } = require('../command')
 
 cmd({
     pattern: "moviedl",
