@@ -1,5 +1,5 @@
 {
-  "name": "DARK_ALFHA_MD",
+  "name": "DARK_ALFHA_MD_V1",
   "version": "1.0.0",
   "description": "A WhatsApp bot created using Node.js",
   "main": "index.js",
@@ -24,8 +24,6 @@
     "vm": "^0.1.0",
     "qrcode-terminal": "^0.12.0",
     "yt-search": "2.11.1",
-    "api-dylux": "1.8.5",
-    "secktor-pack": "latest",
-    "ytdl-secktor": "latest"
+    "api-dylux": "1.8.5"
   }
 }
