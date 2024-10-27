@@ -1,6 +1,8 @@
 // YT MP3 DOWNLOAD COMMAND 
 
 const { cmd } = require('../command')
+const fg = require('api-dylux')
+const yts = require('yt-search')
 const { fetchJson } = require('../lib/functions')
 
 const apilink = 'https://dark-yasiya-api-new.vercel.app' // API LINK ( DO NOT CHANGE THIS!! )
