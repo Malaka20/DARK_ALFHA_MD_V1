@@ -30,7 +30,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         };
 
         const password = generatePassword(length);
-        const message = `🔐 *Your Strong Password* 🔐\n\nPlease find your generated password below:\n\n> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍*`;
+        const message = `🔐 *Your Strong Password* 🔐\n\nPlease find your generated password below:\n\n> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍*`;
 
         // Send initial notification message
         await conn.sendMessage(from, { text: message }, { quoted: mek });
@@ -110,7 +110,7 @@ async (conn, mek, m, { from, q, reply }) => {
 💨 *Wind Speed*: ${data.wind.speed} m/s
 🔽 *Pressure*: ${data.main.pressure} hPa
 
-> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍* 🌦️
+> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍* 🌦️
 `;
 
         return reply(weather);
@@ -142,7 +142,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         const response = await axios.get(apiUrl);
         const data = response.data;
 
-        let userInfo = `     🔍_*KENZI-MD GIT STALK*_🔎
+        let userInfo = `     🔍_*ᴍᴀʟᴀᴋᴀ-ᴍᴅ GIT STALK*_🔎
         
 👤 *Username*: ${data.name || data.login}
 🔗 *Github Url*:(${data.html_url})
@@ -153,7 +153,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 📅 *Created At*: ${new Date(data.created_at).toDateString()}
 🔭 *Public Gists*: ${data.public_gists}
 
-> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍*
+> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍*
 `;
 
         await conn.sendMessage(from, { image: { url: data.avatar_url }, caption: userInfo }, { quoted: mek });
@@ -174,13 +174,14 @@ cmd({
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
 
-let about = ` HELLOW THEIR ${senderNumber} I AM 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍 WHATSAPP BOT 
-              CREATED BY KENZI-MD(DΛЯK ПΣӨП ᑕYBΣЯZ)..
+let about = ` HELLOW THEIR ${senderNumber} I AM 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍 WHATSAPP BOT 
+              MALAKA  BY DARK-ALFHA-MD(DΛЯK ПΣӨП ᑕYBΣЯZ)..
               
               © *Ｄａｒｋ Ｎｅｏｎ Ｃｙｂｅｒｚ* 🅥
-              *ɢɪᴛʜᴜʙ :* github.com/Danupa0
+              *ɢɪᴛʜᴜʙ :* https://github.com/Malaka-KG/DARK_ALFHA_MD_V1
               
-              THANKS FOR USING KENZI-MD WHATSAPP BOT MD`
+              THANKS FOR USING 
+             MALAKA-MD WHATSAPP BOT MD`
 return await conn.sendMessage(from,{image: {url: config.ALIVE_IMG},caption:about},{quoted: mek})
 }catch(e){
 console.log(e)
@@ -228,7 +229,7 @@ try{
 
   await m.react('✅');
   let video = data.url;
-  let dev = '© 2024 KENZI-MD Instagram Downloader | Download with ease, cherish forever.'
+  let dev = '© 2024 Malaka-md Instagram Downloader | Download with ease, cherish forever.'
   
   try {
     await conn.sendMessage(m.chat, { video: { url: video }, caption: dev, fileName: 'ig.mp4', mimetype: 'video/mp4' }, { quoted: m });
@@ -267,7 +268,7 @@ async (conn, mek, m, { from, reply }) => {
 🔗 _${article.url}_
 
 *© Ｄａｒｋ Ｎｅｏｎ Ｃｙｂｅｒｚ 🅥* 
-*💻 BOT NAME:* 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍  
+*💻 BOT NAME:* 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍  
             `;
 
             console.log('Article URL:', article.urlToImage); // Log image URL for debugging
@@ -314,7 +315,7 @@ async (conn, mek, m, { from, q, reply }) => {
 🔠 *Translated*: ${translation}
 🌐 *Language*: ${targetLang.toUpperCase()}
 
-> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍*`;
+> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍*`;
 
         return reply(translationMessage);
     } catch (e) {
@@ -438,7 +439,7 @@ async (conn, mek, m, { from, reply }) => {
         const message = `
 💬 "${quote.content}"
 - ${quote.author}
-*🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍* QUOTES
+*🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍* ᴅᴀʀᴋ
         `;
         return reply(message);
     } catch (e) {
@@ -517,7 +518,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         // Send the movie information along with the poster image
         await conn.sendMessage(from, {
             image: { url: imageUrl },
-            caption: `${movieInfo}\n> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍*`
+            caption: `${movieInfo}\n> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍*`
         }, { quoted: mek });
     } catch (e) {
         console.log(e);
@@ -717,7 +718,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         conversionInfo += `🔄 *Converted Amount*: ${convertedAmount} ${toCurrency}\n`;
         conversionInfo += `📈 *Exchange Rate*: 1 ${fromCurrency} = ${data.rates[toCurrency]} ${toCurrency}\n
         
-> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍*
+> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍*
         `;
 
         await conn.sendMessage(from, { text: conversionInfo }, { quoted: mek });
@@ -764,7 +765,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
             '⚠️ *Note:* All actions are for demonstration purposes only.',
             '⚠️ *Reminder:* Ethical hacking is the only way to ensure security.',
             '',
-            '> *KENZI-MD-HACKING-COMPLETE ☠️❕*'
+            '> *MALAKA-MD-DARK-ALFHA-MD ☠️❕*'
         ];
 
         for (const line of steps) {
@@ -835,7 +836,7 @@ const wordInfo = `
 📝 *Example*: ${example}
 🔗 *Synonyms*: ${synonyms}
 
-> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃𝐐𝐔𝐄𝐄𝐍 𝐊𝐄𝐍𝐙𝐈 𝐌𝐃 🤍*`;
+> *🔮 𝐏𝐨𝐰𝐞𝐫𝐞𝐝 𝐁𝐲 - : 💃ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ 🤍*`;
 
                                  return reply(wordInfo);
                              } catch (e) {
