@@ -25,8 +25,7 @@ const url = data.url
     
 const ytdl = await fetchJson(`${apilink}/download/ytmp3?url=${data.url}`)
     
-let message = `‎‎           🎶 YT SONG DOWNLOADER 🎶
-
+let message = `‎‎🎶 YT SONG DOWNLOADER 🎶
 
  🎵 ‎Title: ${data.title}
  ⏱ Duration: ${data.timestamp}
@@ -48,4 +47,4 @@ reply(e)
 }
 })
 
-// FOLLOW US : https://whatsapp.com/channel/0029VaaPfFK7Noa8nI8zGg27
+// FOLLOW US : https://github.com/Malaka-KG/DARK_ALFHA_MD_V1
