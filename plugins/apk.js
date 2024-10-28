@@ -1,8 +1,8 @@
 //මේක plugins folder එකට
-const { fetchJson } = require('../lib/functions')
 const config = require('../config')
 const { cmd, commands } = require('../command')
-
+const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
+const apkdl = require('../lib/apkdl')
 
 cmd({
     pattern: "apk",
@@ -56,7 +56,7 @@ let buttons = [{
 
 ]
 
-let MNG = `\`✦ 𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝙈𝘿 𝗩1 ✦\`
+let MNG = `\`✦ 𝗗𝗔𝗥𝗞 𝗦𝗛𝗨𝗧𝗘𝗥 𝗠𝗗 𝗩2 ✦\`
 
       ❒ 𝗔𝗽𝗸 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗿 ❒
 
