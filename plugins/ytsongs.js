@@ -26,7 +26,7 @@ let wm = config.FOOTER
 let newsize = config.MAX_SIZE * 1024 * 1024
 
 cmd({
-    pattern: "song",
+    pattern: "songs",
     alias: ["ytmp3","play"],
     use: '.song lelena',
     react: "🎧",
@@ -96,7 +96,7 @@ try {
     
     
     cmd({
-    pattern: "mp3",
+    pattern: "ytmp3",
     react: "📥",
     dontAddCommandList: true,
     filename: __filename
