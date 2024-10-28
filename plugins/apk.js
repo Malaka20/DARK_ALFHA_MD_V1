@@ -1,7 +1,7 @@
-//මේක plugins folder එකට
+
 const config = require('../config')
 const { cmd, commands } = require('../command')
-const apkdl = require('../lib/apkdl')
+
 
 cmd({
     pattern: "apk",
