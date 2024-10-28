@@ -24,9 +24,9 @@ let wm = config.FOOTER
 let newsize = config.MAX_SIZE * 1024 * 1024
 
 cmd({
-    pattern: "song",
+    pattern: "ytmp3",
     alias: ["ytmp3","play"],
-    use: '.song lelena',
+    use: '.ytmp3 lelena',
     react: "🎧",
     desc: 'Download audios from youtube',
     category: "download",
