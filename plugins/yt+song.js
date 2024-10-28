@@ -36,6 +36,8 @@ _*🪀 SONG DＯＷＮＬＯＤＥＲ 🪀*_
  🧿 Views: ${data.views}
  🤵 Author: ${data.author.name}
   📎 Url: ${data.url}
+  
+  🪀 DARK-ALFHA-MD 🪀
 `
   
 await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message }, { quoted : mek })
