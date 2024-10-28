@@ -1,14 +1,12 @@
 //මේක plugins folder එකට
 const config = require('../config')
 const { cmd, commands } = require('../command')
-const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
 const apkdl = require('../lib/apkdl')
 
 cmd({
     pattern: "apk",
     react: "📱",
     alias: ["findapk","playstore"],
-    
     category: "download",
     use: '.apk whatsapp',
     filename: __filename
