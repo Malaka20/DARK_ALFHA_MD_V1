@@ -24,9 +24,9 @@ let wm = config.FOOTER
 let newsize = config.MAX_SIZE * 1024 * 1024
 
 cmd({
-    pattern: "ytmp3",
+    pattern: "song",
     alias: ["ytmp3","play"],
-    use: '.ytmp3 lelena',
+    use: '.song lelena',
     react: "🎧",
     desc: 'Download audios from youtube',
     category: "download",
@@ -77,7 +77,7 @@ cmd({
     })
 
 cmd({
-    pattern: "ytaa",
+    pattern: "mp3",
     react: "📥",
     dontAddCommandList: true,
     filename: __filename
@@ -94,7 +94,7 @@ try {
     
     
     cmd({
-    pattern: "ytad",
+    pattern: "mp3",
     react: "📥",
     dontAddCommandList: true,
     filename: __filename
