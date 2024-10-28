@@ -25,7 +25,11 @@ const url = data.url
     
 const ytdl = await fetchJson(`${apilink}/download/ytmp3?url=${data.url}`)
     
-let message = `‎‎🎶 YT SONG DOWNLOADER 🎶
+let message = `‎‎
+
+*──────────────────*
+_*🎶 YT ‎‎SONG DＯＷＮＬＯＤＥＲ 🎶*_
+*──────────────────*
 
  🎵 ‎Title: ${data.title}
  ⏱ Duration: ${data.timestamp}
