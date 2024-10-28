@@ -1,14 +1,13 @@
 //මේක plugins folder එකට
-const config = require('../config')
+const configs = require('../configs')
 const { cmd, commands } = require('../command')
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
 const apkdl = require('../lib/apkdl')
 
 cmd({
     pattern: "apk",
-    react: "📱",
+    react: "📥",
     alias: ["findapk","playstore"],
-    
     category: "download",
     use: '.apk whatsapp',
     filename: __filename
@@ -81,7 +80,7 @@ return await conn.sendButtonMessage(from, buttons, m, opts)
 })
 cmd({
     pattern: "dapk",
-    react: "📱",
+    react: "📥",
     dontAddCommandList: true,
     filename: __filename
 },
