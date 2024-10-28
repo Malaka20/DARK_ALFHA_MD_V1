@@ -9,7 +9,7 @@ const apilink = 'https://dark-yasiya-api-new.vercel.app' // API LINK ( DO NOT CH
 cmd({
     pattern: "tiktok",
     alias: ["tt","ttdown"],
-    react: "🍧",
+    react: "⬇️",
     desc: "",
     category: "download",
     use: '.tiktok < url >',
@@ -24,7 +24,7 @@ if(!q) return await reply("Please give me tiktok url");
 const tiktok = await fetchJson(`${apilink}/download/tiktok?url=${q}`);
   
 const msg = `
-           🍧 *TIKTOK DOWNLOADER* 🍧
+🌸*TIKTOK DOWNLOADER*🌸
 
 
 • *Title* - ${tiktok.result.title}
@@ -55,4 +55,4 @@ reply(e)
 }
 })
 
-// https://whatsapp.com/channel/0029VaaPfFK7Noa8nI8zGg27
+// https://chat.whatsapp.com/GzWbSKBkjcJARDc6wRvziv
