@@ -21,7 +21,6 @@ if (data.length < 1) return await conn.sendMessage(from, { text: N_FOUND }, { qu
     const rows = []
 for (var i = 0; i < data.length; i++)
 
-
  {
 
     rows.push({
@@ -60,16 +59,12 @@ let MNG = `\`✦ 𝗗𝗔𝗥𝗞 𝗦𝗛𝗨𝗧𝗘𝗥 𝗠𝗗 𝗩2 ✦\`
       ❒ 𝗔𝗽𝗸 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗿 ❒
 
 \`Apk name :\` ${q}
-
-
 `
-
 let opts = {
     image: config.LOGO,
     header: '',
     footer: config.FOOTER,
     body: MNG
-
 }
 return await conn.sendButtonMessage(from, buttons, m, opts)
 } catch (e) {
