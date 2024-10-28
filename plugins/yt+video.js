@@ -48,7 +48,8 @@ await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
 mimetype: "video/mp4",
  fileName: `${data.result.title}.mp4`,caption: `*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·* 👩‍💻`}, { quoted: mek })
-
+await conn.sendMessage(from, { document: { url: ytdl.result.dl_link }, mimetype: "audio/mpeg", fileName: data.title + ".mp4", caption: `,©ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ`}, { quoted: mek })
+    
 }catch(e){
 console.log(e)
 reply(`${e}`)
