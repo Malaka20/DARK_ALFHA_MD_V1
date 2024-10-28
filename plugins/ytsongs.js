@@ -20,6 +20,7 @@ const {
 var sizetoo =  "_This file size is too big_"
 const yts = require("ytsearch-venom")
 const fg = require('api-dylux')
+const yts = require('yt-search')
 
 
 let wm = config.FOOTER
