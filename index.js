@@ -40,14 +40,14 @@ const port = process.env.PORT || 8000;
 //=============================================
 
 async function connectToWA() {
-//==========connsct mongodb ================
+//===========connect mongodb===================
 const connectDB = require('./lib/mongodb')
 connectDB();
-//========== mongodb =======================
-const {readEnv} require('./lib/database')
-const config await readEnv();
+//==============================================
+const {readEnv} = require('./lib/database')   
+const config = await readEnv();
 const prefix = config.PREFIX
-//==========================================
+//==============================================
 
 console.log("Connecting Darkalfha bot 😻...");
 const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys/')
