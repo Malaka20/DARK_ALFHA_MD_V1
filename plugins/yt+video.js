@@ -21,7 +21,7 @@ const search = await fetchJson(`${apilink}/search/yt?q=${q}`)
 const data = search.result.data[0];
 const url = data.url
     
-const ytdl = await fetchJson(`${apilink}/download/ytmp4?url=${data.url}`)
+const ytdl = await fetchJson(`${apilink}/download/ytvurl=${data.url}`)
     
 let message = `‎‎
 *──────────────────*
@@ -42,7 +42,7 @@ await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message
   
 // SEND AUDIO NORMAL TYPE and DOCUMENT TYPE
 await conn.sendMessage(from, { video: { url: ytdl.result.dl_link }, mimetype: "video/mp4" }, { quoted: mek })
-await conn.sendMessage(from, { document: { url: ytdl.result.dl_link }, mimetype: "video/mp4", fileName: data.title + ".mp4", caption: "ᴍᴀʟᴀᴋᴀ-ᴍᴅ"}${data.title}`}, { quoted: mek })
+
   
 } catch(e){
 console.log(e)
