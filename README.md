@@ -5,10 +5,11 @@ A ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ whatsapp bot
 <img src="https://i.ibb.co/XWggNqz/20241027-181936.jpg" width="300" height="190">
 </div>
 
+<a><img src='https://i.imgur.com/LyHic3i.gif'/></a><a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
 1. Get Session
    
-    
-     <a href='https://toxic-alexa-qr92-4bcc7b3bfc2c.herokuapp.com' target="_blank"><img alt='SESSION ID' src='https://img.shields.io/badge/Session_id-100000?style=for-the-badge&logo=scan&logoColor=white&labelColor=black&color=black'/></a>
+    <a href='https://yesset-md-099be347ecc5.herokuapp.com/' target="_blank"><img alt='SESSION ID' src='https://img.shields.io/badge/Session_id-900000?style=for-the-badge&logo=scan&logoColor=white&labelColor=black&color=blue'/></a>
+     
 
 
      <hr>
