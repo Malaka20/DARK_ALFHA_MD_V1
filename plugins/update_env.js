@@ -3,8 +3,8 @@ const EnvVar = require('../lib/mongodbenv');
 const { cmd } = require('../command');
 
 cmd({
-    pattern: "settings",
-    alias: ["setting"],
+    pattern: "update",
+    alias: ["upd"],
     desc: "Check and update environment variables",
     react: "⚙",
     category: "owner",
