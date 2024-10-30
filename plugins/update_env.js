@@ -6,6 +6,7 @@ cmd({
     pattern: "update",
     alias: ["updateenv"],
     desc: "Check and update environment variables",
+    react: "⚙️",
     category: "owner",
     filename: __filename,
 },
