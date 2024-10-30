@@ -4,7 +4,7 @@ const {cmd , commands} = require('../command')
 cmd({
     pattern: "setting",
     desc: "settings",
-    category: "main",
+    category: "owner",
     react: "⚙",
     filename: __filename
 },
