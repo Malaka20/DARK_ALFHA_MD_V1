@@ -27,19 +27,32 @@ menu[commands[i].category] += `.${commands[i].pattern}\n`;
 }
 
 let madeMenu = `💗 *Hello ${pushname}* 👋
-> DARK-ALFHA-MD* 
-╭─────────────────
-│❒⁠⁠⁠⁠╭─────────────
-│❒⁠⁠⁠⁠│▸ *DOWNLOAD* 
-│❒⁠⁠⁠⁠│▸ *MAIN COMMANDS* 
-│❒⁠⁠⁠⁠│▸ *GROUP COMMANDS*
-│❒⁠⁠⁠⁠╰──────────────
-│❒⁠⁠⁠⁠│▸ *OWNER COMMANDS* : ${cm.length} 
-│❒⁠⁠⁠⁠│▸ *CONVERT COMMANDS* : ${format(os.totalmem() - os.freemem())}/${format(os.totalmem())}
-│❒⁠⁠⁠⁠│▸ *SEARCH COMMANDS* : ${os.platform()}
-│❒⁠⁠⁠⁠│▸
-│❒⁠⁠⁠⁠╰──────────────
-╰──────────────────\n
+> *DOWNLOAD COMMANDS* ⬇️
+.video
+
+${menu.download}
+
+> *MAIN COMMANDS* 🌟
+
+${menu.main}
+
+> *GROUP COMMANDS* ⏩
+
+${menu.group}
+
+> *OWNER COMMANDS* 📶
+
+${menu.owner}
+
+> *CONVERT COMMANDS* 😔
+
+${menu.convert}
+
+> *SEARCH COMMANDS* 👀
+
+${menu.search}
+
+POWERD BY DARK-ALFHA-MD 💗
 `
 await conn.sendMessage(from,{text:madeMenu},{quoted:mek})
 
