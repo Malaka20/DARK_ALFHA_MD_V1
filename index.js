@@ -40,6 +40,14 @@ const port = process.env.PORT || 8000;
 //=============================================
 
 async function connectToWA() {
+//===========connect mongodb===================
+const connectDB = require('./lib/mongodb')
+connectDB();
+//==============================================
+const {readEnv} = require('./lib/database')   
+const config = await readEnv();
+//==============================================
+        
 console.log("Connecting Darkalfha bot 😻...");
 const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/auth_info_baileys/')
 var { version } = await fetchLatestBaileysVersion()
