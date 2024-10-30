@@ -3,14 +3,28 @@ const EnvVar = require('../lib/mongodbenv');
 const { cmd } = require('../command');
 
 cmd({
-    pattern: "update",
-    alias: ["updateenv"],
+    pattern: "settings",
+    alias: ["setting"],
     desc: "Check and update environment variables",
     react: "⚙️",
     category: "owner",
     filename: __filename,
 },
 async (conn, mek, m, { from, q, reply, isOwner }) => {
+    
+    let des = `
+    ┏━━━━━━━━━━━━━━━━━━━━━━━┓
+┃       🔧 *OPTIONS MENU* 🔧
+┃━━━━━━━━━━━━━━━━━━━━━━━┃
+
+┣━ *_WORK MODE_* ⤵️
+┃   ┣ 1.1 🔹 *Public Work*
+┃   ┣ 1.2 🔹 *Private Work*
+┃   ┣ 1.3 🔹 *Group Only*
+┃   ┗ 1.4 🔹 *Inbox Only*
+*🪀 𝙈𝘼𝙇𝘼𝙆𝘼 𝘽𝙔 𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝙈𝘿
+`
+    
     if (!isOwner) return;
 
     if (!q) {
