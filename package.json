@@ -28,6 +28,6 @@
     "ytsearch-venom":"1.0.0",
     "google-tts-api":"2.0.2",
     "wa-sticker-formatter":"4.4.4",
-    "mongoose":"8.7.3"
+    "mongoose":"8.7.1"
   }
 }
