@@ -5,7 +5,7 @@ const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, 
 const apkdl = require('../lib/apkdl')
 
 cmd({
-    pattern: "apk",
+    pattern: "dapk",
     react: "📥",
     dontAddCommandList: true,
     filename: __filename
