@@ -1,104 +1,123 @@
-// YT MP3 DOWNLOAD COMMAND 
+const { cmd, commands } = require('../command');
+const fg = require('api-dylux');
+const yts = require('yt-search');
 
-const { cmd } = require('../command')
-const fg = require('api-dylux')
-const yts = require('yt-search')
-const { fetchJson } = require('../lib/functions')
-
-const apilink = 'https://dark-yasiya-api-new.vercel.app/search/yt?text=pandam%20alla' // API LINK ( DO NOT CHANGE THIS!! )
-
+// Command for downloading song
 cmd({
-    pattern: "song",
-    desc: "download songs.",
-    category: "download",
-    react: "🎧",
-    filename: __filename
-},
-async(conn, mek, m,{from, reply, q}) => {
-try{
+  'pattern': 'song',
+  'react': '🎵',
+  'desc': 'Search and get details from youtube.',
+  'category': 'all',
+  'filename': __filename
+}, async (bot, message, args) => {
+  try {
+    if (!args.q) return args.reply('❌Please give me URL or title');
 
-if(!q) return reply('Give me song name or url !')
-    
-const search = await fetchJson(`${apilink}/search/yt?q=${q}`)
-const data = search.result.data[0];
-const url = data.url
-    
-const ytdl = await fetchJson(`${apilink}/download/ytmp3?url=${data.url}`)
-    
-let message = `‎‎
-*──────────────────*
-_*🪀 SONG DＯＷＮＬＯＤＥＲ 🪀*_
-*──────────────────*
+    const searchResults = await yts(args.q);
+    const video = searchResults.videos[0];
+    const videoUrl = video.url;
 
- 🎵 ‎Title: ${data.title}
- ⏱ Duration: ${data.timestamp}
- 🌏 Uploaded: ${data.ago}
- 🧿 Views: ${data.views}
- 🤵 Author: ${data.author.name}
-  📎 Url: ${data.url}
-  
-  🪀 DARK-ALFHA-MD 🪀
-`
-  
-await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message }, { quoted : mek })
-  
-// SEND AUDIO NORMAL TYPE and DOCUMENT TYPE
-await conn.sendMessage(from, { audio: { url: ytdl.result.dl_link }, mimetype: "audio/mpeg" }, { quoted: mek })
-await conn.sendMessage(from, { document: { url: ytdl.result.dl_link }, mimetype: "audio/mpeg", fileName: data.title + ".mp3", caption: `${data.title}`}, { quoted: mek })
-  
-} catch(e){
-console.log(e)
-reply(e)
-}
-})
+    let details = '*•.¸♡ 💃QUEEN KENZI MD 🤍 AUDIO-DOWNLOADER🎶 ♡¸.•*\n|__________________________\n| 🛸title : ' +
+      video.title + '\n| 🎠description : ' + video.description + '\n| 🦄time : ' + video.timestamp + '\n| 🔮views : ' +
+      video.views + '\n| thumbnail : ' + video.thumbnail + '\n|__________________________\n';
 
+    // Send thumbnail
+    await bot.sendMessage(args.from, {
+      image: { url: video.thumbnail },
+      caption: details
+    }, { quoted: message });
+
+    // Download audio
+    const audioData = await fg.yta(videoUrl);
+    const audioUrl = audioData.dl_url;
+    await bot.sendMessage(args.from, {
+      audio: { url: audioUrl },
+      mimetype: 'audio/mpeg',
+      caption: 'Download song'
+    }, { quoted: message });
+
+    // Send as document
+    await bot.sendMessage(args.from, {
+      document: { url: audioUrl },
+      mimetype: 'audio/mpeg',
+      fileName: video.title + '.mp3',
+      caption: '*©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅᴀʀᴋɴᴇᴏɴᴄʏʙᴇʀꜱ*'
+    }, { quoted: message });
+  } catch (error) {
+    console.log(error);
+    args.reply('' + error);
+  }
+});
+
+// Command for downloading video
 cmd({
-    pattern: "video",
-    desc: "downlode videos",
-    category: "downlode",
-    react: "🎬",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("*Please give me a title*")
-let search = await yts(q)
-let link = search.all[0].url
-let desc = `
-*──────────────────*
-_*📽️ VIDEO DＯＷＮＬＯＤＥＲ 📽️*_
-*──────────────────*
+  'pattern': 'video',
+  'react': '🎬',
+  'desc': 'Download YouTube video',
+  'category': 'downlod',
+  'filename': __filename
+}, async (bot, message, args) => {
+  try {
+    if (!args.q) return args.reply('❌Please give me URL or title');
 
-📜 *Title :* ${search.all[0].title}
+    const searchResults = await yts(args.q);
+    const video = searchResults.videos[0];
+    const videoUrl = video.url;
 
-📜 *Description :* ${search.all[0].description}
+    let details = '\n*•.¸♡ 💃QUEEN KENZI MD 🤍 VIDEO-DOWNLOADER📽️ ♡¸.•*\n|__________________________\n| 🛸title : ' +
+      video.title + '\n| 🎠description : ' + video.description + '\n| 🎠time : ' + video.timestamp + '\n| 🔮views : ' +
+      video.views + '\n| thumbnail : ' + video.thumbnail + '\n|__________________________\n';
 
-📜 *Duration :* ${search.all[0].timestamp}
+    // Send thumbnail
+    await bot.sendMessage(args.from, {
+      image: { url: video.thumbnail },
+      caption: details
+    }, { quoted: message });
 
-📜 *Ago :* ${search.all[0].ago}
+    // Download video
+    const videoData = await fg.ytv(videoUrl);
+    const videoDownloadUrl = videoData.dl_url;
+    await bot.sendMessage(args.from, {
+      video: { url: videoDownloadUrl },
+      mimetype: 'video/mp4',
+      caption: 'Download video'
+    }, { quoted: message });
 
-📜 *Views :* ${search.all[0].views}
+    // Send as document
+    await bot.sendMessage(args.from, {
+      document: { url: videoDownloadUrl },
+      mimetype: 'video/mp4',
+      fileName: video.title + '.mp4',
+      caption: 'Download video'
+    }, { quoted: message });
+  } catch (error) {
+    console.log(error);
+    args.reply('' + error);
+  }
+});
 
-📜 *URL :* ${search.all[0].url}
+// Command for YouTube search
+cmd({
+  'pattern': 'yts',
+  'alias': ['ytsearch'],
+  'use': '.yts <search terms>',
+  'react': '🔎',
+  'desc': 'Search for YouTube videos',
+  'category': 'search',
+  'filename': __filename
+}, async (bot, message, args) => {
+  try {
+    if (!args.q) return args.reply('*Please give me words to search*');
 
-> MALAKA-MD
-`
+    const searchResults = await yts(args.q);
+    let resultText = '';
+    searchResults.videos.map(video => {
+      resultText += ` *💃${video.title}*\n🔗 ${video.url}\n\n`;
+    });
 
-await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
-
-
-        let data = await fetchJson (`https://dark-yasiya-api-new.vercel.app/search/yt?text=pandam%20alla=${link}`)
-
-await conn.sendMessage(from, {
-  video: {url: data.result.downloadLink},
-mimetype: "video/mp4",
- fileName: `${data.result.title}.mp4`,caption: `*©ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·* 👩‍💻`}, { quoted: mek })
-
-}catch(e){
-console.log(e)
-reply(`${e}`)
-}
-})
-
-
-// FOLLOW US : https://github.com/Malaka-KG/DARK_ALFHA_MD_V1
+    await bot.sendMessage(args.from, { text: resultText }, { quoted: message });
+  } catch (error) {
+    console.log(error);
+    args.reply('*Error !!*');
+  }
+});
