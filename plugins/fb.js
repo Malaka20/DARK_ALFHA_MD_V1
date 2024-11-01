@@ -5,7 +5,7 @@ const { cmd, commands } = require('../command')
 // FETCH API URL
 let baseUrl;
 (async () => {
-    let baseUrlGet = await fetchJson(`https://dark-yasiya-api-new.vercel.app`)
+    let baseUrlGet = await fetchJson(`https://api.nyxs.pw/dl/fb?url=`)
     baseUrl = baseUrlGet.api
 })();
 
