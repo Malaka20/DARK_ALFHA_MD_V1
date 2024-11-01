@@ -5,7 +5,7 @@ const { cmd, commands } = require('../command')
 // FETCH API URL
 let baseUrl;
 (async () => {
-    let baseUrlGet = await fetchJson(`https://api.nyxs.pw/dl/fb?url=`)
+    let baseUrlGet = await fetchJson(`https://photooxy.com/search?q=Fb`)
     baseUrl = baseUrlGet.api
 })();
 
