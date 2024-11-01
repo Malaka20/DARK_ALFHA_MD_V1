@@ -1,47 +1,62 @@
-// Deobfuscated version of the JavaScript
+const { fetchJson } = require('../lib/functions')
+const config = require('../config')
+const { cmd, commands } = require('../command')
 
-const { cmd, commands } = require('../command');
+// FETCH API URL
+let baseUrl;
+(async () => {
+    let baseUrlGet = await fetchJson(`https://dark-yasiya-api-new.vercel.app`)
+    baseUrl = baseUrlGet.api
+})();
 
-// Define Facebook downloader command
+
+const yourName = "*©ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛッ*";
+
+
+
+//fb downloader
 cmd({
-    pattern: 'fb',
-    react: '🔃',
-    desc: 'Download Facebook video',
-    category: 'download',
+    pattern: "fb",
+    alias: ["facebook"],
+    desc: "download fb videos",
+    category: "download",
+    react: "🔎",
     filename: __filename
-}, async (message, chat, context, options) => {
-    const { from, quoted, body, q, reply } = options;
-    if (!q) return reply("Please provide a valid URL.");
-    if (!q.includes("facebook.com")) return reply("Invalid Facebook URL.");
+},
+async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        const response = await fetch(`https://api.example.com/api/fdown?url=${q}`);
-        const data = await response.json();
-        await message.sendMessage(from, { video: { url: data.sd }, caption: "SD Quality" }, { quoted: chat });
-        await message.sendMessage(from, { video: { url: data.hd }, caption: "HD Quality" }, { quoted: chat });
-    } catch (error) {
-        console.error(error);
-        reply("An error occurred while processing the request.");
+        if (!q && !q.startsWith("https://")) return reply("give me fb url")
+        //fetch data from api  
+        let data = await fetchJson(`${baseUrl}/api/fdown?url=${q}`)
+        reply("*Downloading...*")
+        //send video (hd,sd)
+        await conn.sendMessage(from, { video: { url: data.data.hd }, mimetype: "video/mp4", caption: `- HD\n\n ${yourName}` }, { quoted: mek })
+        await conn.sendMessage(from, { video: { url: data.data.sd }, mimetype: "video/mp4", caption: `- SD \n\n ${yourName}` }, { quoted: mek })  
+    } catch (e) {
+        console.log(e)
+        reply(`${e}`)
     }
-});
+})
 
-// Define TikTok downloader command
+
+//gdrive(google drive) dl
 cmd({
-    pattern: 'tiktok',
-    react: '⬇',
-    desc: 'Download TikTok video',
-    category: 'download',
+    pattern: "gdrive",
+    alias: ["googledrive"],
+    desc: "download gdrive files",
+    category: "download",
+    react: "🔎",
     filename: __filename
-}, async (message, chat, context, options) => {
-    const { from, quoted, body, q, reply } = options;
-    if (!q) return reply("Please provide a valid URL.");
-    if (!q.includes("tiktok.com")) return reply("Invalid TikTok URL.");
+},
+async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        const response = await fetch(`https://api.example.com/api/tiktokdl?url=${q}`);
-        const data = await response.json();
-        await message.sendMessage(from, { video: { url: data.no_wm }, caption: "No Watermark" }, { quoted: chat });
-        await message.sendMessage(from, { audio: { url: data.audio }, mimetype: 'audio/mpeg' }, { quoted: chat });
-    } catch (error) {
-        console.error(error);
-        reply("An error occurred while processing the request.");
+        if (!q && !q.startsWith("https://")) return reply("give me gdrive url")
+        //fetch data from api  
+        let data = await fetchJson(`${baseUrl}/api/gdrivedl?url=${q}`)
+        reply("*Downloading...*")
+        await conn.sendMessage(from, { document: { url: data.data.download }, fileName: data.data.fileName, mimetype: data.data.mimeType, caption: `${data.data.fileName}\n\n${yourName}` }, { quoted: mek })                                                                                                                 
+    } catch (e) {
+        console.log(e)
+        reply(`${e}`)
     }
-});
+})
