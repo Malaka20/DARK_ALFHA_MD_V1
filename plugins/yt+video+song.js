@@ -6,7 +6,7 @@ const {
   addAudioMetaData,
   // genListMessage,
   generateList,
-} = require('../lib/')
+} = require('../lib/functions')
 const ytIdRegex =
   /(?:http(?:s|):\/\/|)(?:(?:www\.|)youtube(?:\-nocookie|)\.com\/(?:watch\?.*(?:|\&)v=|embed|shorts\/|v\/)|youtu\.be\/)([-_0-9A-Za-z]{11})/
 
