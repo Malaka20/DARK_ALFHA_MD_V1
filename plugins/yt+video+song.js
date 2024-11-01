@@ -5,7 +5,7 @@ const fg = require('api-dylux')
 const yts = require('yt-search')
 const { fetchJson } = require('../lib/functions')
 
-const apilink = 'https://dark-yasiya-api-new.vercel.app' // API LINK ( DO NOT CHANGE THIS!! )
+const apilink = 'https://dark-yasiya-api-new.vercel.app/search/yt?text=pandam%20alla' // API LINK ( DO NOT CHANGE THIS!! )
 
 cmd({
     pattern: "song",
@@ -87,7 +87,7 @@ _*📽️ VIDEO DＯＷＮＬＯＤＥＲ 📽️*_
 await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
 
 
-        let data = await fetchJson (`https://dark-yasiya-api-new.vercel.app=${link}`)
+        let data = await fetchJson (`https://dark-yasiya-api-new.vercel.app/search/yt?text=pandam%20alla=${link}`)
 
 await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
