@@ -1,27 +1,47 @@
-const { cmd, commands } = require('../command'); // Using actual paths and variables
+// Deobfuscated version of the JavaScript
 
+const { cmd, commands } = require('../command');
+
+// Define Facebook downloader command
 cmd({
-  pattern: 'fb',
-  react: '🔃',
-  desc: 'download facebook video',
-  category: 'download',
-  filename: __filename
-}, async (context, reply, msg, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins }) => {
-  try {
-    if (!q) return reply('please give me a valid URL ❗');
-    if (!q.includes('facebook.com')) return reply("That's not a Facebook URL ❕");
+    pattern: 'fb',
+    react: '🔃',
+    desc: 'Download Facebook video',
+    category: 'download',
+    filename: __filename
+}, async (message, chat, context, options) => {
+    const { from, quoted, body, q, reply } = options;
+    if (!q) return reply("Please provide a valid URL.");
+    if (!q.includes("facebook.com")) return reply("Invalid Facebook URL.");
+    try {
+        const response = await fetch(`https://api.example.com/api/fdown?url=${q}`);
+        const data = await response.json();
+        await message.sendMessage(from, { video: { url: data.sd }, caption: "SD Quality" }, { quoted: chat });
+        await message.sendMessage(from, { video: { url: data.hd }, caption: "HD Quality" }, { quoted: chat });
+    } catch (error) {
+        console.error(error);
+        reply("An error occurred while processing the request.");
+    }
+});
 
-    const response = await fetch(`https://api.apify.com/v2/acts/pocesar~download-youtube-video/runs?token=$API_TOKEN`);
-    const data = await response.json();
-    const sdVideo = data.data.sd;
-    const hdVideo = data.data.hd;
-
-    await reply('*🌸DOWNLOADING· · ·🌸*\n> ALEXA-MD');
-    await context.sendMessage(from, { video: { url: sdVideo }, caption: '🌸 SD QUALITY 🌸\n > ALEXA-MD', mimetype: 'video/mp4' }, { quoted });
-    await context.sendMessage(from, { video: { url: hdVideo }, caption: '🌸 HD QUALITY 🌸\n > ALEXA-MD', mimetype: 'video/mp4' }, { quoted });
-}catch(e){
-console.log(e)
-reply(`${e}`)
-}
-})
-
+// Define TikTok downloader command
+cmd({
+    pattern: 'tiktok',
+    react: '⬇',
+    desc: 'Download TikTok video',
+    category: 'download',
+    filename: __filename
+}, async (message, chat, context, options) => {
+    const { from, quoted, body, q, reply } = options;
+    if (!q) return reply("Please provide a valid URL.");
+    if (!q.includes("tiktok.com")) return reply("Invalid TikTok URL.");
+    try {
+        const response = await fetch(`https://api.example.com/api/tiktokdl?url=${q}`);
+        const data = await response.json();
+        await message.sendMessage(from, { video: { url: data.no_wm }, caption: "No Watermark" }, { quoted: chat });
+        await message.sendMessage(from, { audio: { url: data.audio }, mimetype: 'audio/mpeg' }, { quoted: chat });
+    } catch (error) {
+        console.error(error);
+        reply("An error occurred while processing the request.");
+    }
+});
