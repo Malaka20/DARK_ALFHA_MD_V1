@@ -2,16 +2,7 @@ const { fetchJson } = require('../lib/functions')
 const config = require('../config')
 const { cmd, commands } = require('../command')
 
-// FETCH API URL
-let baseUrl;
-(async () => {
-    let baseUrlGet = await fetchJson(`https://dark-yasiya-api-new.vercel.app/news`)
-    baseUrl = baseUrlGet.api
-})();
-
-
 const yourName = "*©ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛッ*";
-
 
 
 //fb downloader
