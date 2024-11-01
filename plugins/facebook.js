@@ -5,7 +5,7 @@ const { cmd, commands } = require('../command')
 // FETCH API URL
 let baseUrl;
 (async () => {
-    let baseUrlGet = await fetchJson(`https://api-pink-venom.vercel.app/`)
+    let baseUrlGet = await fetchJson(`https://api-pink-venom.vercel.app/api/fbdl?url=https://www.facebook.com/share/v/96sTSx436kHcRmya/?mibextid=SphRi8`)
     baseUrl = baseUrlGet.api
 })();
 
