@@ -1,63 +1,27 @@
-const { fetchJson } = require('../lib/functions')
-const config = require('../config')
-const { cmd, commands } = require('../command')
+const { cmd, commands } = require('../command'); // Using actual paths and variables
 
-// FETCH API URL
-let baseUrl;
-(async () => {
-    let baseUrlGet = await fetchJson(`https://raw.githubusercontent.com/prabathLK/PUBLIC-URL-HOST-DB/main/public/url.json`)
-    baseUrl = baseUrlGet.api
-})();
-
-
-const yourName = "*©ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛッ*";
-
-
-
-//fb downloader
 cmd({
-    pattern: "fb",
-    alias: ["facebook"],
-    desc: "download fb videos",
-    category: "download",
-    react: "🔎",
-    filename: __filename
-},
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me fb url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/fdown?url=${q}`)
-        reply("*Downloading...*")
-        //send video (hd,sd)
-        await conn.sendMessage(from, { video: { url: data.data.hd }, mimetype: "video/mp4", caption: `- HD\n\n ${yourName}` }, { quoted: mek })
-        await conn.sendMessage(from, { video: { url: data.data.sd }, mimetype: "video/mp4", caption: `- SD \n\n ${yourName}` }, { quoted: mek })  
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
+  pattern: 'fb',
+  react: '🔃',
+  desc: 'download facebook video',
+  category: 'download',
+  filename: __filename
+}, async (context, reply, msg, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins }) => {
+  try {
+    if (!q) return reply('please give me a valid URL ❗');
+    if (!q.includes('facebook.com')) return reply("That's not a Facebook URL ❕");
 
+    const response = await fetch(`https://api.apify.com/v2/acts/pocesar~download-youtube-video/runs?token=$API_TOKEN`);
+    const data = await response.json();
+    const sdVideo = data.data.sd;
+    const hdVideo = data.data.hd;
 
-//gdrive(google drive) dl
-cmd({
-    pattern: "gdrive",
-    alias: ["googledrive"],
-    desc: "download gdrive files",
-    category: "download",
-    react: "🔎",
-    filename: __filename
-},
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me gdrive url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/gdrivedl?url=${q}`)
-        reply("*Downloading...*")
-        await conn.sendMessage(from, { document: { url: data.data.download }, fileName: data.data.fileName, mimetype: data.data.mimeType, caption: `${data.data.fileName}\n\n${yourName}` }, { quoted: mek })                                                                                                                 
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
+    await reply('*🌸DOWNLOADING· · ·🌸*\n> ALEXA-MD');
+    await context.sendMessage(from, { video: { url: sdVideo }, caption: '🌸 SD QUALITY 🌸\n > ALEXA-MD', mimetype: 'video/mp4' }, { quoted });
+    await context.sendMessage(from, { video: { url: hdVideo }, caption: '🌸 HD QUALITY 🌸\n > ALEXA-MD', mimetype: 'video/mp4' }, { quoted });
+}catch(e){
+console.log(e)
+reply(`${e}`)
+}
 })
 
