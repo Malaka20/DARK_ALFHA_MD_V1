@@ -1,123 +1,57 @@
-const { cmd, commands } = require('../command');
-const fg = require('api-dylux');
-const yts = require('yt-search');
+//Created by Sadeesha Coder 🙋
 
-// Command for downloading song
+const {cmd , commands} = require('../command')
+const yts = require('yt-search')
+const { fetchJson } = require("../lib/functions")
+
 cmd({
-  'pattern': 'song',
-  'react': '🎵',
-  'desc': 'Search and get details from youtube.',
-  'category': 'all',
-  'filename': __filename
-}, async (bot, message, args) => {
-  try {
-    if (!args.q) return args.reply('❌Please give me URL or title');
+    pattern: "video",
+    desc: "downlode videos",
+    category: "downlode",
+    react: "🎬",
+    filename: __filename
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+if(!q) return reply("*Please give me a title*")
+let search = await yts(q)
+let link = search.all[0].url
+let desc = `
+*──────────────────*
+_*🌸 VIDEO DＯＷＮＬＯＤＥＲ 🌸*_
+*──────────────────*
 
-    const searchResults = await yts(args.q);
-    const video = searchResults.videos[0];
-    const videoUrl = video.url;
+🌸 *Title :* ${search.all[0].title}
 
-    let details = '*•.¸♡ 💃QUEEN KENZI MD 🤍 AUDIO-DOWNLOADER🎶 ♡¸.•*\n|__________________________\n| 🛸title : ' +
-      video.title + '\n| 🎠description : ' + video.description + '\n| 🦄time : ' + video.timestamp + '\n| 🔮views : ' +
-      video.views + '\n| thumbnail : ' + video.thumbnail + '\n|__________________________\n';
+🌸 *Description :* ${search.all[0].description}
 
-    // Send thumbnail
-    await bot.sendMessage(args.from, {
-      image: { url: video.thumbnail },
-      caption: details
-    }, { quoted: message });
+🌸 *Duration :* ${search.all[0].timestamp}
 
-    // Download audio
-    const audioData = await fg.yta(videoUrl);
-    const audioUrl = audioData.dl_url;
-    await bot.sendMessage(args.from, {
-      audio: { url: audioUrl },
-      mimetype: 'audio/mpeg',
-      caption: 'Download song'
-    }, { quoted: message });
+🌸 *Ago :* ${search.all[0].ago}
 
-    // Send as document
-    await bot.sendMessage(args.from, {
-      document: { url: audioUrl },
-      mimetype: 'audio/mpeg',
-      fileName: video.title + '.mp3',
-      caption: '*©ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅᴀʀᴋɴᴇᴏɴᴄʏʙᴇʀꜱ*'
-    }, { quoted: message });
-  } catch (error) {
-    console.log(error);
-    args.reply('' + error);
-  }
-});
+🌸 *Views :* ${search.all[0].views}
 
-// Command for downloading video
-cmd({
-  'pattern': 'video',
-  'react': '🎬',
-  'desc': 'Download YouTube video',
-  'category': 'downlod',
-  'filename': __filename
-}, async (bot, message, args) => {
-  try {
-    if (!args.q) return args.reply('❌Please give me URL or title');
+🌸 *URL :* ${search.all[0].url}
 
-    const searchResults = await yts(args.q);
-    const video = searchResults.videos[0];
-    const videoUrl = video.url;
+_📤ᴜᴘʟᴏᴅɪɴɢ ʏᴏᴜʀ ᴀᴜᴅɪᴏ ꜰɪʟʟ📤_
 
-    let details = '\n*•.¸♡ 💃QUEEN KENZI MD 🤍 VIDEO-DOWNLOADER📽️ ♡¸.•*\n|__________________________\n| 🛸title : ' +
-      video.title + '\n| 🎠description : ' + video.description + '\n| 🎠time : ' + video.timestamp + '\n| 🔮views : ' +
-      video.views + '\n| thumbnail : ' + video.thumbnail + '\n|__________________________\n';
 
-    // Send thumbnail
-    await bot.sendMessage(args.from, {
-      image: { url: video.thumbnail },
-      caption: details
-    }, { quoted: message });
+> ALEXA-MD
+`
 
-    // Download video
-    const videoData = await fg.ytv(videoUrl);
-    const videoDownloadUrl = videoData.dl_url;
-    await bot.sendMessage(args.from, {
-      video: { url: videoDownloadUrl },
-      mimetype: 'video/mp4',
-      caption: 'Download video'
-    }, { quoted: message });
+await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
 
-    // Send as document
-    await bot.sendMessage(args.from, {
-      document: { url: videoDownloadUrl },
-      mimetype: 'video/mp4',
-      fileName: video.title + '.mp4',
-      caption: 'Download video'
-    }, { quoted: message });
-  } catch (error) {
-    console.log(error);
-    args.reply('' + error);
-  }
-});
 
-// Command for YouTube search
-cmd({
-  'pattern': 'yts',
-  'alias': ['ytsearch'],
-  'use': '.yts <search terms>',
-  'react': '🔎',
-  'desc': 'Search for YouTube videos',
-  'category': 'search',
-  'filename': __filename
-}, async (bot, message, args) => {
-  try {
-    if (!args.q) return args.reply('*Please give me words to search*');
+        let data = await fetchJson (`https://api-pink-venom.vercel.app/api/ytmp4?url=${link}`)
 
-    const searchResults = await yts(args.q);
-    let resultText = '';
-    searchResults.videos.map(video => {
-      resultText += ` *💃${video.title}*\n🔗 ${video.url}\n\n`;
-    });
+await conn.sendMessage(from, {
+  video: {url: data.result.downloadLink},
+mimetype: "video/mp4",
+ fileName: `${data.result.title}.mp4`,caption: `*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·* 🧑🏻‍💻`}, { quoted: mek })
 
-    await bot.sendMessage(args.from, { text: resultText }, { quoted: message });
-  } catch (error) {
-    console.log(error);
-    args.reply('*Error !!*');
-  }
-});
+}catch(e){
+    console.log(e)
+    reply(`${e}`)
+}
+}
+)
