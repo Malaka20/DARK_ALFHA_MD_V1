@@ -3,7 +3,7 @@
 const { cmd } = require('../command')
 const { fetchJson } = require('../lib/functions')
 
-const apilink = 'https://youtube.com/watch?v=0geqOYqwL0s' // API LINK ( DO NOT CHANGE THIS!! )
+const apilink = 'https://dark-yasiya-api-new.vercel.app' // API LINK ( DO NOT CHANGE THIS!! )
 
 cmd({
     pattern: "song",
