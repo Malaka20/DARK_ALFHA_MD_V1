@@ -8,8 +8,6 @@ const {
   generateList,
 } = require('../lib/functions')
 const { cmd } = require('../command')
-const fg = require('api-dylux')
-const yts = require('yt-search')
 const ytIdRegex =
   /(?:http(?:s|):\/\/|)(?:(?:www\.|)youtube(?:\-nocookie|)\.com\/(?:watch\?.*(?:|\&)v=|embed|shorts\/|v\/)|youtu\.be\/)([-_0-9A-Za-z]{11})/
 
