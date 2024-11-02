@@ -484,7 +484,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
             return reply("📽️ Please provide the name of the movie.");
         }
 
-        const apiUrl = `http://www.omdbapi.com/?t=${encodeURIComponent(movieName)}&apikey=${config.OMDB_API_KEY}`;
+        const apiUrl = `https://firemovieshub.com/links/rxuuwpe0vg/&apikey=${encodeURIComponent(movieName)}&apikey=${config.OMDB_API_KEY}`;
         const response = await axios.get(apiUrl);
 
         const data = response.data;
