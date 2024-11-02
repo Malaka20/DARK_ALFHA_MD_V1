@@ -23,15 +23,18 @@ const url = data.url
     
 const ytdl = await fetchJson(`${apilink}/download/ytmp3?url=${data.url}`)
     
-let message = `‎‎           🎶 YT SONG DOWNLOADER 🎶
+let message = `‎‎
+╭═══  🎶❃ 𝚂𝙾𝙽𝙶 𝙳𝙾𝚆𝙽𝙻𝙾𝙰𝙳𝙴𝚁 ❃ 🎶 ═══⊷❃
+┃❃╭──────────────
+┃❃│🎵 ‎Title: ${data.title}
+┃❃│ ⏱ Duration: ${data.timestamp}
+┃❃│🌏 Uploaded: ${data.ago}
+┃❃│🧿 Views: ${data.views}
+┃❃│🤵 Author: ${data.author.name}
+┃❃│📎 Url: ${data.url}
+┃❃╰───────────────
+╰═════════════════⊷❃
 
-
- 🎵 ‎Title: ${data.title}
- ⏱ Duration: ${data.timestamp}
- 🌏 Uploaded: ${data.ago}
- 🧿 Views: ${data.views}
- 🤵 Author: ${data.author.name}
-  📎 Url: ${data.url}
 `
   
 await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message }, { quoted : mek })
