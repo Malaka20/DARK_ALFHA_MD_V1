@@ -44,7 +44,7 @@ await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},
 await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
 mimetype: "video/mp4",
- fileName: `${data.result.title}.mp4`,caption: `*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·* 🧑🏻‍💻`}, { quoted: mek })
+ fileName: `${data.result.title}.mp4`,caption: `*© 𝘔𝘢𝘭𝘢𝘬𝘢 · · ·* 👩‍💻`}, { quoted: mek })
 
 }catch(e){
     console.log(e)
