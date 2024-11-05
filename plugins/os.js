@@ -3,8 +3,6 @@
 const config = require('../config')
 const { cmd, commands } = require('../command')
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
-const os = require('os')
-const { exec } = require('child_process')
 
 cmd({
     pattern: "os",
