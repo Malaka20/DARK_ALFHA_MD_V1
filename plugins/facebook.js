@@ -1,4 +1,4 @@
-import pkg, { prepareWAMessageMedia } from '@whiskeysockets/baileys';
+const {cmd , commands} = require('../command');
 const { generateWAMessageFromContent, proto } = pkg;
 import getFBInfo from '@xaviabot/fb-downloader';
 
