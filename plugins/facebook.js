@@ -27,15 +27,12 @@ try{
     return reply('*`No resalt found.`*');
   }
 
-  if (selectedMedia) {
-        try {
-          const videoQualities = [];
-          if (selectedMedia.sd) {
-            videoQualities.push({ resolution: 'SD', url: selectedMedia.sd });
-          }
-          if (selectedMedia.hd) {
-            videoQualities.push({ resolution: 'HD', url: selectedMedia.hd });
-          }
+  let data;
+  try {
+    data = result.find(i => i.resolution === "720p (HD)") || result.find(i => i.resolution === "360p (SD)");
+  } catch (error) {
+    return reply('*`Error data loss.`*');
+  }
 
   if (!data) {
     return reply('*`No data found.`*');
