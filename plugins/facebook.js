@@ -1,5 +1,4 @@
 const {cmd , commands} = require('../command');
-const { generateWAMessageFromContent, proto } = pkg;
 import getFBInfo from '@xaviabot/fb-downloader';
 
 const fbSearchResultsMap = new Map();
