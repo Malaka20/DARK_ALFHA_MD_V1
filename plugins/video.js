@@ -43,7 +43,7 @@ _*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
 await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
 
 
-        let data = await fetchJson (`https://api-pink-venom.vercel.app/api/ytmp4?url=${link}`)
+        let data = await fetchJson (`https://api.botwa.space/api/ytmp4?url=https%3A%2F%2Fyoutube.com%2Fwatch%3Fv%3DVPIom0Azrkg&apikey=ltOjD3oGgcqp=${link}`)
 
 await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
