@@ -1,57 +1,54 @@
+//Created by Sadeesha Coder 🙋
 
-const {cmd , commands} = require('../command');
-const { igdl } = require('ruhend-scraper');
+const {cmd , commands} = require('../command')
 const yts = require('yt-search')
+const { fetchJson } = require("../lib/functions")
 
 cmd({
     pattern: "video",
-    desc: "To download videos.",
-    category: "download",
+    desc: "downlode videos",
+    category: "downlode",
+    react: "🎬",
     filename: __filename
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
+if(!q) return reply("*Please give me a title*")
+let search = await yts(q)
+let link = search.all[0].url
+let desc = `
+*──────────────────*
+_*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
+*──────────────────*
 
-  if (!args[0]) {
-    return reply('*`Please give a waild yts link`*');
-  }
+ *Title :* ${search.all[0].title}
 
-  await m.react('🕒');
-  let res;
-  try {
-    res = await yts(args[0]);
-  } catch (error) {
-    return reply('*`Error obtaining data.`*');
-  }
+ *Description :* ${search.all[0].description}
 
-  let result = res.data;
-  if (!result || result.length === 0) {
-    return reply('*`No resalt found.`*');
-  }
+ *Duration :* ${search.all[0].timestamp}
 
-  let data;
-  try {
-    data = result.find(i => i.resolution === "720p (HD)") || result.find(i => i.resolution === "360p (SD)");
-  } catch (error) {
-    return reply('*`Error data loss.`*');
-  }
+ *Ago :* ${search.all[0].ago}
 
-  if (!data) {
-    return reply('*`No data found.`*');
-  }
+ *Views :* ${search.all[0].views}
 
-  await m.react('✅');
-  let video = data.url;
-  let dev = '© 2024 Queen Anju FB Downloader | Download with ease, cherish forever.'
-  
-  try {
-    await conn.sendMessage(m.chat, { video: { url: video }, caption: dev, fileName: 'video.mp4', mimetype: 'video/mp4' }, { quoted: m });
-  } catch (error) {
-    return reply('*`Error download video.`*');
-  await m.react('❌');
-  }
+ *URL :* ${search.all[0].url}
+
+> 𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 👩‍💻
+`
+
+await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
+
+
+        let data = await fetchJson (`https://api.dreaded.site/api/ytdl/video?url=${link}`)
+
+await conn.sendMessage(from, {
+  video: {url: data.result.downloadLink},
+mimetype: "video/mp4",
+ fileName: `${data.result.title}.mp4`,caption: `*© 𝘔𝘢𝘭𝘢𝘬𝘢 · · ·* 👩‍💻`}, { quoted: mek })
+
 }catch(e){
-console.log(e)
-  reply(`${e}`)
+    console.log(e)
+    reply(`${e}`)
 }
-});
+}
+)
