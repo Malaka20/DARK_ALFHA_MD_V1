@@ -1,87 +1,56 @@
-import fg from 'api-dylux';
-import yts from 'yt-search';
 
-const video = async (m, Matrix) => {
-  const prefixMatch = m.body.match(/^[\\/!#.]/);
-  const prefix = prefixMatch ? prefixMatch[0] : '/';
-  const cmd = m.body.startsWith(prefix) ? m.body.slice(prefix.length).split(' ')[0].toLowerCase() : '';
-  const text = m.body.slice(prefix.length + cmd.length).trim();
+const {cmd , commands} = require('../command');
+const { igdl } = require('ruhend-scraper');
 
-  const validCommands = ['video', 'ytmp4', 'vid'];
+cmd({
+    pattern: "video",
+    desc: "To download videos.",
+    category: "download",
+    filename: __filename
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
 
-   if (validCommands.includes(cmd)) {
-    if (!text) return m.reply('Give a YouTube URL or search query HANSAMAL-MD.');
-
-    try {
-      await m.React("🕘");
-
-      // Check if the input is a valid YouTube URL
-      const isUrl = fg.validateURL(text);
-      await m.React("⬇️");
-      
-      if (isUrl) {
-        // If it's a URL, directly use ytdl-core for audio and video
-        const videoStream = fg(text, { filter: 'audioandvideo', quality: 'highest' });
-
-        const videoBuffer = [];
-
-        videoStream.on('data', (chunk) => {
-          videoBuffer.push(chunk);
-        });
-
-        videoStream.on('end', async () => {
-          try {
-            const finalVideoBuffer = Buffer.concat(videoBuffer);
-
-            const videoInfo = await yts({ videoId: ytdl.getURLVideoID(text) });
-    
-            await Matrix.sendMessage(m.from, { video: finalVideoBuffer, mimetype: 'video/mp4', caption: '> © Powered by IMALKAHANSAMAL-𝞛𝘿' }, { quoted: m });
-            await m.React("✅");
-          } catch (err) {
-            console.error('Error sending video:', err);
-            m.reply('Error sending video.');
-            await m.React("❌");
-          }
-        });
-      } else {
-        // If it's a search query, use yt-search for video
-        const searchResult = await yts(text);
-        const firstVideo = searchResult.videos[0];
-        await m.React("⬇️");
-
-        if (!firstVideo) {
-          m.reply('Video not found.');
-          await m.React("❌");
-          return;
-        }
-
-        const videoStream = fg(firstVideo.url, { filter: 'audioandvideo', quality: 'highest' });
-
-        const videoBuffer = [];
-
-        videoStream.on('data', (chunk) => {
-          videoBuffer.push(chunk);
-        });
-
-        videoStream.on('end', async () => {
-          try {
-            const finalVideoBuffer = Buffer.concat(videoBuffer);
-          
-            await Matrix.sendMessage(m.from, { video: finalVideoBuffer, mimetype: 'video/mp4', caption: '> © Powered by HANSAMAL-MD' }, { quoted: mek });
-            await m.React("✅");
-          } catch (err) {
-            console.error('Error sending video:', err);
-            m.reply('Error sending video.');
-            await m.React("❌");
-          }
-        });
-      }
-    } catch (error) {
-      console.error("Error generating response:", error);
-      m.reply('An error occurred while processing your request.');
-      await m.React("❌");
-    }
+  if (!args[0]) {
+    return reply('*`Please give a waild Facebook link`*');
   }
-};
 
-export default video;
+  await m.react('🕒');
+  let res;
+  try {
+    res = await igdl(args[0]);
+  } catch (error) {
+    return reply('*`Error obtaining data.`*');
+  }
+
+  let result = res.data;
+  if (!result || result.length === 0) {
+    return reply('*`No resalt found.`*');
+  }
+
+  let data;
+  try {
+    data = result.find(i => i.resolution === "720p (HD)") || result.find(i => i.resolution === "360p (SD)");
+  } catch (error) {
+    return reply('*`Error data loss.`*');
+  }
+
+  if (!data) {
+    return reply('*`No data found.`*');
+  }
+
+  await m.react('✅');
+  let video = data.url;
+  let dev = '© 2024 Queen Anju FB Downloader | Download with ease, cherish forever.'
+  
+  try {
+    await conn.sendMessage(m.chat, { video: { url: video }, caption: dev, fileName: 'video.mp4', mimetype: 'video/mp4' }, { quoted: m });
+  } catch (error) {
+    return reply('*`Error download video.`*');
+  await m.react('❌');
+  }
+}catch(e){
+console.log(e)
+  reply(`${e}`)
+}
+});
