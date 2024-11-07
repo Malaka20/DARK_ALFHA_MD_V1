@@ -1,63 +1,58 @@
 //Created by Sadeesha Coder 🙋
 
-const config = require('../config')
 const {cmd , commands} = require('../command')
-const fg = require('api-dylux')
 const yts = require('yt-search')
+const { fetchJson } = require("../lib/functions")
 
 cmd({
     pattern: "video",
-    desc: "download videos.",
-    react: "📽️",
-    category: "download",
+    desc: "downlode videos",
+    category: "downlode",
+    react: "🎬",
     filename: __filename
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-if(!q) return reply(">🔗Please give me a URL or TITLE🔗*")
-const search = await yts (q) 
-const data = search.videos[0];
-const url = data.url
+if(!q) return reply("*Please give me a title*")
+let search = await yts(q)
+let link = search.all[0].url
+let desc = `
+*──────────────────*
+_*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
+*──────────────────*
 
-let desc = `*❮❮❮ THENU - MD VIDEO DOWNLOADER ❯❯❯*
+ *Title :* ${search.all[0].title}
 
-> ➤ *𝗧𝗜𝗧𝗟𝗘* - ${data.title}
+ *Description :* ${search.all[0].description}
 
-> ➤ *𝗩𝗜𝗘𝗪𝗦* - ${data.views}
+ *Duration :* ${search.all[0].timestamp}
 
-> ➤ *𝗗𝗘𝗦𝗖𝗥𝗜𝗣𝗧𝗜𝗢𝗡* - ${data.description}
+ *Ago :* ${search.all[0].ago}
 
-> ➤ *𝗧𝗜𝗠𝗘* - ${data.timestamp}
+ *Views :* ${search.all[0].views}
 
-> ➤ *𝗔𝗚𝗢* - ${data.ago}
+ *URL :* ${search.all[0].url}
 
-> 🎬 Your video downloading....
+> 𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 👩‍💻
 
-> ꜱɪᴍᴘᴀʟ ᴡᴀᴛꜱ ᴀᴘᴘ ʙᴏᴛ ʙʏ THENU  ᴍᴅ ⚡
-
-> *THENU ᴍᴅ ᴡᴀᴛꜱ ᴀᴘᴘ ʙᴏᴛ ⚟*
- 
 > © Made by Thenula Panapiti.
+
 > ↺ |◁   II   ▷|   ♡
-  `
- await conn.sendMessage(from,{image:{url: data.thumbnail},caption:desc},{quoted:mek})
- 
- //download video
+`
 
- let down = await fg.ytv(url)
- let downloadUrl = down.dl_url
-    
- //send video+ document message 
+await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
 
- await conn.sendMessage(from,{video: {url:downloadUrl},mimetype:"video/mp4",caption:">Thenula Panapiti💕"},{quoted:mek})
- await conn.sendMessage(from,{document: {url:downloadUrl},mimetype:"video/mp4",fileName:data.title + ".mp4",caption:"> Thenula Panapiti💕"},{quoted:mek})
 
- 
+        let data = await fetchJson (`https://api.dreaded.site/api/ytdl/video?url=${link}`)
 
+await conn.sendMessage(from, {
+  video: {url: data.result.downloadLink},
+mimetype: "video/mp4",
+ fileName: `${data.result.title}.mp4`,caption: `*© 𝘔𝘢𝘭𝘢𝘬𝘢 · · ·* 👩‍💻`}, { quoted: mek })
 
 }catch(e){
-  console.log(e)
-  reply(`${e}`)
+    console.log(e)
+    reply(`${e}`)
 }
-})
-
+}
+)
