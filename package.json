@@ -30,6 +30,7 @@
     "wa-sticker-formatter":"4.4.4",
     "mongoose":"8.7.1",
     "ruhend-scraper":"8.0.3",
-    "fb-downloader-new":"0.0.2"
+    "fb-downloader-new":"0.0.2",
+    "ios-news":"1.0.1"
   }
 }
