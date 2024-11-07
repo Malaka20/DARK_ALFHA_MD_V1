@@ -13,13 +13,13 @@ async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender
 try{
 
   if (!args[0]) {
-    return reply('*`Please give a waild Facebook link`*');
+    return reply('*`Please give a waild yts link`*');
   }
 
   await m.react('🕒');
   let res;
   try {
-    res = await igdl(args[0]);
+    res = await yts(args[0]);
   } catch (error) {
     return reply('*`Error obtaining data.`*');
   }
