@@ -1,58 +1,87 @@
-//Created by Sadeesha Coder 🙋
+import fg from 'api-dylux';
+import yts from 'yt-search';
 
-const {cmd , commands} = require('../command')
-const yts = require('yt-search')
-const { fetchJson } = require("../lib/functions")
+const video = async (m, Matrix) => {
+  const prefixMatch = m.body.match(/^[\\/!#.]/);
+  const prefix = prefixMatch ? prefixMatch[0] : '/';
+  const cmd = m.body.startsWith(prefix) ? m.body.slice(prefix.length).split(' ')[0].toLowerCase() : '';
+  const text = m.body.slice(prefix.length + cmd.length).trim();
 
-cmd({
-    pattern: "video",
-    desc: "downlode videos",
-    category: "downlode",
-    react: "🎬",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("*Please give me a title*")
-let search = await yts(q)
-let link = search.all[0].url
-let desc = `
-*──────────────────*
-_*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
-*──────────────────*
+  const validCommands = ['video', 'ytmp4', 'vid'];
 
- *Title :* ${search.all[0].title}
+   if (validCommands.includes(cmd)) {
+    if (!text) return m.reply('Give a YouTube URL or search query HANSAMAL-MD.');
 
- *Description :* ${search.all[0].description}
+    try {
+      await m.React("🕘");
 
- *Duration :* ${search.all[0].timestamp}
+      // Check if the input is a valid YouTube URL
+      const isUrl = fg.validateURL(text);
+      await m.React("⬇️");
+      
+      if (isUrl) {
+        // If it's a URL, directly use ytdl-core for audio and video
+        const videoStream = fg(text, { filter: 'audioandvideo', quality: 'highest' });
 
- *Ago :* ${search.all[0].ago}
+        const videoBuffer = [];
 
- *Views :* ${search.all[0].views}
+        videoStream.on('data', (chunk) => {
+          videoBuffer.push(chunk);
+        });
 
- *URL :* ${search.all[0].url}
+        videoStream.on('end', async () => {
+          try {
+            const finalVideoBuffer = Buffer.concat(videoBuffer);
 
-> 𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 👩‍💻
+            const videoInfo = await yts({ videoId: ytdl.getURLVideoID(text) });
+    
+            await Matrix.sendMessage(m.from, { video: finalVideoBuffer, mimetype: 'video/mp4', caption: '> © Powered by IMALKAHANSAMAL-𝞛𝘿' }, { quoted: m });
+            await m.React("✅");
+          } catch (err) {
+            console.error('Error sending video:', err);
+            m.reply('Error sending video.');
+            await m.React("❌");
+          }
+        });
+      } else {
+        // If it's a search query, use yt-search for video
+        const searchResult = await yts(text);
+        const firstVideo = searchResult.videos[0];
+        await m.React("⬇️");
 
-> © Made by Thenula Panapiti.
+        if (!firstVideo) {
+          m.reply('Video not found.');
+          await m.React("❌");
+          return;
+        }
 
-> ↺ |◁   II   ▷|   ♡
-`
+        const videoStream = fg(firstVideo.url, { filter: 'audioandvideo', quality: 'highest' });
 
-await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
+        const videoBuffer = [];
 
+        videoStream.on('data', (chunk) => {
+          videoBuffer.push(chunk);
+        });
 
-        let data = await fetchJson (`https://api.botwa.space/api/ytmp4?url=https%3A%2F%2Fyoutube.com%2Fwatch%3Fv%3DVPIom0Azrkg&apikey=ltOjD3oGgcqp=${link}`)
+        videoStream.on('end', async () => {
+          try {
+            const finalVideoBuffer = Buffer.concat(videoBuffer);
+          
+            await Matrix.sendMessage(m.from, { video: finalVideoBuffer, mimetype: 'video/mp4', caption: '> © Powered by HANSAMAL-MD' }, { quoted: mek });
+            await m.React("✅");
+          } catch (err) {
+            console.error('Error sending video:', err);
+            m.reply('Error sending video.');
+            await m.React("❌");
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error generating response:", error);
+      m.reply('An error occurred while processing your request.');
+      await m.React("❌");
+    }
+  }
+};
 
-await conn.sendMessage(from, {
-  video: {url: data.result.downloadLink},
-mimetype: "video/mp4",
- fileName: `${data.result.title}.mp4`,caption: `*© 𝘔𝘢𝘭𝘢𝘬𝘢 · · ·* 👩‍💻`}, { quoted: mek })
-
-}catch(e){
-    console.log(e)
-    reply(`${e}`)
-}
-}
-)
+export default video;
