@@ -35,6 +35,10 @@ let message = `‎‎
 ┃❃╰───────────────
 ╰═════════════════⊷
 >𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 👩‍💻
+
+> © Made by Thenula Panapiti.
+
+> ↺ |◁   II   ▷|   ♡
 `
   
 await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message }, { quoted : mek })
