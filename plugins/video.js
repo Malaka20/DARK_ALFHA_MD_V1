@@ -1,6 +1,7 @@
 
 const {cmd , commands} = require('../command');
 const { igdl } = require('ruhend-scraper');
+const yts = require('yt-search')
 
 cmd({
     pattern: "video",
