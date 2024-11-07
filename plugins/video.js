@@ -43,7 +43,7 @@ _*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
 await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
 
 
-        let data = await fetchJson (`https://api.dreaded.site/api/ytdl/video?url=${link}`)
+        let data = await fetchJson (`https://api-pink-venom.vercel.app/api/ytmp4?url=${link}`)
 
 await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
