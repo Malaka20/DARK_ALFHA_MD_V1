@@ -39,6 +39,7 @@
     "cheerio":"1.0.0-rc.12",
     "mime-types":"2.1.35",
     "file-type":"16.5.3",
-    "inrl-dl": "^1.0.0"
+    "inrl-dl": "^1.0.0",
+    "node-fetch": "^2.6.1"
   }
 }
