@@ -17,7 +17,7 @@ else N_FOUND = "*I couldn't find anything :(*"
 var urlneed =''
 if(config.LANG === 'SI') urlneed = "*කරුණාකර Tiktok video url එකක් ලබා දෙන්න*"
 else urlneed = "*Please give me tiktok video url..*"
-
+const apilink = 'https://dark-yasiya-api-new.vercel.app' // API LINK ( DO NOT CHANGE THIS!! )
 
 cmd({
     pattern: "tiktok",
@@ -32,7 +32,7 @@ async(conn, mek, m,{from, l, prefix, quoted, body, isCmd, command, args, q, isGr
 try{
 if (!regtik(q)) return await  reply(urlneed)
 var l = ''
-let tiktok = await fetchJson('https://api.sdbots.tech/tiktok?url=' + q)
+const tiktok = await fetchJson(`${apilink}/download/tiktok?url=${q}`);
 if(tiktok.msg == 'OK') {
 let data = tiktok
 l = {
