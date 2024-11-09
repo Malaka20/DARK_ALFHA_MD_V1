@@ -18,52 +18,36 @@ let search = await yts(q)
 let link = search.all[0].url
 let desc = `
 *──────────────────*
-_*🌸 VIDEO DＯＷＮＬＯＤＥＲ 🌸*_
+_*💗 VIDEO DＯＷＮＬＯＤＥＲ 💗*_
 *──────────────────*
 
-🌸 *Title :* ${search.all[0].title}
+ *Title :* ${search.all[0].title}
 
-🌸 *Description :* ${search.all[0].description}
+ *Description :* ${search.all[0].description}
 
-🌸 *Duration :* ${search.all[0].timestamp}
+ *Duration :* ${search.all[0].timestamp}
 
-🌸 *Ago :* ${search.all[0].ago}
+ *Ago :* ${search.all[0].ago}
 
-🌸 *Views :* ${search.all[0].views}
+ *Views :* ${search.all[0].views}
 
-🌸 *URL :* ${search.all[0].url}
-
-_📤ᴜᴘʟᴏᴅɪɴɢ ʏᴏᴜʀ ᴀᴜᴅɪᴏ ꜰɪʟʟ📤_
+ *URL :* ${search.all[0].url}
 
 
-> ALEXA-MD
+
+
+> DARK_ALFHA_MD
 `
-
-	const sections = [
-    {
-	title: "",
-	rows: [
-	   {title: "1", rowId: prefix + '240p ' + q , description: '240p Quality Video'},
-	   {title: "2", rowId: prefix + '360p ' + q , description: '360p Quality Video'} ,
-           {title: "3", rowId: prefix + '480p ' + q , description: '480p Quality Video'},
-	   {title: "4", rowId: prefix + '720p ' + q , description: '720p Quality Video'} ,
-           {title: "5", rowId: prefix + '1080p ' + q , description: '1080p Quality Video'},
-	   {title: "6", rowId: prefix + '1440p ' + q , description: '1440p Quality Video'} ,
-           {title: "7", rowId: prefix + '2160p ' + q , description: '2160p Quality Video'},
-	   {title: "8", rowId: prefix + 'ytdocv ' + q , description: 'Document type Video'} ,
-	]
-    } 
-]
 
 await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
 
 
-        let data = await fetchJson (`https://api.dreaded.site/api/ytdl/video?url=${link}`)
+        let data = await fetchJson (`https://www.dark-yasiya-api.site/download/ytmp4?url=${link}`)
 
 await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
 mimetype: "video/mp4",
- fileName: `${data.result.title}.mp4`,caption: `*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·* 🧑🏻‍💻`}, { quoted: mek })
+ fileName: `${data.result.title}.mp4`,caption: `*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ · · ·* 👩‍💻`}, { quoted: mek })
 
 }catch(e){
     console.log(e)
