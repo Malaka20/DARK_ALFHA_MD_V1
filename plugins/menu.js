@@ -1,100 +1,112 @@
 const config = require('../config')
-const {cmd , commands} = require('../command')
-const os = require("os")
-const {runtime} = require('../lib/functions')
+const os = require('os')
+const { cmd, commands } = require('../command')
+const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
 
 cmd({
-    pattern: "menu",
-    desc: "To get the menu.",
-    react: "📜",
-    category: "main",
-    filename: __filename
+  pattern: "menu",
+  react: "📜",
+  alias: ["panel","list","commands"],
+  desc: "Get bot\'s command list.",
+  category: "main",
+  use: '.menu',
+  filename: __filename
 },
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
+	var msg = mek
+if(os.hostname().length == 12 ) hostname = 'replit'
+else if(os.hostname().length == 36) hostname = 'heroku'
+else if(os.hostname().length == 8) hostname = 'koyeb'
+else hostname = os.hostname()
+let monspace ='```'
+let monspacenew ='`'
+if(config.ALIVE === "default"){
+ const sections = [
+    {
+	title: "",
+	rows: [
+	    {title: "1", rowId: prefix + 'downmenu' , description: 'Down Commands'},
+	    {title: "2", rowId: prefix + 'searchmenu' , description: 'Search Commands'},
+	    {title: "3", rowId: prefix + 'convertmenu' , description: 'Convert Commands'}, 
+	    {title: "4", rowId: prefix + 'logomenu' , description: 'Logo Commands'},
+	    {title: "5", rowId: prefix + 'ownermenu' , description: 'Owner Commands'},
+	    {title: "6", rowId: prefix + 'adminmenu' , description: 'Admin Commands'},
+	    {title: "7", rowId: prefix + 'othermenu' , description: 'Other commands'},
 
-let menu = {
-main: '',
-download: '',
-group: '',
-owner: '',
-convert: '',
-search: '',
-fun: '',
-other: ''
-};
-
-for (let i = 0; i < commands.length; i++) {
-if (commands[i].pattern && !commands[i].dontAddCommandList) {
-menu[commands[i].category] += `.${commands[i].pattern}\n`;
- }
+	]
+    } 
+]
+const listMessage = {
+  caption: `👋 ❤කොහොමද ${pushname} I'm alive now
+    
+*👾 QUEEN-IZUMI-MD commands menu...*
+  
+ *🚀Version:* ${require("../package.json").version}
+ *⌛Memory:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+ *🕒Runtime:* ${runtime(process.uptime())}
+ *📍Platform:* ${hostname}`,
+  image : { url : config.LOGO} ,
+  footer: config.FOOTER,
+  buttonText: "🔢 Reply below number,",
+  sections,
+  contextInfo: {
+				
+				externalAdReply: { 
+					title: '🧚 ＱＵＥＥＮ -ＩＺＵＭＩ - ＭＤ 🧚',
+					body: 'ᴀɴ ᴜꜱᴇʀ ʙᴏᴛ ꜰᴏʀ ᴡʜᴀᴛꜱᴀᴘᴘ',
+					mediaType: 1,
+					sourceUrl: "" ,
+          thumbnailUrl: 'https://telegra.ph/file/ba8ea739e63bf28c30b37.jpg' ,
+					renderLargerThumbnail: false,
+          showAdAttribution: true
+         }}	
 }
 
-let madeMenu = `
-🌟👑 𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 - 𝗠𝗮𝗶𝗻 𝗠𝗲𝗻𝘂 👑🌟
+return await conn.replyList(from, listMessage ,{ quoted : msg }) 
+}
+else {
+  const sections = [
+    {
+	title: "",
+	rows: [
+	    {title: "1", rowId: prefix + 'downmenu' , description: 'Down Commands'},
+	    {title: "2", rowId: prefix + 'searchmenu' , description: 'Search Commands'},
+	    {title: "3", rowId: prefix + 'convertmenu' , description: 'Convert Commands'}, 
+	    {title: "4", rowId: prefix + 'logomenu' , description: 'Logo Commands'},
+	    {title: "5", rowId: prefix + 'ownermenu' , description: 'Owner Commands'},
+	    {title: "6", rowId: prefix + 'adminmenu' , description: 'Admin Commands'},
+	    {title: "7", rowId: prefix + 'othermenu' , description: 'Other commands'},
 
-      👋 HELLO, ${pushname}!
 
-✨ 𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 ✨ 
+	]
+    } 
+]
+const listMessage = {
+  caption: config.ALIVE,
+  image : { url : config.LOGO} ,
+  footer: config.FOOTER,
+  buttonText: "🔢 Reply you select number,",
+  sections,
+  contextInfo: {
+				
+				externalAdReply: { 
+					title: '🧚 ＱＵＥＥＮ -ＩＺＵＭＩ - ＭＤ 🧚',
+					body: 'ᴀɴ ᴜꜱᴇʀ ʙᴏᴛ ꜰᴏʀ ᴡʜᴀᴛꜱᴀᴘᴘ',
+					mediaType: 1,
+					sourceUrl: "" ,
+          thumbnailUrl: 'https://telegra.ph/file/ba8ea739e63bf28c30b37.jpg' ,
+					renderLargerThumbnail: false,
+          showAdAttribution: true
+         }}	
+}
 
-📊 *𝗕𝗼𝘁 𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻:*
-────────────────────
-⏳ *𝗥𝘂𝗻𝘁𝗶𝗺𝗲:* ${runtime(process.uptime())}
-👤 *𝗢𝘄𝗻𝗲𝗿 𝗡𝗮𝗺𝗲:* 𝗝𝗮𝗻𝗶𝘁𝗵 𝗥𝗮𝘀𝗵𝗺𝗶𝗸𝗮
-📞 *𝗢𝘄𝗻𝗲𝗿 𝗡𝘂𝗺𝗯𝗲𝗿:* ${config.BOT_NUMBER}
-────────────────────
-
-📥 *𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱 𝗠𝗲𝗻𝘂:*
-
-${menu.download}
-
-────────────────────
-🔧 *𝗠𝗮𝗶𝗻 𝗠𝗲𝗻𝘂:*
-
-${menu.main}
-
-────────────────────
-🎉 *𝗙𝘂𝗻 𝗠𝗲𝗻𝘂:*
-
-${menu.fun}
-
-────────────────────
-👥 *𝗚𝗿𝗼𝘂𝗽 𝗠𝗲𝗻𝘂:*
-
-${menu.group}
-
-────────────────────
-🔒 *𝗢𝘄𝗻𝗲𝗿 𝗠𝗲𝗻𝘂:*
-
-${menu.owner}
-
-────────────────────
-🔄 *𝗖𝗼𝗻𝘃𝗲𝗿𝘁 𝗠𝗲𝗻𝘂:*
-
-${menu.convert}
-
-────────────────────
-🔍 *𝗦𝗲𝗮𝗿𝗰𝗵 𝗠𝗲𝗻𝘂:*
-
-${menu.search}
-
-────────────────────
-⚙️ *𝗢𝘁𝗵𝗲𝗿 𝗠𝗲𝗻𝘂:*
-
-${menu.other}
-
-────────────────────
-*© 𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 * 
-💻 *GitHub:* 👩‍💻
- 
-
-`
-
-return await conn.sendMessage(from,{image: {url: config.ALIVE_IMG},caption:madeMenu},{quoted: mek})
-}catch(e){
-console.log(e)
-reply(`${e}`)
+return await conn.replyList(from, listMessage ,{ quoted : msg })
+}
+} catch (e) {
+reply('*Error !!*')
+l(e)
 }
 })
 
-
+	
