@@ -53,15 +53,7 @@ const listMessage = {
   sections,
 contextInfo: {
 				
-				externalAdReply: { 
-					title: '🧚 ＱＵＥＥＮ -ＩＺＵＭＩ - ＭＤ 🧚',
-					body: 'ᴀɴ ᴜꜱᴇʀ ʙᴏᴛ ꜰᴏʀ ᴡʜᴀᴛꜱᴀᴘᴘ',
-					mediaType: 1,
-					sourceUrl: "" ,
-          thumbnailUrl: 'https://telegra.ph/file/ba8ea739e63bf28c30b37.jpg' ,
-					renderLargerThumbnail: false,
-          showAdAttribution: true
-         }}	
+				
 }
   
 // SEND DETAILS
