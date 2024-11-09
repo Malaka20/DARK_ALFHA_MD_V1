@@ -35,6 +35,34 @@ const msg = `
 
 • *Views* - ${tiktok.result.views}   
 `
+    let sections = [
+       {
+	title: "",
+	rows: [
+    {title: "1", rowId: `${prefix}dvideo ${l.nowm}`, description: 'video without Watermark'},
+    {title: "2", rowId: `${prefix}dvideo ${l.watermark}`, description: 'Video with Watermark'},
+    {title: "3", rowId: `${prefix}dau ${l.audio}`, description: 'Download audio'},
+	]
+    } 
+]
+const listMessage = {
+  image: { url: l.thumbnail },
+  caption: dat,
+  footer: config.FOOTER,
+  buttonText: "🔢 Reply below number,",
+  sections,
+contextInfo: {
+				
+				externalAdReply: { 
+					title: '🧚 ＱＵＥＥＮ -ＩＺＵＭＩ - ＭＤ 🧚',
+					body: 'ᴀɴ ᴜꜱᴇʀ ʙᴏᴛ ꜰᴏʀ ᴡʜᴀᴛꜱᴀᴘᴘ',
+					mediaType: 1,
+					sourceUrl: "" ,
+          thumbnailUrl: 'https://telegra.ph/file/ba8ea739e63bf28c30b37.jpg' ,
+					renderLargerThumbnail: false,
+          showAdAttribution: true
+         }}	
+}
   
 // SEND DETAILS
 await conn.sendMessage( from, { image: { url: tiktok.result.cover || '' }, caption: msg }, { quoted: mek });
