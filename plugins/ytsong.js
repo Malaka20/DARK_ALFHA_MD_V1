@@ -1,108 +1,63 @@
-// YT MP3 DOWNLOAD COMMAND 
-
-const { cmd } = require('../command')
-const yts = require('yt-search')
-const { fetchJson } = require('../lib/functions')
-
-const apilink = 'https://dark-yasiya-api-new.vercel.app' // API LINK ( DO NOT CHANGE THIS!! )
+const { cmd } = require('../command');
+const { fetchJson } = require('../DATABASE/functions');
+const apiLink = 'https://dark-yasiya-api-new.vercel.app';
 
 cmd({
-    pattern: "song",
-    desc: "download songs.",
-    category: "download",
-    react: "🎧",
-    filename: __filename
-},
-async(conn, mek, m,{from, reply, q}) => {
-try{
-
-if(!q) return reply('Give me song name or url !')
+  'pattern': 'song',
+  'desc': 'Download songs',
+  'category': 'audio',
+  'react': '🎧',
+  'filename': __filename
+}, async (_0xeaf511, _0x573124, _0x2c135b, { from: _0x5e067c, reply: _0x51b22b, q: _0x28e446 }) => {
+  try {
+    if (!_0x28e446) return _0x51b22b('Give me song name or URL!');
     
-const search = await fetchJson(`${apilink}/search/yt?q=${q}`)
-const data = search.result.data[0];
-const url = data.url
+    const searchResult = await fetchJson(apiLink + '/search/yt?q=' + _0x28e446);
+    const songData = searchResult.result.data[0];
+    const downloadData = await fetchJson(apiLink + '/download/ytmp3?url=' + songData.url);
     
-const ytdl = await fetchJson(`${apilink}/download/ytmp3?url=${data.url}`)
-    
-let message = `‎‎
-╭═══🎶❃ 𝚂𝙾𝙽𝙶 𝙳𝙾𝚆𝙽𝙻𝙾𝙰𝙳𝙴𝚁 ❃🎶═══⊷
-┃❃╭──────────────
-┃❃│🎵 ‎Title: ${data.title}
-┃❃│ ⏱ Duration: ${data.timestamp}
-┃❃│🌏 Uploaded: ${data.ago}
-┃❃│🧿 Views: ${data.views}
-┃❃│🤵 Author: ${data.author.name}
-┃❃│📎 Url: ${data.url}
-┃❃╰───────────────
-╰═════════════════⊷
-> © 𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 👩‍💻
+    let message = `‎‎*乂 DARK_ALFHA_MD SONG DOWNLOADER*\n\n`;
+    message += `*⚙️ Title* : ${songData.title}\n`;
+    message += `*📃 Description* : ${songData.description}\n`;
+    message += `*⏰ Duration* : ${songData.duration}\n`;
+    message += `*🚀 Views* : ${songData.views}\n`;
+    message += `*📆 Uploaded On* : ${songData.timestamp}\n`;
+    message += `*🖇️ Url* : ${songData.url}\n\n`;
+    message += `*乂 REPLY THE DOWNLOAD OPTION*\n\n`;
+    message += `*1️⃣ Download: Audio Type*\n`;
+    message += `*2️⃣ Download: Document Type*\n\n`;
+    message += `> *©powered by sahas tech*`;
 
-> ↺ |◁   II   ▷|   ♡
-`
-  
-await conn.sendMessage(from, { image: { url : data.thumbnail }, caption: message }, { quoted : mek })
-  
-// SEND AUDIO NORMAL TYPE and DOCUMENT TYPE
-await conn.sendMessage(from, { audio: { url: ytdl.result.dl_link }, mimetype: "audio/mpeg" }, { quoted: mek })
-await conn.sendMessage(from, { document: { url: ytdl.result.dl_link }, mimetype: "audio/mpeg", fileName: data.title + ".mp3", caption: `${data.title}`}, { quoted: mek })
-  
-} catch(e){
-console.log(e)
-reply(e)
-}
-})
+    const msgId = await _0xeaf511.sendMessage(_0x5e067c, { 'text': message }, { 'quoted': _0x573124 });
 
-// YT MP4 DOWNLOAD COMMAND 
-
-cmd({
-    pattern: "video",
-    desc: "downlode videos",
-    category: "downlode",
-    react: "🎬",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("*Please give me a title*")
-let search = await yts(q)
-let link = search.all[0].url
-let desc = `
-*──────────────────*
-_*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
-*──────────────────*
-
- *Title :* ${search.all[0].title}
-
- *Description :* ${search.all[0].description}
-
- *Duration :* ${search.all[0].timestamp}
-
- *Ago :* ${search.all[0].ago}
-
- *Views :* ${search.all[0].views}
-
- *URL :* ${search.all[0].url}
-
-> © 𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 👩‍💻
-
-> ↺ |◁   II   ▷|   ♡
-`
-
-await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
-
-
-        let data = await fetchJson (`https://www.youtube.com/watch?v=${link}`)
-
-await conn.sendMessage(from, {
-  video: {url: data.result.downloadLink},
-mimetype: "video/mp4",
- fileName: `${data.result.title}.mp4`,caption: `*© 𝘔𝘢𝘭𝘢𝘬𝘢 · · ·* 👩‍💻`}, { quoted: mek })
-
-}catch(e){
-    console.log(e)
-    reply(`${e}`)
-}
-}
-)
-
-// FOLLOW US : https://whatsapp.com/channel/0029VaaPfFK7Noa8nI8zGg27
+    _0xeaf511.ev.on('messages.upsert', async event => {
+      const message = event.messages[0];
+      const messageText = message.message.text.trim();
+      
+      if (message.key.id === msgId.key.id) {
+        switch (messageText) {
+          case '1':
+            await _0xeaf511.sendMessage(_0x5e067c, {
+              'audio': { 'url': downloadData.result.dl_link },
+              'mimetype': 'audio/mpeg'
+            }, { 'quoted': _0x573124 });
+            break;
+          case '2':
+            await _0xeaf511.sendMessage(_0x5e067c, {
+              'document': { 'url': downloadData.result.dl_link },
+              'mimetype': 'audio/mpeg',
+              'fileName': songData.title + '.mp3',
+              'caption': `${songData.title}\n\n> ©powered by sahas tech`
+            }, { 'quoted': _0x573124 });
+            break;
+          default:
+            _0x51b22b('Invalid option. Please select a valid option🔴');
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    await _0xeaf511.sendMessage(_0x5e067c, { 'react': { 'text': '❌', 'key': _0x573124.key } });
+    _0x51b22b('An error occurred while processing your request.');
+  }
+});
