@@ -1,5 +1,7 @@
-# DARK_ALFHA_MD_V1
-A ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ whatsapp bot
+
+***
+</p> <p align="center">
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Rubik+Dirt&size=65&pause=1000&color=F72C3F&background=FF20A500&center=true&vCenter=true&width=1000&height=150&lines=MALAKA-MD;MADE+BY+DARK_ALFHA_MD_V1" alt="Typing SVG" /></a>
 
 </h3>
 <img src="https://i.ibb.co/XWggNqz/20241027-181936.jpg" width="300" height="190">
@@ -10,13 +12,15 @@ A ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ whatsapp bot
    
     <a href='https://pair-web-public.koyeb.app/' target="_blank"><img alt='SESSION ID' src='https://img.shields.io/badge/Session_id-900000?style=for-the-badge&logo=scan&logoColor=white&labelColor=black&color=blue'/></a>
      
+<p align="center">
+<a href='https://railway.app/new' target="_blank"><img alt='Heroku' src='https://img.shields.io/badge/-railway deploy-blue?style=for-the-badge&logo=railway&logoColor=white'/< width=150 height=28/p></a>
 
+<p align="center">
+<a href='https://signup.heroku.com/' target="_blank"><img alt='Heroku' src='https://img.shields.io/badge/-heroku ‎ deploy-blue?style=for-the-badge&logo=heroku&logoColor=white'/< width=150 height=28/p></a>
 
-     <hr>
-<h5>👩‍💻 Deploy Free Koyeb👇</h5>
-<a href="http://koyeb.com" ><img src="https://i.ibb.co/t4KftP0/images.png width="50" height="25"></a>
-<hr>
-<h5>👩‍💻 Deploy Free Workflows 👇</h5>
+<p align="center">
+<a href="http://koyeb.com" >
+<img alt='Koyeb' src='https://img.shields.io/badge/-koyeb deploy-blue?style=for-the-badge&logo=koyeb&logoColor=white'/< width=150 height=28/p></a>
 
 ```
 name: Node.js CI
