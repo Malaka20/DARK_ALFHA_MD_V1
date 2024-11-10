@@ -10,6 +10,9 @@ cmd({
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
 
+ await conn.sendMessage(from, { text: '📥 *ᴍᴀʟᴀᴋᴀ-ᴍᴅ ιѕ ᴅᴏᴡɴʟᴏᴅɪɴɢ...* 📥' }, { quoted: mek });
+
+
   if (!args[0]) {
     return reply('*`Please give a waild Facebook link`*');
   }
@@ -40,7 +43,7 @@ try{
 
   await m.react('✅');
   let video = data.url;
-  let dev = '© 2024 𝘔𝘢𝘭𝘢𝘬𝘢 FB Downloader | Download with ease, cherish forever.'
+  let dev = '© 2024 𝘔𝘢𝘭𝘢𝘬𝘢 FB DOWNLOAD HD.'
   
   try {
     await conn.sendMessage(m.chat, { video: { url: video }, caption: dev, fileName: 'fb.mp4', mimetype: 'video/mp4' }, { quoted: m });
