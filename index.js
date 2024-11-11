@@ -80,7 +80,7 @@ console.log('Bot connected to whatsapp ✅')
 
 let up = `DARK-ALFHA-MD-BOT connected successful ✅\n\nPREFIX: ${prefix}`;
 
-conn.sendMessage(ownerNumber + "@s.whatsapp.net", { image: { url: `https://i.ibb.co/XWggNqz/20241027-181936.jpg` }, caption: up })
+conn.sendMessage(ownerNumber + "@s.whatsapp.net", { image: { url: `https://i.ibb.co/V2pdBTJ/20241111-195632.jpg` }, caption: up })
 
 }
 })
