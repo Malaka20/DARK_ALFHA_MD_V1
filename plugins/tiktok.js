@@ -93,7 +93,7 @@ _*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
 await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
 
 
-        let data = await fetchJson (`https://zazie-ytdl-api.vercel.app/api/ytvideo?url=https://youtube.com/watch?v=8JPtxtSK-Cs&quality=${link}`)
+        let data = await fetchJson (`https://api-pink-venom.vercel.app/api/ytmp4?url=https%3A%2F%2Fyoutu.be%2FqZT0K4DeAcE%3Fsi%3DBcYrTF7-6kxjefEp${link}`)
 
 await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
