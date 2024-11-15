@@ -1,6 +1,6 @@
 const {cmd , commands} = require('../command');
-import ytdl from '@distube/ytdl-core';
-import yts from 'yt-search';
+const ytdl from '@distube/ytdl-core';
+const yts from 'yt-search';
 
 const video = async (m, Matrix) => {
   const prefixMatch = m.body.match(/^[\\/!#.]/);
