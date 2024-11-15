@@ -51,53 +51,53 @@ reply(e)
 
 //video by 𝘔𝘈𝘓𝘈𝘒𝘈𝘉𝘖𝘛𝘔𝘋 🙋
 
+//------ YT VIDEO DL --------
 
-cmd({
-    pattern: "video",
-    desc: "downlode videos",
-    category: "downlode",
-    react: "🎬",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("*Please give me a title*")
-let search = await yts(q)
-let link = search.all[0].url
+//Credit By Dark Shadow Modz
+// https://whatsapp.com/channel/0029VaXRYlrKwqSMF7Tswi38
 
-    
-let desc = `
-*──────────────────*
-_*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
-*──────────────────*
+//------ YT VIDEO DL --------
 
- *Title :* ${search.all[0].title}
-
- *Description :* ${search.all[0].description}
-
- *Duration :* ${search.all[0].timestamp}
-
- *Ago :* ${search.all[0].ago}
-
- *Views :* ${search.all[0].views}
-
- *URL :* ${search.all[0].url}
-
-> 𝙳𝙰𝚁𝙺-𝙰𝙻𝙵𝙷𝙰-𝙱𝙾𝚃 👩‍💻
-`
-
-await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
-
-const ytdl = await fetchJson(`${apilink}https://www.dark-yasiya-api.site/download/ytmp4?url=${data.url}`)
-        
-await conn.sendMessage(from, {
-  video: {url: data.result.downloadLink},
-mimetype: "video/mp4",
- fileName: `${data.result.title}.mp4`,caption: `*© 𝘔𝘢𝘭𝘢𝘬𝘢 · · ·* 👩‍💻`}, { quoted: mek })
-
-}catch(e){
-    console.log(e)
-    reply(`${e}`)
+case prefix  + 'ytmp4': {
+  if (!text) return m.reply('*Enter Your Url*')
+  try {
+    m.reply('*Process sending video, mungkin membutuhkan 1-3 menit jika durasi video panjang!*')
+    let proces = await (await fetch(`https://endpoint.web.id/downloader/ytmp4?key=${global.key}&url=${text}`)).json()
+    let video4 = proces.result; 
+    supunfernando.sendMessage(m.chat,{video:{url: video4.media }, caption: video4.title }, { quoted: m })
+  } catch (e) {
+      m.reply('*error*');
+    }
 }
+break
+
+//------ YT SONG DL --------
+
+//Credit By Dark Shadow Modz
+// https://whatsapp.com/channel/0029VaXRYlrKwqSMF7Tswi38
+
+//------ YT SONG DL --------
+
+case prefix + 'ytmp31': {
+  if (!text) return m.reply(`*Enter Your Url*`)
+  try {
+    let load = await (await fetch(`https://endpoint.web.id/downloader/ytmp3?key=${global.key}&url=${text}`)).json();
+    let shannz = load.result
+ 
+    await supunfernando.sendMessage(m.chat, { audio: { url: supunfernando.media }, mimetype: 'audio/mp4', 
+    contextInfo: {
+      externalAdReply: {
+        title: supunfernando.title,
+        body: `Type : Mp3 (128kbps)`,
+        thumbnailUrl: supunfernando.image,
+        mediaType: 1,
+        showAdAttribution: false,
+        renderLargerThumbnail: true,
+      },
+    }, 
+    }, { quoted: m });
+  } catch (error) {
+      m.reply(`shannz api sedang error, segera repot ke owner!`);
+    }
 }
-)
+break
