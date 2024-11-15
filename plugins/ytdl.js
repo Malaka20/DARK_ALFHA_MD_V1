@@ -1,3 +1,4 @@
+const {cmd , commands} = require('../command');
 import ytdl from '@distube/ytdl-core';
 import yts from 'yt-search';
 
