@@ -64,6 +64,8 @@ try{
 if(!q) return reply("*Please give me a title*")
 let search = await yts(q)
 let link = search.all[0].url
+
+    
 let desc = `
 *──────────────────*
 _*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
@@ -86,9 +88,8 @@ _*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
 
 await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
 
-
-        let data = await fetchJson (`https://api.giftedtech.my.id/api/download/ytvideo?apikey=gifted&url=${link}`)
-
+const ytdl = await fetchJson(`${apilink}https://www.dark-yasiya-api.site/download/ytmp4?url=${data.url}`)
+        
 await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
 mimetype: "video/mp4",
