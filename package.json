@@ -11,6 +11,7 @@
   "dependencies": {
     "@whiskeysockets/baileys": "6.6.0",
     "@adiwajshing/keyed-db": "^0.2.4",
+    "@distube/ytdl-core": "^4.13.5",
     "pino": "^7.0.5",
     "pm2": "^5.2.0",
     "util": "^0.12.4",
@@ -35,6 +36,7 @@
     "buffer":"6.0.3",
     "cheerio":"1.0.0-rc.12",
     "mime-types":"2.1.35",
-    "file-type":"16.5.3"
+    "file-type":"16.5.3",
+    "ytdl-core": "^4.11.5"
   }
 }
