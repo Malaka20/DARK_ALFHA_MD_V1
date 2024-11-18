@@ -105,37 +105,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
                         reply(".update AUTO_READ_STATUS:false");
                         reply(".restart");
                     break;
-                    case '4.1': 
-                    reply(".update AUTO_BIO:true");
-                    reply(".restart");
-                    break;
-                    case '4.2': 
-                    reply(".update AUTO_BIO:false");
-                    reply(".restart");
-                    break;
-                    case '5.1': 
-                    reply(".startnews");
-                    break;
-                    case '5.2': 
-                    reply(".stopnews");
-                    break;
-                    case '6.1':      
-                        reply(".update AUTO_TYPING:true");
-                        reply(".restart");
-                        break;
-                    case '6.2':   
-                        reply(".update AUTO_TYPING:false");
-                        reply(".restart");
-                    break;
-                    case '7.1': 
-                        reply(".update AUTO_READ_CMD:true");
-                        reply(".restart");
-                    break;
-                    case '7.2':   
-                        reply(".update AUTO_READ_CMD:false");
-                        reply(".restart");
-                    
-                        break;
+            
                     default:
                         reply("Invalid option. Please select a valid option🔴");
                 }
