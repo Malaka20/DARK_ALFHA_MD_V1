@@ -38,8 +38,7 @@ _*🌟 VIDEO DＯＷＮＬＯＤＥＲ 🌟*_
 
 await conn.sendMessage(from,{image:{url: search.all[0].thumbnail},caption:desc},{quoted:mek})
 
-
-        let data = await fetchJson (`https://api-pink-venom.vercel.app/api/ytdl?url=$(yt${link}`)
+ let data = await fetchJson (`https://www.dark-yasiya-api.site/download/ytmp4?url=${link}`)
 
 await conn.sendMessage(from, {
   video: {url: data.result.downloadLink},
