@@ -3,7 +3,6 @@
 const { cmd } = require('../command')
 const { fetchJson } = require('../lib/functions')
 
-const apilink = 'https://api-pink-venom.vercel.app/api/ytdl?url=$(yt' // API LINK ( DO NOT CHANGE THIS!! )
 
 cmd({
     pattern: "song",
@@ -23,7 +22,8 @@ const url = data.url
     
 const ytdl = await fetchJson(`${apilink}/download/ytmp3?url=${data.url}`)
     
-let message = `‎‎           🎶 YT SONG DOWNLOADER 🎶
+let message = `‎‎          
+🎶 YT SONG DOWNLOADER 🎶
 
 
  🎵 ‎Title: ${data.title}
