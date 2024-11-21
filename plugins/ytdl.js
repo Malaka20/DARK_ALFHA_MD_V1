@@ -1,144 +1,205 @@
-const { zokou } = require("../framework/zokou");
-const yts = require('yt-search');
-const ytdl = require('ytdl-core');
-const fs = require('fs');
-const yt=require("../framework/dl/ytdl-core.js")
-const ffmpeg = require("fluent-ffmpeg");
-const yts1 = require("youtube-yts");
-//var fs =require("fs-extra")
+const { cmd, commands } = require("../command");
+const yts = require("yt-search");
+const axios = require('axios');
 
-zokou({
-  nomCom: "play",
-  categorie: "Search",
-  reaction: "🎧"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { ms, repondre, arg } = commandeOptions;
-     
-  if (!arg[0]) {
-    repondre("wrong!!! Ie. _Play hozambe by Beltah ft shifura._");
-    return;
-  }
-
+// Function to download YouTube audio using a specific API
+async function dlyta(url) {
   try {
-    let topo = arg.join(" ")
-    const search = await yts(topo);
-    const videos = search.videos;
-
-    if (videos && videos.length > 0 && videos[0]) {
-      const urlElement = videos[0].url;
-          
-       let infoMess = {
-          image: {url : videos[0]. thumbnail},
-         caption : `\YESSER-MD\n\n*song name :* _${videos[0].title}_
-
-*Time :* _${videos[0].timestamp}_
-
-*Url :* _${videos[0].url}_
-
-
-© proud by yessertech`
-       }
-
-      
-
-      
-
-      
-       zk.sendMessage(origineMessage,infoMess,{quoted:ms}) ;
-      // Obtenir le flux audio de la vidéo
-      const audioStream = ytdl(urlElement, { filter: 'audioonly', quality: 'highestaudio' });
-
-      // Nom du fichier local pour sauvegarder le fichier audio
-      const filename = 'audio.mp3';
-
-      // Écrire le flux audio dans un fichier local
-      const fileStream = fs.createWriteStream(filename);
-      audioStream.pipe(fileStream);
-
-      fileStream.on('finish', () => {
-        // Envoi du fichier audio en utilisant l'URL du fichier local
-      
-
-     zk.sendMessage(origineMessage, { audio: { url:"audio.mp3"},mimetype:'audio/mp4' }, { quoted: ms,ptt: false });
-        console.log("Envoi du fichier audio terminé !");
-
-     
-      });
-
-      fileStream.on('error', (error) => {
-        console.error('Erreur lors de l\'écriture du fichier audio :', error);
-        repondre('Une erreur est survenue lors de l\'écriture du fichier audio.');
-      });
-    } else {
-      repondre('Aucune vidéo trouvée.');
+    for (let i = 0; i < 10; i++) {
+      const response = await fetch("https://api-pink-venom.vercel.app/api/ytdl?url=" + url);
+      const data = await response.json();
+      if (data.result.download_url) {
+        return {
+          status: true,
+          dl_link: data.result.download_url
+        };
+      }
     }
+    await new Promise(resolve => setTimeout(resolve, 4000));
+    return {
+      status: false,
+      msg: "error"
+    };
   } catch (error) {
-    console.error('Erreur lors de la recherche ou du téléchargement de la vidéo :', error);
-    
-    repondre('Une erreur est survenue lors de la recherche ou du téléchargement de la vidéo.');
+    console.error(error);
+    return {
+      status: false,
+      msg: error.message
+    };
   }
-});
+}
 
-  
-
-zokou({
-  nomCom: "video",
-  categorie: "Search",
-  reaction: "🎥"
-}, async (origineMessage, zk, commandeOptions) => {
-  const { arg, ms, repondre } = commandeOptions;
-
-  if (!arg[0]) {
-    repondre("insert video name Ie. _video hozambee by Beltah ft shifura._");
-    return;
-  }
-
-  const topo = arg.join(" ");
+// Function to download YouTube video in a specified format
+async function ytmp4(url, format) {
   try {
-    const search = await yts(topo);
-    const videos = search.videos;
-
-    if (videos && videos.length > 0 && videos[0]) {
-      const Element = videos[0];
-
-      let InfoMess = {
-        image: { url: videos[0].thumbnail },
-        caption: `YESSER-MD‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎‎\n\n*Video name :* _${Element.title}_
-*Time :* _${Element.timestamp}_
-*Url :* _${Element.url}_
-\n\n\n © proud by yessertech`
-      };
-
-      zk.sendMessage(origineMessage, InfoMess, { quoted: ms });
-
-      // Obtenir les informations de la vidéo à partir du lien YouTube
-      const videoInfo = await ytdl.getInfo(Element.url);
-      // Format vidéo avec la meilleure qualité disponible
-      const format = ytdl.chooseFormat(videoInfo.formats, { quality: '18' });
-      // Télécharger la vidéo
-      const videoStream = ytdl.downloadFromInfo(videoInfo, { format });
-
-      // Nom du fichier local pour sauvegarder la vidéo
-      const filename = 'video.mp4';
-
-      // Écrire le flux vidéo dans un fichier local
-      const fileStream = fs.createWriteStream(filename);
-      videoStream.pipe(fileStream);
-
-      fileStream.on('finish', () => {
-        // Envoi du fichier vidéo en utilisant l'URL du fichier local
-        zk.sendMessage(origineMessage, { video: { url :"./video.mp4"} , caption: "© YESSER-MD", gifPlayback: false }, { quoted: ms });
-      });
-
-      fileStream.on('error', (error) => {
-        console.error('Erreur lors de l\'écriture du fichier vidéo :', error);
-        repondre('Une erreur est survenue lors de l\'écriture du fichier vidéo.');
-      });
-    } else {
-      repondre('No video found');
+    if (!url || !format) {
+      throw new Error("url and format parameters are required.");
     }
+    const formatInt = parseInt(format.replace('p', ''), 10);
+    const params = {
+      button: 1,
+      start: 1,
+      end: 1,
+      format: formatInt,
+      url: url
+    };
+    const headers = {
+      Accept: "*/*",
+      "Accept-Encoding": "gzip, deflate, br",
+      "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+      Origin: 'https://loader.to',
+      Referer: "https://loader.to",
+      "Sec-Ch-Ua": "\"Not-A.Brand\";v=\"99\", \"Chromium\";v=\"124\"",
+      "Sec-Ch-Ua-Mobile": '?1',
+      "Sec-Ch-Ua-Platform": "\"Android\"",
+      "Sec-Fetch-Dest": 'empty',
+      "Sec-Fetch-Mode": "cors",
+      "Sec-Fetch-Site": 'cross-site',
+      "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+    };
+    const response = await axios.get("https://ab.cococococ.com/ajax/download.php", { params, headers });
+    const id = response.data.id;
+
+    const checkProgress = async () => {
+      try {
+        const progressResponse = await axios.get("https://p.oceansaver.in/ajax/progress.php", {
+          params: { id },
+          headers
+        });
+        const { progress, download_url, text } = progressResponse.data;
+        return text === 'Finished' ? download_url : (await new Promise(resolve => setTimeout(resolve, 1000)), checkProgress());
+      } catch (error) {
+        throw new Error("Error in progress check: " + error.message);
+      }
+    };
+
+    return await checkProgress();
   } catch (error) {
-    console.error('Erreur lors de la recherche ou du téléchargement de la vidéo :', error);
-    repondre('Une erreur est survenue lors de la recherche ou du téléchargement de la vidéo.');
+    console.error(error);
+    throw error;
+  }
+}
+
+module.exports = {
+  dlyta,
+  ytmp4
+};
+
+function extractYouTubeId(url) {
+  const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|playlist\?list=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+function convertYouTubeLink(url) {
+  const id = extractYouTubeId(url);
+  return id ? "https://www.youtube.com/watch?v=" + id : url;
+}
+
+// Command to download songs
+cmd({
+  pattern: "song",
+  alias: "play",
+  desc: "To download songs.",
+  react: '🎵',
+  category: 'download',
+  filename: __filename
+}, async (bot, message, args, context) => {
+  try {
+    const { from, q, reply } = context;
+    if (!q) {
+      return reply("Please give me a URL or title.");
+    }
+    const searchQuery = convertYouTubeLink(q);
+    const searchResult = await yts(searchQuery);
+    const video = searchResult.videos[0];
+    const videoUrl = video.url;
+
+    const caption = `
+*╭─────────────────*
+│*⇩Aʅҽxα SONG DOWNLOADING⇩*
+*⁠⁠⁠⁠╰─────────────────*
+*──────────────────*
+❍ *Title:* ${video.title} 
+❍ *Duration:* ${video.timestamp} 
+❍ *Views:* ${video.views} 
+❍ *Uploaded On:* ${video.ago} 
+❍ *Link:* ${video.url}
+*──────────────────*
+╭──────────────────
+│ *⫷ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ⫸*
+│
+│ *1*    _(ᴀᴜᴅɪᴏ)_
+│ *2*    _(ᴅᴏᴄᴜᴍᴇɴᴛ)_
+⁠⁠⁠⁠╰──────────────────
+*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·*
+> Aʅҽxα 👧🏻
+`;
+
+    const messageResponse = await bot.sendMessage(from, {
+      image: { url: video.thumbnail },
+      caption
+    });
+
+    const messageId = messageResponse.key.id;
+
+    bot.ev.on("messages.upsert", async msg => {
+      const newMessage = msg.messages[0];
+      if (!newMessage.message) return;
+
+      const { conversation, extendedTextMessage } = newMessage.message;
+      const userReply = conversation || extendedTextMessage?.text;
+      const remoteJid = newMessage.key.remoteJid;
+
+      if (extendedTextMessage?.contextInfo?.stanzaId === messageId) {
+        await bot.sendMessage(remoteJid, {
+          react: { text: '⬇️', key: newMessage.key }
+        });
+
+        const downloadResponse = await dlyta(videoUrl);
+        const downloadLink = downloadResponse.dl_link;
+
+        await bot.sendMessage(remoteJid, {
+          react: { text: '⬆️', key: newMessage.key }
+        });
+
+        if (userReply === '1') {
+          await bot.sendMessage(remoteJid, {
+            audio: { url: downloadLink },
+            mimetype: "audio/mpeg",
+            contextInfo: {
+              externalAdReply: {
+                title: video.title,
+                body: video.videoId,
+                mediaType: 1,
+                sourceUrl: video.url,
+                thumbnailUrl: video.thumbnail,
+                renderLargerThumbnail: true,
+                showAdAttribution: true
+              }
+            }
+          }, { quoted: newMessage });
+
+          await bot.sendMessage(remoteJid, {
+            react: { text: '✅', key: newMessage.key }
+          });
+
+        } else if (userReply === '2') {
+          await bot.sendMessage(remoteJid, {
+            document: { url: downloadLink },
+            mimetype: 'audio/mp3',
+            fileName: video.title + ".mp3",
+            caption: "\n*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·*\n "
+          }, { quoted: newMessage });
+
+          await bot.sendMessage(remoteJid, {
+            react: { text: '✅', key: newMessage.key }
+          });
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    reply('' + error);
   }
 });
