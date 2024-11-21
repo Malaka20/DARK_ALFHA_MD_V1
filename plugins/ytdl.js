@@ -276,3 +276,105 @@ cmd({
     reply(error.message);
   }
 });
+
+cmd({
+  pattern: 'video',
+  desc: "To download videos.",
+  react: '🎥',
+  category: "download",
+  filename: __filename
+}, async (client, message, args, context) => {
+  const { from, quoted, body, command, args: cmdArgs, q, reply } = context;
+  
+  try {
+    if (!q) return reply("Please give me a URL or title.");
+
+    const searchQuery = convertYouTubeLink(q);
+    const searchResults = await yts(searchQuery);
+    const video = searchResults.videos[0];
+    const videoUrl = video.url;
+
+    const responseMessage = `
+      *╭─────────────────*
+      │*⟱Aʅҽxα VIDEO DOWNLOADING⟱*
+      *╰─────────────────*
+      *──────────────────*
+      ❍ *Title:* ${video.title}
+      ❍ *Duration:* ${video.timestamp}
+      ❍ *Views:* ${video.views}
+      ❍ *Uploaded On:* ${video.ago}
+      ❍ *Link:* ${video.url}
+      *──────────────────*
+      ╭──────────────────
+      │ *⫷ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ⫸*
+      │
+      │ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴠɪᴅᴇᴏ ꜰɪʟᴇ ❃
+      │ _1.1 (360ᴘ)_
+      │ _1.2 (480ᴘ)_
+      │ _1.3 (720ᴘ)_
+      │ _1.4 (1080ᴘ)_
+      │ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴅᴏᴄᴜᴍᴇɴᴛ ❃
+      │ _2.1 (360ᴘ)_
+      │ _2.2 (480ᴘ)_
+      │ _2.3 (720ᴘ)_
+      │ _2.4 (1080ᴘ)_
+      *╰──────────────────*
+      *© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·*
+      > Aʅҽxα 👧🏻
+    `;
+
+    const sentMessage = await client.sendMessage(from, { image: { url: video.thumbnail }, caption: responseMessage });
+    const originalMessageId = sentMessage.key.id;
+
+    client.ev.on("messages.upsert", async (messageUpdate) => {
+      const replyMessage = messageUpdate.messages[0];
+      if (!replyMessage.message) return;
+
+      const replyText = replyMessage.message.conversation || replyMessage.message.extendedTextMessage?.text;
+      const replyContext = replyMessage.message.extendedTextMessage?.contextInfo?.stanzaId === originalMessageId;
+
+      if (replyContext) {
+        await client.sendMessage(replyMessage.key.remoteJid, { react: { text: '⬇️', key: replyMessage.key } });
+
+        let quality;
+        switch (replyText) {
+          case "1.1":
+          case "2.1":
+            quality = "360p";
+            break;
+          case "1.2":
+          case "2.2":
+            quality = "480p";
+            break;
+          case "1.3":
+          case "2.3":
+            quality = "720p";
+            break;
+          case "1.4":
+          case "2.4":
+            quality = "1080p";
+            break;
+          default:
+            return;
+        }
+
+        const videoLink = await ytmp4(videoUrl, quality);
+        const messageType = replyText.startsWith("1") ? 'video' : 'document';
+        const mimeType = messageType === 'video' ? null : "video/mp4";
+        const fileName = messageType === 'document' ? `${video.title}.mp4` : null;
+
+        await client.sendMessage(replyMessage.key.remoteJid, {
+          [messageType]: { url: videoLink },
+          mimetype: mimeType,
+          fileName: fileName,
+          caption: "\n*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·*\n"
+        }, { quoted: replyMessage });
+
+        await client.sendMessage(replyMessage.key.remoteJid, { react: { text: '✅', key: replyMessage.key } });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    reply('' + error);
+  }
+});
