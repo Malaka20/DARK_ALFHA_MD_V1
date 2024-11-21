@@ -1,51 +1,31 @@
-// MEDIAFIRE DOWNLOAD COMMAND
-
-
-const { cmd } = require('../command')
-const { fetchJson } = require('../lib/functions')
-
-const apilink = 'https://www.dark-yasiya-api.site' // API LINK ( DO NOT CHANGE THIS!! )
-
-
+const config = require('../config')
+const fg = require('api-dylux');
+const { mediafireDl } = require('mfiredlcore-vihangayt')
+const { cmd, commands } = require('../command')
+const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson} = require('../lib/functions')
 cmd({
-    pattern: "mfire",
-    alias: ["mf","mediafire"],
-    react: "🔥",
-    desc: "",
+    pattern: "mediafire",
+    alias: ["mfire"],
+    react: '📁',
+    desc: "Download mediafire files.",
     category: "download",
-    use: '.mfire < mediafire url >',
+    use: '.mediafire <mediafire link>',
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, reply, q }) => {
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-  
-if(!q) return await reply("Please give me mediafire url");
-  if(!q.includes('mediafire.com')) return await reply("This url is invalid");
-  
-const mfire = await fetchJson(`${apilink}https://www.dark-yasiya-api.site/download/mfire?url=${q}`);
-  
-const msg = `
-           🔥 *MEDIAFIRE DOWNLOADER* 🔥
-
-
-• *File Name* - ${mfire.result.fileName}
-
-• *File Size* - ${mfire.result.size}
-
-• *Upload Date and Time* - ${mfire.result.date}
-
-`
-  
-// SEND DETAILS
-await conn.sendMessage( from, { image: { url: 'https://i.ibb.co/dPw1fHD/mfire.jpg' }, caption: msg }, { quoted: mek });
-
-// SEND FILE
-await conn.sendMessage(from, { document: { url: mfire.result.dl_link }, mimetype: mfire.result.fileType , fileName: mfire.result.fileName, caption: mfire.result.fileName }, { quoted: mek });
-
-  
+if (!q) return await  reply('*Please give me google drive url*')
+if (!q.includes('mediafire.com')) return await  reply('*Please give me google drive url*')
+if (!q.includes('/file')) return await  reply('*Please give me google drive url*')
+const baby1 = await mediafireDl(q)
+if(baby1.size.includes('MB') && baby1.size.replace('MB','') > config.MAX_SIZE) return await  reply('*This file is too big !!*')
+if(baby1.size.includes('GB')) return await  reply('*This file is too big !!*')
+const mfile = conn.sendMessage(from, { document : { url : baby1.link}, fileName : baby1.name, mimetype: baby1.mime,caption: `*🧸 Name* : ${baby1.name}
+*📊 Size* : ${baby1.size}
+*🕹️ Mime* : ${baby1.mime}`}, {quoted: mek})	
+await conn.sendMessage(from, { react: { text: '📁', key: mfile.key }})
 } catch (e) {
-console.log(e)
-reply('This url type is not working !!')
+reply('*Error !!*')
+l(e)
 }
 })
-
