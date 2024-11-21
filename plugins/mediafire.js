@@ -1,105 +1,52 @@
+// MEDIAFIRE DOWNLOAD COMMAND
+
+
+const { cmd } = require('../command')
 const { fetchJson } = require('../lib/functions')
-const config = require('../config')
-const { cmd, commands } = require('../command')
 
-//====your bot name=======
-let cap = 'Thenu-MD 💫'
-
-// <========FETCH API URL========>
-let baseUrl;
-(async () => {
-    let baseUrlGet = await fetchJson(`https://www.dark-yasiya-api.site`)
-    baseUrl = baseUrlGet.api
-})();
+const apilink = 'https://www.dark-yasiya-api.site' // API LINK ( DO NOT CHANGE THIS!! )
 
 
-//fb downloader
 cmd({
-    pattern: "fb1",
-    alias: ["facebook1"],
-    desc: "download fb videos",
+    pattern: "mfire",
+    alias: ["mf","mediafire"],
+    react: "🔥",
+    desc: "",
     category: "download",
+    use: '.mfire < mediafire url >',
     filename: __filename
 },
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me fb url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/fdown?url=${q}`)
-        reply("*Hi.\n\n*••《《Thenu-MD-FB-DL》》••📡.*\n\n*🔭Downloading*...\n\n> ☆Thenu_MD")
-        //send video (hd,sd)
-        await conn.sendMessage(from, { video: { url: data.data.hd }, mimetype: "video/mp4", caption: `- QUALITY HD\n\n> ${cap}` }, { quoted: mek })
-        await conn.sendMessage(from, { video: { url: data.data.sd }, mimetype: "video/mp4", caption: `- QUALITY SD \n\n> ${cap}` }, { quoted: mek })  
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
+async(conn, mek, m,{from, quoted, reply, q }) => {
+try{
+  
+if(!q) return await reply("Please give me mediafire url");
+  if(!q.includes('mediafire.com')) return await reply("This url is invalid");
+  
+const mfire = await fetchJson(`${apilink}/download/mfire?url=${q}`);
+  
+const msg = `
+           🔥 *MEDIAFIRE DOWNLOADER* 🔥
 
 
-//twitter dl (x)
-cmd({
-    pattern: "twitter1",
-    alias: ["twdl"],
-    desc: "download tw videos",
-    category: "download",
-    filename: __filename
-},
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me twitter url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/twitterdl?url=${q}`)
-        reply("*《《THENU-MD-Twitter-DL》》\n\n*Downloading.🎷..\n> ♡Thenula*")
-        //send video (hd,sd)
-        await conn.sendMessage(from, { video: { url: data.data.data.HD }, mimetype: "video/mp4", caption: `- QUALITY HD\n\n> ${cap}` }, { quoted: mek })
-        await conn.sendMessage(from, { video: { url: data.data.data.SD }, mimetype: "video/mp4", caption: `- QUALITY SD \n\n> ${cap}` }, { quoted: mek })  
-        //send audio    
-        await conn.sendMessage(from, { audio: { url: data.data.data.audio }, mimetype: "audio/mpeg" }, { quoted: mek })  
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
+• *File Name* - ${mfire.result.fileName}
+
+• *File Size* - ${mfire.result.size}
+
+• *Upload Date and Time* - ${mfire.result.date}
+
+`
+  
+// SEND DETAILS
+await conn.sendMessage( from, { image: { url: 'https://i.ibb.co/dPw1fHD/mfire.jpg' }, caption: msg }, { quoted: mek });
+
+// SEND FILE
+await conn.sendMessage(from, { document: { url: mfire.result.dl_link }, mimetype: mfire.result.fileType , fileName: mfire.result.fileName, caption: mfire.result.fileName }, { quoted: mek });
+
+  
+} catch (e) {
+console.log(e)
+reply('This url type is not working !!')
+}
 })
 
-//gdrive(google drive) dl
-cmd({
-    pattern: "gdrive1",
-    alias: ["googledrive"],
-    desc: "download gdrive files",
-    category: "download",
-    filename: __filename
-},
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me gdrive url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/gdrivedl?url=${q}`)
-        reply("*🧚Downloading...*")
-        await conn.sendMessage(from, { document: { url: data.data.download }, fileName: data.data.fileName, mimetype: data.data.mimeType, caption: cap }, { quoted: mek })                                                                                                                 
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
-
-//mediafire dl
-cmd({
-    pattern: "mediafire",
-    alias: ["mfire"],
-    desc: "download mfire files",
-    category: "download",
-    filename: __filename
-},
-async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!q && !q.startsWith("https://")) return reply("give me mediafire url")
-        //fetch data from api  
-        let data = await fetchJson(`${baseUrl}/api/mediafiredl?url=${q}`)
-        reply("*《《Thenu-MD-MF-DL》》\n\n*🧚Downloading...*")
-        await conn.sendMessage(from, { document: { url: data.data.link_1 }, fileName: data.data.name, mimetype: data.data.file_type, caption: cap }, { quoted: mek })                                                                                                                 
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
+// https://whatsapp.com/channel/0029VaaPfFK7Noa8nI8zGg27
