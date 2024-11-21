@@ -29,18 +29,21 @@ const xv_info = await fetchJson(`${apilink}/download/xvideo?url=${xv_list.result
   // FIRST VIDEO
   
 const msg = `
-           🔞 *XVIDEO DOWNLOADER* 🔞
-
-       
-• *Title* - ${xv_info.result.title}
-
-• *Views* - ${xv_info.result.views}
-
-• *Like* - ${xv_info.result.like}
-
-• *Deslike* - ${xv_info.result.deslike}
-
-• *Size* - ${xv_info.result.size}
+╭─────────────────❖
+│🔞*XVIDEO DOWNLOADER*🔞
+╰─────────────────❖
+ ──────────────────❖
+╭────────────────❖
+│ ℹ️ *DARK_ALFHA_MD* 
+│
+│☍ ⦁ *Title* - ${xv_info.result.title}
+│☍ ⦁ *Views* - ${xv_info.result.views}
+│☍ ⦁ *Like* - ${xv_info.result.like}
+│☍ ⦁ *Deslike* - ${xv_info.result.deslike}
+│☍ ⦁ *Size* - ${xv_info.result.size}
+╰────────────────❖
+──────────────────❖
+> ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
 `
 
 
