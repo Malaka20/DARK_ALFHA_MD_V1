@@ -202,3 +202,77 @@ cmd({
     reply('' + error);
   }
 });
+
+cmd({
+  pattern: 'video',
+  desc: "To download videos.",
+  react: '🎥',
+  category: "download",
+  filename: __filename
+}, async (bot, message, args) => {
+  try {
+    const { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply } = message;
+    
+    if (!q) {
+      return reply("Please give me a URL or title.");
+    }
+
+    const videoLink = convertYouTubeLink(q);
+    const searchResults = await yts(videoLink);
+    const video = searchResults.videos[0];
+    const videoUrl = video.url;
+
+    const responseMessage = `
+      *Title:* ${video.title}
+      *Duration:* ${video.timestamp}
+      *Views:* ${video.views}
+      *Uploaded On:* ${video.ago}
+      *Link:* ${video.url}
+      
+      Reply with the number to download:
+      1.1 (360p)
+      1.2 (480p)
+      1.3 (720p)
+      1.4 (1080p)
+      
+      Created by Sadeesha Coder
+    `;
+
+    const sentMessage = await bot.sendMessage(from, { image: { url: video.thumbnail }, caption: responseMessage });
+    const messageId = sentMessage.key.id;
+
+    bot.ev.on("messages.upsert", async (upsertedMessages) => {
+      const incomingMessage = upsertedMessages.messages[0];
+      if (!incomingMessage.message) return;
+
+      const text = incomingMessage.message.conversation || incomingMessage.message.extendedTextMessage?.text;
+      const isResponseToBot = incomingMessage.message.extendedTextMessage && incomingMessage.message.extendedTextMessage.contextInfo.stanzaId === messageId;
+
+      if (isResponseToBot) {
+        await bot.sendMessage(incomingMessage.key.remoteJid, { react: { text: '⬇️', key: incomingMessage.key } });
+
+        let videoResolution;
+        switch (text) {
+          case "1.1": videoResolution = "360p"; break;
+          case "1.2": videoResolution = "480p"; break;
+          case "1.3": videoResolution = "720p"; break;
+          case "1.4": videoResolution = "1080p"; break;
+          default: return;
+        }
+
+        const videoFileUrl = await ytmp4(videoUrl, videoResolution);
+        await bot.sendMessage(incomingMessage.key.remoteJid, { react: { text: '⬆️', key: incomingMessage.key } });
+
+        await bot.sendMessage(incomingMessage.key.remoteJid, {
+          video: { url: videoFileUrl },
+          caption: "Created by Sadeesha Coder"
+        }, { quoted: incomingMessage });
+
+        await bot.sendMessage(incomingMessage.key.remoteJid, { react: { text: '✅', key: incomingMessage.key } });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    reply(error.message);
+  }
+});
