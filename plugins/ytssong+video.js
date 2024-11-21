@@ -1,89 +1,74 @@
-const { cmd, commands } = require("../command");
+ const { cmd, commands } = require("../command");
 const yts = require("yt-search");
-const axios = require('axios');
+const axios = require("axios");
+const fg = require("api-dylux");
 
-// Function to download YouTube audio using a specific API
-async function dlyta(url) {
+async function ytmp3(url) {
   try {
-    for (let i = 0; i < 10; i++) {
-      const response = await fetch("https://api-pink-venom.vercel.app/api/ytdl?url=" + url);
-      const data = await response.json();
-      if (data.result.download_url) {
-        return {
-          status: true,
-          dl_link: data.result.download_url
-        };
-      }
-    }
-    await new Promise(resolve => setTimeout(resolve, 4000));
+    if (!url) throw new Error("URL parameter is required");
+
+    const { title, dl_url } = await fg.yta(url);
     return {
-      status: false,
-      msg: "error"
+      status: true,
+      Created_by: "Janith Rashmika",
+      title,
+      dl_link: dl_url
     };
   } catch (error) {
-    console.error(error);
-    return {
-      status: false,
-      msg: error.message
-    };
+    return { status: false, error: error.message };
   }
 }
 
-// Function to download YouTube video in a specified format
 async function ytmp4(url, format) {
   try {
-    if (!url || !format) {
-      throw new Error("url and format parameters are required.");
-    }
-    const formatInt = parseInt(format.replace('p', ''), 10);
-    const params = {
-      button: 1,
-      start: 1,
-      end: 1,
-      format: formatInt,
-      url: url
-    };
-    const headers = {
-      Accept: "*/*",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
-      Origin: 'https://loader.to',
-      Referer: "https://loader.to",
-      "Sec-Ch-Ua": "\"Not-A.Brand\";v=\"99\", \"Chromium\";v=\"124\"",
-      "Sec-Ch-Ua-Mobile": '?1',
-      "Sec-Ch-Ua-Platform": "\"Android\"",
-      "Sec-Fetch-Dest": 'empty',
-      "Sec-Fetch-Mode": "cors",
-      "Sec-Fetch-Site": 'cross-site',
-      "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
-    };
-    const response = await axios.get("https://ab.cococococ.com/ajax/download.php", { params, headers });
-    const id = response.data.id;
+    if (!url || !format) throw new Error("Both URL and format parameters are required.");
 
-    const checkProgress = async () => {
+    const formatInt = parseInt(format.replace('p', ''), 10);
+    const requestConfig = {
+      params: { button: 1, start: 1, end: 1, format: formatInt, url },
+      headers: {
+        Accept: "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+        Origin: "https://loader.to",
+        Referer: "https://loader.to",
+        "Sec-Ch-Ua": "\"Not-A.Brand\";v=\"99\", \"Chromium\";v=\"124\"",
+        "Sec-Ch-Ua-Mobile": '?1',
+        "Sec-Ch-Ua-Platform": "\"Android\"",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "cross-site",
+        "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+      }
+    };
+
+    const { data: initialResponse } = await axios.get("https://ab.cococococ.com/ajax/download.php", requestConfig);
+    const id = initialResponse.id;
+
+    async function checkProgress() {
       try {
-        const progressResponse = await axios.get("https://p.oceansaver.in/ajax/progress.php", {
+        const { data: progressResponse } = await axios.get("https://p.oceansaver.in/ajax/progress.php", {
           params: { id },
-          headers
+          headers: requestConfig.headers
         });
-        const { progress, download_url, text } = progressResponse.data;
-        return text === 'Finished' ? download_url : (await new Promise(resolve => setTimeout(resolve, 1000)), checkProgress());
+        const { progress, download_url, text } = progressResponse;
+
+        if (text === "Finished") return download_url;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return checkProgress();
       } catch (error) {
         throw new Error("Error in progress check: " + error.message);
       }
-    };
+    }
 
     return await checkProgress();
   } catch (error) {
-    console.error(error);
-    throw error;
+    return { status: false, error: error.message };
   }
 }
 
-module.exports = {
-  dlyta,
-  ytmp4
-};
+const utils = { ytmp3, ytmp4 };
+module.exports = utils;
 
 function extractYouTubeId(url) {
   const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|playlist\?list=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -93,9 +78,8 @@ function extractYouTubeId(url) {
 
 function convertYouTubeLink(url) {
   const id = extractYouTubeId(url);
-  return id ? "https://www.youtube.com/watch?v=" + id : url;
+  return id ? `https://www.youtube.com/watch?v=${id}` : url;
 }
-
 // Command to download songs
 cmd({
   pattern: "song",
