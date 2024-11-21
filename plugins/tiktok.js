@@ -25,16 +25,20 @@ if(!q) return await reply("Please give me tiktok url");
 const tiktok = await fetchJson(`${apilink}/download/tiktok?url=${q}`);
   
 const msg = `
-           📥 *TIKTOK DOWNLOADER* 📥
-
-
-• *Title* - ${tiktok.result.title}
-
-• *Author* - ${tiktok.result.author}
-
-• *Duration* - ${tiktok.result.duration}
-
-• *Views* - ${tiktok.result.views}   
+╭─────────────────❖
+│📥*TIKTOK DOWNLOADER*📥
+╰─────────────────❖
+──────────────────❖
+╭────────────────❖
+│ ℹ️ *DARK_ALFHA_MD* 
+│
+│☍ ⦁ *Title* - ${tiktok.result.title}
+│☍ ⦁ *Author* - ${tiktok.result.author}
+│☍ ⦁ *Duration* - ${tiktok.result.duration}
+│☍ ⦁ *Views* - ${tiktok.result.views}
+╰────────────────❖
+──────────────────❖
+> ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
 `
   
 // SEND DETAILS
