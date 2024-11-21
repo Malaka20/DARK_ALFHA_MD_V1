@@ -15,8 +15,8 @@ let baseUrl;
 
 //fb downloader
 cmd({
-    pattern: "fb",
-    alias: ["facebook"],
+    pattern: "fb1",
+    alias: ["facebook1"],
     desc: "download fb videos",
     category: "download",
     filename: __filename
@@ -39,7 +39,7 @@ async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, send
 
 //twitter dl (x)
 cmd({
-    pattern: "twitter",
+    pattern: "twitter1",
     alias: ["twdl"],
     desc: "download tw videos",
     category: "download",
@@ -64,7 +64,7 @@ async(conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, send
 
 //gdrive(google drive) dl
 cmd({
-    pattern: "gdrive",
+    pattern: "gdrive1",
     alias: ["googledrive"],
     desc: "download gdrive files",
     category: "download",
