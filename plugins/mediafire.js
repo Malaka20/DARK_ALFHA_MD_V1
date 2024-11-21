@@ -22,7 +22,7 @@ try{
 if(!q) return await reply("Please give me mediafire url");
   if(!q.includes('mediafire.com')) return await reply("This url is invalid");
   
-const mfire = await fetchJson(`${apilink}/download/mfire?url=${q}`);
+const mfire = await fetchJson(`${apilink}https://www.dark-yasiya-api.site/download/mfire?url=${q}`);
   
 const msg = `
            🔥 *MEDIAFIRE DOWNLOADER* 🔥
