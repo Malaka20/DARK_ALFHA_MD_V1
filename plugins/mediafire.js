@@ -25,15 +25,19 @@ if(!q) return await reply("Please give me mediafire url");
 const mfire = await fetchJson(`${apilink}/download/mfire?url=${q}`);
   
 const msg = `
-           🔥 *MEDIAFIRE DOWNLOADER* 🔥
-
-
-• *File Name* - ${mfire.result.fileName}
-
-• *File Size* - ${mfire.result.size}
-
-• *Upload Date and Time* - ${mfire.result.date}
-
+╭─────────────────❖
+│🔥*MEDIAFIRE DOWNLOADER*🔥
+╰─────────────────❖
+──────────────────❖
+╭────────────────❖
+│ ℹ️ *DARK_ALFHA_MD* 
+│
+│☍ ⦁ *File Name* - ${mfire.result.fileName}
+│☍ ⦁ *File Size* - ${mfire.result.size}
+│☍ ⦁ *Upload Date and Time* - ${mfire.result.date}
+╰────────────────❖
+──────────────────❖
+> ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
 `
   
 // SEND DETAILS
