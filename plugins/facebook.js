@@ -14,7 +14,7 @@ const {
   fetchJson,
   runtime,
   sleep
-} = require("../DATABASE/functions");
+} = require("../lib/functions");
 const {
   Sticker,
   createSticker,
