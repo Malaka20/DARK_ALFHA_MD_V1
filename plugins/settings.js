@@ -14,7 +14,7 @@ cmd({
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
         let desc = `┏━━━━━━━━━━━━━━━━━━━━━━━┓
-┃       ⚙ QUEEN LITHU MD BOT SETTINGS ⚙
+┃       ⚙ DARK_ALFHA_MD BOT SETTINGS ⚙
 ┃━━━━━━━━━━━━━━━━━━━━━━━┃
 ┣━💼 Work Mode : 𝙿𝚄𝙱𝙻𝙸𝙲🌎/𝙿𝚁𝙸𝚅𝙰𝚃𝙴/𝙸𝙽𝙱𝙾𝚇/𝙶𝚁𝙾𝚄𝙿
 ┣━🔊 Auto Voice : ♻ 𝙾𝙽/𝙾𝙵𝙵
@@ -61,7 +61,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ┃   ┗ 7.2 🖊❌ Deactivate Auto Command Read
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
 
-> *©ᴘᴏᴡᴇʀᴇᴅ Qᴜᴇᴇɴ-ʟɪᴛʜᴜ-ᴍᴅ*`;
+> *© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ*`;
 
         const vv = await conn.sendMessage(from, { image: { url: "https://ibb.co/F0ccn0P"}, caption: desc }, { quoted: mek });
 
