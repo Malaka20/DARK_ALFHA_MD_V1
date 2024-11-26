@@ -8,7 +8,7 @@
 <a><img src='https://i.imgur.com/LyHic3i.gif'/></a><a><img src='https://i.imgur.com/LyHic3i.gif'/></a>
 1. Get Session
    
-    <a href='https://pair-web-public.koyeb.app/' target="_blank"><img alt='SESSION ID' src='https://img.shields.io/badge/Session_id-900000?style=for-the-badge&logo=scan&logoColor=white&labelColor=black&color=blue'/></a>
+    <a href='https://replit.com/@darkalfhabot/MALAKA-SESSION-ID-V2-1#README.md' target="_blank"><img alt='SESSION ID' src='https://img.shields.io/badge/Session_id-900000?style=for-the-badge&logo=scan&logoColor=white&labelColor=black&color=blue'/></a>
      
 <p align="center">
 <a href='https://railway.app/new' target="_blank"><img alt='Heroku' src='https://img.shields.io/badge/-railway deploy-blue?style=for-the-badge&logo=railway&logoColor=white'/< width=150 height=28/p></a>
