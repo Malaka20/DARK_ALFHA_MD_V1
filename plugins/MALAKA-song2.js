@@ -26,14 +26,20 @@ let yts = yt.results[0]
 const ytdl = await ytmp3(yts.url)
 		
 let ytmsg = `
-🎶 SONG DOWNLOADER 🎶
-
-
-🎵 *TITLE :* ${yts.title}
-🤵 *AUTHOR :* ${yts.author.name}
-⏱ *RUNTIME :* ${yts.timestamp}
-👀 *VIEWS :* ${yts.views}
-🖇️ *URL :* ${yts.url}
+╭─────────────────❖
+│*SONG DOWNLOADER* 🎶
+╰─────────────────❖
+──────────────────❖
+╭────────────────❖
+│ ℹ️ *DARK_ALFHA_MD* 
+│
+│☍ ⦁ *TITLE :* ${yts.title}
+│☍ ⦁ *AUTHOR :* ${yts.author.name}
+│☍ ⦁ *RUNTIME :* ${yts.timestamp}
+│☍ ⦁ *VIEWS :* ${yts.views}
+╰────────────────❖
+──────────────────❖
+> ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
 `
 // SEND DETAILS
 await conn.sendMessage(from, { image: { url: yts.thumbnail || yts.image || '' }, caption: `${ytmsg}`}, { quoted: mek });
