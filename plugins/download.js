@@ -1,111 +1,125 @@
-const config = require('../config')
-const { cmd } = require('../command')
-const axios = require('axios')
-const { fetchJson } = require('../lib/functions')
+const { fetchJson } = require("../lib/functions");
+const { downloadTiktok } = require('@mrnima/tiktok-downloader');
+const { facebook } = require("@mrnima/facebook-downloader");
+const cheerio = require("cheerio");
+const { igdl } = require("ruhend-scraper");
+const axios = require('axios');
+const { cmd, commands } = require("../command");
 
-const apilink = 'https://dark-yasiya-news-apis.vercel.app/api' // API LINK ( DO NOT CHANGE THIS!! )
-
-
-// ================================HIRU NEWS========================================
 
 cmd({
-    pattern: "hirunews",
-    alias: ["hiru","news1"],
-    react: "⭐",
-    desc: "",
-    category: "news",
-    use: '.hirunews',
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, reply }) => {
-try{
+  pattern: "tiktok1",
+  alias: ['tt1'],
+  react: '🎥',
+  desc: "download TikTok videos",
+  category: "download",
+  filename: __filename
+}, async (botInstance, msgEvent, msgOptions, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
+  try {
+    // Validate the provided URL
+    if (!q || !q.startsWith("https://")) {
+      return reply("*`Need a valid URL`*");
+    }
 
-const news = await fetchJson(`${apilink}/hiru`)
-  
-const msg = `
-           ⭐ *HIRU NEWS* ⭐
+    // React to the message indicating download in progress
+    msgOptions.react('⬇️');
 
-       
-• *Title* - ${news.result.title}
+    // Download TikTok video
+    let tiktokData = await downloadTiktok(q);
 
-• *News* - ${news.result.desc}
+    // Prepare response message with options for the user to choose download quality
+    let responseMessage = `
+┏━┫*⚬Lααɾα-ᴍᴅ-ᴛɪᴋᴛᴏᴋ⚬*┣━✾
+┃            *ᴸ  ͣ  ͣ  ͬ  ͣ  ✻  ᴸ  ͣ  ͣ  ͬ  ͣ*
+┻
+*ᴛɪᴛʟᴇ*:  ${tiktokData.result.title}
 
-• *Link* - ${news.result.url}`
+*🔢 Reply with the number below*
 
+*VIDEO FILE* 🎬
+*1*     ┃  *SD Quality*
+*2*     ┃  *HD Quality*
 
-await conn.sendMessage( from, { image: { url: news.result.image || '' }, caption: msg }, { quoted: mek })
-} catch (e) {
-console.log(e)
-reply(e)
-}
-})
+*AUDIO FILE* 🎧
+*3*     ┃  *Audio*
 
-// ================================SIRASA NEWS========================================
+> Lααɾα-ᴍᴅ ✻
+`;
 
-cmd({
-    pattern: "sirasanews",
-    alias: ["sirasa","news2"],
-    react: "🔺",
-    desc: "",
-    category: "news",
-    use: '.sirasa',
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, reply }) => {
-try{
+    // Send response message with the video thumbnail
+    const sentMessage = await botInstance.sendMessage(from, {
+      image: { url: tiktokData.result.image },
+      caption: responseMessage
+    });
 
-const news = await fetchJson(`${apilink}/sirasa`)
-  
-const msg = `
-           🔺 *SIRASA NEWS* 🔺
+    const messageID = sentMessage.key.id;
 
-       
-• *Title* - ${news.result.title}
+    // Listen for the user's reply to choose the download quality
+    botInstance.ev.on("messages.upsert", async (messageEvent) => {
+      const newMessage = messageEvent.messages[0];
+      if (!newMessage.message) return;
 
-• *News* - ${news.result.desc}
+      const userReply = newMessage.message.conversation || newMessage.message.extendedTextMessage?.text;
+      const chatID = newMessage.key.remoteJid;
+      const isReplyToOriginal = newMessage.message.extendedTextMessage && newMessage.message.extendedTextMessage.contextInfo.stanzaId === messageID;
 
-• *Link* - ${news.result.url} `
+      if (isReplyToOriginal) {
+        // React to the user's reply
+        await botInstance.sendMessage(chatID, {
+          react: { text: '⬇️', key: newMessage.key }
+        });
 
+        let downloadLinks = tiktokData.result;
 
-await conn.sendMessage( from, { image: { url: news.result.image || '' }, caption: msg }, { quoted: mek })
-} catch (e) {
-console.log(e)
-reply(e)
-}
-})
+        // Send the appropriate file based on user's reply
+        if (userReply === '1') {
+          await botInstance.sendMessage(chatID, {
+            video: { url: downloadLinks.dl_link.download_mp4_1 },
+            caption: "*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·*"
+          }, { quoted: newMessage });
+        } else if (userReply === '2') {
+          await botInstance.sendMessage(chatID, {
+            video: { url: downloadLinks.dl_link.download_mp4_2 },
+            caption: "*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·*"
+          }, { quoted: newMessage });
+        } else if (userReply === '3') {
+          await botInstance.sendMessage(chatID, {
+            audio: { url: downloadLinks.dl_link.download_mp3 },
+            mimetype: "audio/mpeg"
+          }, { quoted: newMessage });
+        }
 
-// ================================DERANA NEWS========================================
-
-cmd({
-    pattern: "derananews",
-    alias: ["derana","news3"],
-    react: "📑",
-    desc: "",
-    category: "news",
-    use: '.derana',
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, reply}) => {
-try{
-
-const news = await fetchJson(`${apilink}/derana`)
-  
-const msg = `
-           📑 *DERANA NEWS* 📑
-
-       
-• *Title* - ${news.result.title}
-
-• *News* - ${news.result.desc}
-
-• *Date* - ${news.result.date}
-
-• *Link* - ${news.result.url} `
-
-
-await conn.sendMessage( from, { image: { url: news.result.image || '' }, caption: msg }, { quoted: mek })
-} catch (e) {
-console.log(e)
-reply(e)
-}
-})
+        // React to indicate the file has been sent
+        await botInstance.sendMessage(chatID, {
+          react: { text: '⬆️', key: newMessage.key }
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    reply('' + error);
+  }
+});
