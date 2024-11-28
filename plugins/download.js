@@ -117,3 +117,93 @@ cmd({
     await reply("*An error occurred while searching!*");
   }
 });
+
+cmd({
+  pattern: 'fb',
+  alias: ["facebook"],
+  desc: "Download Facebook videos",
+  category: "download",
+  filename: __filename
+}, async (bot, message, chat, options) => {
+  try {
+    const { from, q: url, reply } = options;
+
+    // Validate URL
+    if (!url || !url.startsWith("https://")) {
+      return reply("Please provide a valid Facebook video URL.");
+    }
+
+    // React to the command
+    await bot.sendMessage(from, { react: { text: '⏳', key: message.key } });
+
+    // Fetch Facebook video details
+    const videoData = await facebook(url);
+    if (!videoData || !videoData.result) {
+      return reply("Failed to fetch Facebook video details. Please try again.");
+    }
+
+    // Build options menu
+    const caption = `
+*Facebook Downloader* 📹
+*Duration*: ${videoData.result.duration}
+
+Choose an option:
+1️⃣ SD Video
+2️⃣ HD Video
+3️⃣ Audio
+4️⃣ Audio (as Document)
+5️⃣ Voice Note
+    `;
+
+    const menuMessage = await bot.sendMessage(from, {
+      image: { url: videoData.result.thumbnail },
+      caption,
+    }, { quoted: message });
+
+    // Listen for user response
+    bot.ev.on("messages.upsert", async (update) => {
+      const response = update.messages[0];
+      if (!response.message) return;
+
+      const userChoice = response.message.conversation || response.message.extendedTextMessage?.text;
+      const isReply = response.message.extendedTextMessage?.contextInfo.stanzaId === menuMessage.key.id;
+
+      if (isReply) {
+        await bot.sendMessage(from, { react: { text: '⬇️', key: response.key } });
+
+        const { links } = videoData.result;
+
+        switch (userChoice) {
+          case "1":
+            await bot.sendMessage(from, { video: { url: links.SD }, caption: "Here is your SD video." });
+            break;
+          case "2":
+            await bot.sendMessage(from, { video: { url: links.HD }, caption: "Here is your HD video." });
+            break;
+          case "3":
+            await bot.sendMessage(from, { audio: { url: links.SD }, mimetype: "audio/mpeg" });
+            break;
+          case "4":
+            await bot.sendMessage(from, {
+              document: { url: links.SD },
+              mimetype: "audio/mpeg",
+              fileName: "Facebook_Audio.mp3",
+              caption: "Here is your audio as a document.",
+            });
+            break;
+          case "5":
+            await bot.sendMessage(from, { audio: { url: links.SD }, mimetype: "audio/mp4", ptt: true });
+            break;
+          default:
+            reply("Invalid choice. Please reply with a valid number.");
+        }
+
+        await bot.sendMessage(from, { react: { text: '⬆️', key: response.key } });
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    reply("An error occurred while processing your request. Please try again.");
+  }
+});
