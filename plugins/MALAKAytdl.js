@@ -207,3 +207,157 @@ console.log(e)
 reply(`${e}`)
 }
 })
+
+//==========video download============================
+cmd({
+  pattern: 'video',
+  desc: "To download videos.",
+  react: '🎥',
+  category: "download",
+  filename: __filename
+}, async (client, message, _, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+  try {
+    // Check if URL or title is provided
+    if (!q) {
+      return reply("Please give me a URL or title.");
+    }
+
+    // Convert input to YouTube link format
+    q = convertYouTubeLink(q);
+
+    // Search for the YouTube video
+    const searchResults = await yts(q);
+    const video = searchResults.videos[0];
+    const videoUrl = video.url;
+
+    // Construct the details message
+    let detailsMessage = `
+      ╭─────────────────❖
+      │𝘔𝘈𝘓𝘈𝘒𝘈 VIDEO DOWNLOADING
+      ╰─────────────────❖
+       ──────────────────❖
+      ╭────────────────❖
+      │ ℹ️ *DARK_ALFHA_MD* 
+      │
+      │☍ ⦁ *Title:* ${video.title}
+      │☍ ⦁ *Duration:* ${video.timestamp}
+      │☍ ⦁ *Views:* ${video.views}
+      │☍ ⦁ *Uploaded On:* ${video.ago}
+      ╰────────────────❖  
+       ──────────────────❖
+      ╭──────────────────
+      │ © 𝙏𝙤 𝙙𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙚𝙣𝙙: 🔢
+      │
+      │ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴠɪᴅᴇᴏ ꜰɪʟᴇ 📽️
+      │ _➀.➀ 360ᴘ
+      │ _➀.➁ 480ᴘ
+      │ _➀.➂ 720ᴘ
+      │ _➀.➃ 1080ᴘ
+      │ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴅᴏᴄᴜᴍᴇɴᴛ 📂
+      │ _➁.➀ 360ᴘ
+      │ _➁.➁ 480ᴘ
+      │ _➁.➂ 720ᴘ
+      │ _➁.➃ 1080ᴘ
+      ╰──────────────────❖
+     > © ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
+    `;
+
+    // Send the image with the details message
+    const sentMessage = await client.sendMessage(from, {
+      image: { url: video.thumbnail },
+      caption: detailsMessage
+    });
+
+    const messageId = sentMessage.key.id;
+
+    // Listen for further messages in the conversation
+    client.ev.on("messages.upsert", async upsert => {
+      const receivedMessage = upsert.messages[0];
+      if (!receivedMessage.message) {
+        return;
+      }
+
+      const text = receivedMessage.message.conversation || receivedMessage.message.extendedTextMessage?.text;
+      const chatId = receivedMessage.key.remoteJid;
+      const isReply = receivedMessage.message.extendedTextMessage && receivedMessage.message.extendedTextMessage.contextInfo.stanzaId === messageId;
+
+      if (isReply) {
+        // React to the message
+        await client.sendMessage(chatId, {
+          react: {
+            text: '⬇️',
+            key: receivedMessage.key
+          }
+        });
+
+        // Download and send the video based on the user's choice
+        let resolution = '';
+        switch (text) {
+          case "1.1":
+            resolution = "360p";
+            break;
+          case "1.2":
+            resolution = "480p";
+            break;
+          case "1.3":
+            resolution = "720p";
+            break;
+          case "1.4":
+            resolution = "1080p";
+            break;
+          case "2.1":
+            resolution = "360";
+            break;
+          case "2.2":
+            resolution = "480";
+            break;
+          case "2.3":
+            resolution = "720";
+            break;
+          case "2.4":
+            resolution = "1080";
+            break;
+          default:
+            return;
+        }
+
+        const videoUrlWithResolution = await ytmp4(videoUrl, resolution);
+
+        await client.sendMessage(chatId, {
+          react: {
+            text: '⬆️',
+            key: receivedMessage.key
+          }
+        });
+
+        if (text.startsWith("1.")) {
+          await client.sendMessage(chatId, {
+            video: { url: videoUrlWithResolution },
+            caption: "\n* © ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻*\n"
+          }, {
+            quoted: receivedMessage
+          });
+        } else {
+          await client.sendMessage(chatId, {
+            document: { url: videoUrlWithResolution },
+            mimetype: "video/mp4",
+            fileName: `${video.title}.mp4`,
+            caption: "\n* © ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻 *\n"
+          }, {
+            quoted: receivedMessage
+          });
+        }
+
+        await client.sendMessage(chatId, {
+          react: {
+            text: '✅',
+            key: receivedMessage.key
+          }
+        });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    reply('' + error);
+  }
+});
