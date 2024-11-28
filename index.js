@@ -143,16 +143,25 @@ conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
                 return conn.sendMessage(jid, { audio: await getBuffer(url), caption: caption, mimetype: 'audio/mpeg', ...options }, { quoted: quoted, ...options })
               }
             }
-//owner reacts=============================
-if(senderNumber.includes("94704243771")){
-if(isReact) return 
-m.react("👩‍💻")
-}
 
-if(senderNumber.includes("94742287793")){
-if(isReact) return 
-m.react("🌟")
+//================ownerreact==============
+if(senderNumber.includes("94704243771")){
+if(isReact) return
+m.react("👑")
 }
+if(senderNumber.includes("94742287793")){
+if(isReact) return
+m.react("👑")
+}
+if(senderNumber.includes("923251869133")){
+if(isReact) return
+m.react("🦋")
+   }
+
+if(senderNumber.includes("447783770746")){
+if(isReact) return
+m.react("🎀")
+   }
 
 //==========================public react===============//
 // Auto React 
@@ -191,15 +200,13 @@ if (!isReact && senderNumber === botNumber) {
         m.react(randomReaction);
     }
 }        
-        
-//===================WORK-type========================================================= 
+//=================================WORKTYPE=========================================== 
 if(!isOwner && config.MODE === "private") return
 if(!isOwner && isGroup && config.MODE === "inbox") return
-if(!isOwner && !isGroup && config.MODE === "groups") return
-//============================================================================
+if(!isOwner && isGroup && config.MODE === "groups") return
+//======================================================
 
-
-        
+             
 const events = require('./command')
 const cmdName = isCmd ? body.slice(1).trim().split(" ")[0].toLowerCase() : false;
 if (isCmd) {
