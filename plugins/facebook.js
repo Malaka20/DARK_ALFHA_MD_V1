@@ -2,7 +2,7 @@ const {cmd , commands} = require('../command');
 const { igdl } = require('ruhend-scraper');
 
 cmd({
-    pattern: "fb",
+    pattern: "fb2",
     desc: "To download facebook videos.",
     category: "download",
     filename: __filename
