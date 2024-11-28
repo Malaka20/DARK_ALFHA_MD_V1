@@ -144,15 +144,24 @@ cmd({
 
     // Build options menu
     const caption = `
-*Facebook Downloader* 📹
-*Duration*: ${videoData.result.duration}
-
-Choose an option:
-1️⃣ SD Video
-2️⃣ HD Video
-3️⃣ Audio
-4️⃣ Audio (as Document)
-5️⃣ Voice Note
+      *ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ ꜰʙ⚬*⌛ᴅᴜʀᴀᴛɪᴏɴ*
+      *Duration*: ${videoData.result.duration}
+      ╭──────────────────❖
+      │ © 𝙏𝙤 𝙙𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙚𝙣𝙙: 🔢
+      │
+      │ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴠɪᴅᴇᴏ ꜰɪʟᴇ 🎬      
+      │
+      │ _➀.➀ *ꜱᴅ ᴍᴀʟᴀᴋᴀ-ᴍᴅ*
+      │ _➀.➁ *ʜᴅ ᴍᴀʟᴀᴋᴀ-ᴍᴅ*
+      │ 
+      │ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴅᴏᴄᴜᴍᴇɴᴛ 🎧
+      │
+      │ _➁.➀ *ᴀᴜᴅɪᴏ*
+      │ _➁.➁ *ᴅᴏᴄᴜᴍᴇɴᴛ*
+      │ _➁.➂ *ᴠᴏɪᴄᴇ*
+      ╰──────────────────❖
+       > ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
+       > 
     `;
 
     const menuMessage = await bot.sendMessage(from, {
@@ -205,5 +214,87 @@ Choose an option:
   } catch (error) {
     console.error(error);
     reply("An error occurred while processing your request. Please try again.");
+  }
+});
+
+cmd({
+  pattern: "tiktok",
+  alias: ['tt'],
+  react: '🎥',
+  desc: "Download TikTok videos",
+  category: "download",
+  filename: __filename
+}, async (bot, message, chat, options) => {
+  try {
+    const { from, q: url, reply } = options;
+
+    // Validate URL
+    if (!url || !url.startsWith("https://")) {
+      return reply("Please provide a valid TikTok URL.");
+    }
+
+    // React to command
+    chat.react('⬇️');
+
+    // Fetch download links
+    const videoData = await downloadTiktok(url);
+    if (!videoData || !videoData.result) {
+      return reply("Failed to fetch TikTok video details. Please try again.");
+    }
+
+    // Send options to user
+    const caption = `
+      *ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ ᴛɪᴋᴛᴏᴋ⚬*⌛ᴛɪᴛʟᴇ*
+      *Title*: ${videoData.result.title}
+      ╭──────────────────❖
+      │ © 𝙏𝙤 𝙙𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙚𝙣𝙙: 🔢
+      │
+      │ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴠɪᴅᴇᴏ ꜰɪʟᴇ 🎬      
+      │
+      │ _➀ *ꜱᴅ* ᴍᴀʟᴀᴋᴀ-ᴍᴅ*
+      │ _➁ *ʜᴅ* ᴍᴀʟᴀᴋᴀ-ᴍᴅ*
+      │ 
+      │ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴅᴏᴄᴜᴍᴇɴᴛ 🎧
+      │
+      │ _➂ *ᴀᴜᴅɪᴏ* ᴍᴀʟᴀᴋᴀ-ᴍᴅ*
+      │
+      ╰──────────────────❖
+       > ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
+       > 
+    `;
+    const menuMessage = await bot.sendMessage(from, {
+      image: { url: videoData.result.image },
+      caption,
+    });
+
+    // Wait for user selection
+    bot.ev.on("messages.upsert", async (update) => {
+      const response = update.messages[0];
+      if (!response.message) return;
+
+      const userChoice = response.message.conversation || response.message.extendedTextMessage?.text;
+      const isReply = response.message.extendedTextMessage?.contextInfo.stanzaId === menuMessage.key.id;
+
+      if (isReply) {
+        // Process user selection
+        chat.react('⬇️');
+        const { dl_link } = videoData.result;
+
+        if (userChoice === '1') {
+          await bot.sendMessage(from, { video: { url: dl_link.download_mp4_1 }, caption: "> ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ SD video!" });
+        } else if (userChoice === '2') {
+          await bot.sendMessage(from, { video: { url: dl_link.download_mp4_2 }, caption: "> ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ HD video!" });
+        } else if (userChoice === '3') {
+          await bot.sendMessage(from, { audio: { url: dl_link.download_mp3 }, mimetype: "audio/mpeg" });
+        } else {
+          reply("Invalid choice. Please reply with 1, 2, or 3.");
+        }
+        chat.react('⬆️');
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    reply("An error occurred. Please try again.");
   }
 });
