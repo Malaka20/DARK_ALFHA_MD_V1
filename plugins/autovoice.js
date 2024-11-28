@@ -59,16 +59,3 @@ async (conn, mek, m, { from, body, isOwner }) => {
         }
     }                
 });            
-
-
-//fake recording
-cmd({
-  on: "body"
-},    
-async (conn, mek, m, { from, body, isOwner }) => {       
- if (config.FAKE_RECORDING === 'true') {
-                await conn.sendPresenceUpdate('recording', from);
-            }
-         } 
-   );
-//always offline
