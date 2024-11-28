@@ -175,10 +175,10 @@ Choose an option:
 
         switch (userChoice) {
           case "1":
-            await bot.sendMessage(from, { video: { url: links.SD }, caption: "Here is your SD video." });
+            await bot.sendMessage(from, { video: { url: links.SD }, caption: ">*ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ SD video." });
             break;
           case "2":
-            await bot.sendMessage(from, { video: { url: links.HD }, caption: "Here is your HD video." });
+            await bot.sendMessage(from, { video: { url: links.HD }, caption: ">*ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ HD video." });
             break;
           case "3":
             await bot.sendMessage(from, { audio: { url: links.SD }, mimetype: "audio/mpeg" });
