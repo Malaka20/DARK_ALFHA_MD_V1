@@ -54,8 +54,8 @@ reply('This url type is not working !!')
 })
 
 cmd({
-    pattern: "tiktok",
-    alias: ["tt","ttdown"],
+    pattern: "tiktok2",
+    alias: ["tt2","ttdown2"],
     react: "📥",
     desc: "",
     category: "download",
