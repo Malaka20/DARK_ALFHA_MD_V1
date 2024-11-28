@@ -1,28 +1,68 @@
 const { cmd, commands } = require('../command')
 
-cmd({
-    pattern: "promote",
-    desc: "Promote a member to admin.",
-    category: "group",
-    react: "🔼",
-    filename: __filename
-},
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        if (!isGroup) return reply('This command can only be used in a group.')
-        if (!isBotAdmins) return reply('Bot must be an admin to use this command.')
-        if (!isAdmins) return reply('You must be an admin to use this command.')
+const promoteCommand = {
+  pattern: "promote",
+  react: '🥏',
+  alias: ['addadmin'],
+  desc: "To add a participant as an admin",
+  category: 'group',
+  use: '.promote',
+  filename: __filename
+};
 
-        const user = m.mentioned[0] || m.quoted?.sender
-        if (!user) return reply('Please tag or reply to a user to promote.')
+cmd(promoteCommand, async (client, message, args, extras) => {
+  const {
+    from,
+    quoted,
+    isGroup,
+    groupAdmins,
+    isAdmins,
+    isBotAdmins,
+    participants,
+    reply,
+  } = extras;
 
-        await conn.groupParticipantsUpdate(from, [user], 'promote')
-        await reply(`@${user.split('@')[0]} has been promoted to admin.`, { mentions: [user] })
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
+  try {
+    // Fetch predefined replies from an external JSON file
+    const replyMessages = (await fetchJson("https://raw.githubusercontent.com/SILENTLOVER40/SILENT-SOBX-MD-DATA/refs/heads/main/DATABASE/mreply.json")).replyMsg;
+
+    // Ensure the command is used in a group
+    if (!isGroup) {
+      return reply(replyMessages.only_gp);
     }
-})
+
+    // Ensure the sender is an admin
+    if (!isAdmins) {
+      return reply(replyMessages.you_adm);
+    }
+
+    // Ensure the bot has admin rights
+    if (!isBotAdmins) {
+      return reply(replyMessages.give_adm);
+    }
+
+    // Get the user to promote
+    const userToPromote = message.mentionedJid?.[0] || message.msg?.contextInfo?.participant;
+
+    if (!userToPromote) {
+      return reply("❌ Couldn't find any user to promote!");
+    }
+
+    // Check if the user is already an admin
+    const isAlreadyAdmin = groupAdmins.includes(userToPromote);
+    if (isAlreadyAdmin) {
+      return reply("✔️ User is already an admin.");
+    }
+
+    // Promote the user
+    await client.groupParticipantsUpdate(from, [userToPromote], 'promote');
+    await client.sendMessage(from, { text: "✔️ User has been promoted to admin." }, { quoted });
+
+  } catch (error) {
+    console.error("Error while promoting user:", error);
+    reply("❌ An error occurred while trying to promote the user.");
+  }
+});
 
 cmd({
     pattern: "demote",
