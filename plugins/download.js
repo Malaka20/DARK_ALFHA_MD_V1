@@ -297,108 +297,50 @@ cmd({
   }
 });
 
-const cheerio = require('cheerio');
-const fetch = require('node-fetch');
-
-// Command definition for downloading Instagram videos
 cmd({
   pattern: 'ig',
   alias: ["insta"],
-  desc: "To download Instagram videos.",
+  desc: "Download Instagram videos.",
   react: '🎥',
   category: "download",
   filename: __filename
-}, async (client, message, args, {
-  from,
-  quoted,
-  body,
-  isCmd,
-  command,
-  args,
-  q,
-  isGroup,
-  sender,
-  senderNumber,
-  botNumber2,
-  botNumber,
-  pushname,
-  isMe,
-  isOwner,
-  groupMetadata,
-  groupName,
-  participants,
-  groupAdmins,
-  isBotAdmins,
-  isAdmins,
-  reply
+}, async (_0x386562, _0x1b4817, _0x2d5654, {
+  from: _0x2b1245,
+  quoted: _0x35994d,
+  q: _0x133e89,
+  reply: _0x1bd856
 }) => {
   try {
-    // Check if a valid link is provided
-    if (!q) {
-      return reply("Please provide a valid link.");
+    // Validate URL
+    if (!_0x133e89 || !/^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(_0x133e89)) {
+      return _0x2d5654.reply("Please provide a valid Instagram link.");
     }
-
-    // React to indicate the download process has started
-    await message.react('⬇️');
+    
+    _0x2d5654.react('⬇️');
 
     // Fetch video data
-    let videoData = await igdl(q);
-    let videoUrls = videoData.data;
-
-    // Loop through the video URLs and send each video
-    for (let i = 0; i < videoUrls.length; i++) {
-      let videoUrl = videoUrls[i].url;
-
-      // React to indicate the upload process has started
-      await message.react('⬆️');
-
-      await client.sendMessage(from, {
-        video: { url: videoUrl },
-        mimetype: "video/mp4",
-        caption: "*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱɪʟᴇɴᴛ ʟᴏᴠᴇʀ · · ·⁴³²*"
-      }, {
-        quoted: quoted
-      });
-
-      // React to indicate the process is complete
-      await message.react('✅');
+    let _0x46b060 = await igdl(_0x133e89);
+    if (!_0x46b060.data || _0x46b060.data.length === 0) {
+      return _0x2d5654.reply("No videos found for the provided link.");
     }
+
+    // Send each video
+    for (let video of _0x46b060.data) {
+      if (!video.url) continue; // Skip if URL is missing
+      _0x2d5654.react('⬆️');
+      await _0x386562.sendMessage(_0x2b1245, {
+        video: { url: video.url },
+        mimetype: "video/mp4",
+        caption: "*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·*"
+      }, { quoted: _0x1b4817 });
+    }
+
+    _0x2d5654.react('✅');
   } catch (error) {
-    console.log(error);
-    reply("An error occurred while processing your request.");
+    console.error(error);
+    _0x2d5654.reply("An error occurred while processing your request.");
   }
 });
-
-// Function to extract video data from the given URL
-async function igdl(url) {
-  return new Promise((resolve, reject) => {
-    fetch(url, { method: "get" })
-      .then(response => response.text())
-      .then(html => {
-        const $ = cheerio.load(html, { xmlMode: false });
-        const videoData = {
-          title: $("meta[property='og:title']").attr('content'),
-          duration: $("meta[property='og:duration']").attr("content"),
-          image: $("meta[property='og:image']").attr("content"),
-          videoType: $("meta[property='og:video:type']").attr("content"),
-          videoWidth: $("meta[property='og:video:width']").attr("content"),
-          videoHeight: $("meta[property='og:video:height']").attr('content'),
-          info: $("span.metadata").text(),
-          files: {
-            low: (html.match("html5player.setVideoUrlLow\'(.*?)'\;") || [])[1],
-            high: (html.match("html5player.setVideoUrlHigh\'(.*?)'\;") || [])[1],
-            HLS: (html.match("html5player.setVideoHLS\'(.*?)'\;") || [])[1],
-            thumb: (html.match("html5player.setThumbUrl\'(.*?)'\;") || [])[1],
-            thumb69: (html.match("html5player.setThumbUrl169\'(.*?)'\;") || [])[1],
-            thumbSlide: (html.match("html5player.setThumbSlide\'(.*?)'\;") || [])[1],
-            thumbSlideBig: (html.match("html5player.setThumbSlideBig\'(.*?)'\;") || [])[1]
-          }
-        };
-        resolve({ status: true, data: videoData });
-      })
-      .catch(error => reject({ status: false, error }));
-  });
-}
 
 cmd({
   pattern: "baiscope",
