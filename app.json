@@ -22,29 +22,6 @@
 
     },
 
-    "AUTO_REACT": {
-      "description": "Make it true if you want bot AutoReact.",
-      "required": true,
-      "value": "true"
-    },
-
-    "OWNER_REACT": {
-      "description": "Make it true if you want bot OwnerReact.",
-      "required": true,
-      "value": "true"
-    
-    }, 
-
-    "BOT_NAME": {
-      "description": "write hear your name.",
-      "required": true,
-      "value": "✦ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ✦"
-    }, 
-
-    "HEART_REACT": {
-      "description": "Make it true if you want bot only heart ♥️ emjois reaction .",
-      "required": true,
-      "value": "false"
     }
 },
   
