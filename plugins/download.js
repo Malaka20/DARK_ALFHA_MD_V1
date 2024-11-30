@@ -304,41 +304,36 @@ cmd({
   react: '🎥',
   category: "download",
   filename: __filename
-}, async (_0x386562, _0x1b4817, _0x2d5654, {
-  from: _0x2b1245,
-  quoted: _0x35994d,
-  q: _0x133e89,
-  reply: _0x1bd856
-}) => {
+}, async (bot, msg, context, { from, quoted, q, reply }) => {
   try {
     // Validate URL
-    if (!_0x133e89 || !/^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(_0x133e89)) {
-      return _0x2d5654.reply("Please provide a valid Instagram link.");
+    if (!q || !/^https?:\/\/(www\.)?instagram\.com\/(p|reel|tv)\//.test(q)) {
+      return reply("The provided link is invalid. Please share a valid Instagram post, reel, or TV link.");
     }
-    
-    _0x2d5654.react('⬇️');
+
+    context.react('⬇️');
 
     // Fetch video data
-    let _0x46b060 = await igdl(_0x133e89);
-    if (!_0x46b060.data || _0x46b060.data.length === 0) {
-      return _0x2d5654.reply("No videos found for the provided link.");
+    let igData = await igdl(q);
+    if (!igData.data || igData.data.length === 0) {
+      return reply("No videos found for the provided Instagram link.");
     }
 
-    // Send each video
-    for (let video of _0x46b060.data) {
-      if (!video.url) continue; // Skip if URL is missing
-      _0x2d5654.react('⬆️');
-      await _0x386562.sendMessage(_0x2b1245, {
+    // Process and send each video
+    for (let video of igData.data) {
+      if (!video.url) continue;
+      context.react('⬆️');
+      await bot.sendMessage(from, {
         video: { url: video.url },
         mimetype: "video/mp4",
-        caption: "*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·*"
-      }, { quoted: _0x1b4817 });
+        caption: `> © ᴍᴀʟᴀᴋᴀ-ᴍᴅ . . . 👩‍💻`
+      }, { quoted: quoted });
     }
 
-    _0x2d5654.react('✅');
+    context.react('✅');
   } catch (error) {
-    console.error(error);
-    _0x2d5654.reply("An error occurred while processing your request.");
+    console.error("Error processing Instagram download:", error.message);
+    reply("An error occurred while processing your request. Please try again.");
   }
 });
 
