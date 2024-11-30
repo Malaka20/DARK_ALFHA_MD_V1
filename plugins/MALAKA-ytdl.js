@@ -102,111 +102,119 @@ cmd({
   pattern: "song",
   alias: "play",
   desc: "To download songs.",
-  react: '🎵',
-  category: 'download',
-  filename: __filename
+  react: "🎵",
+  category: "download",
+  filename: __filename,
 }, async (bot, message, args, context) => {
   try {
-    const { from, q, reply } = context;
-    if (!q) {
-      return reply("Please give me a URL or title.");
+    const {
+      from,
+      quoted,
+      body,
+      q: query,
+      reply,
+    } = context;
+
+    if (!query) {
+      return reply("Please provide a URL or song title.");
     }
-    const searchQuery = convertYouTubeLink(q);
-    const searchResult = await yts(searchQuery);
-    const video = searchResult.videos[0];
+
+    // Convert query to a valid YouTube link or search query
+    const searchQuery = convertYouTubeLink(query);
+
+    // Perform YouTube search
+    const searchResults = await yts(searchQuery);
+    const video = searchResults.videos[0];
+    if (!video) {
+      return reply("No results found.");
+    }
+
     const videoUrl = video.url;
 
-    const caption = `
- ╭─────────────────────❖
- │𝘔𝘈𝘓𝘈𝘒𝘈 SONG DOWNLOADING 
- ╰─────────────────────❖
- ──────────────────❖
-╭────────────────❖
-│ ℹ️ *DARK_ALFHA_MD* 
-│
-│☍ ⦁ *Title:* ${video.title} 
-│☍ ⦁ *Duration:* ${video.timestamp}
-│☍ ⦁ *Views:* ${video.views} 
-│☍ ⦁ *Uploaded On:* ${video.ago} 
-╰────────────────❖
-❖──────────────────❖
-╭──────────────────❖
-│ © 𝙏𝙤 𝙙𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙚𝙣𝙙: 🔢
-│
-│ *➀*  ᴀᴜᴅɪᴏ ꜰɪʟᴇ 🎶
-│──────────────────❖
-│ *➁*  ᴅᴏᴄᴜᴍᴇɴᴛ ꜰɪʟᴇ 📂
-⁠⁠⁠⁠╰──────────────────❖
-> ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
-`;
-
-    const messageResponse = await bot.sendMessage(from, {
+    // Send initial message with options
+    const initialMessage = await bot.sendMessage(from, {
       image: { url: video.thumbnail },
-      caption
-    });
+      caption: `
+*◉ SILENT-SOBX-MD ◉*
 
-    const messageId = messageResponse.key.id;
+┏━━━━━━━━━━━━━
+┃ SILENT-SOBX-MD SONG DOWNLOAD ✻
+┗━━━━━━━━━━━━━
 
-    bot.ev.on("messages.upsert", async msg => {
-      const newMessage = msg.messages[0];
-      if (!newMessage.message) return;
+🔢 *Reply with a number to download format:*
 
-      const { conversation, extendedTextMessage } = newMessage.message;
-      const userReply = conversation || extendedTextMessage?.text;
-      const remoteJid = newMessage.key.remoteJid;
+1. 🎧 *Audio*
+2. 📁 *Document*
 
-      if (extendedTextMessage?.contextInfo?.stanzaId === messageId) {
-        await bot.sendMessage(remoteJid, {
-          react: { text: '⬇️', key: newMessage.key }
-        });
+> Silent-SOBX-MD Bot ✻
+      `,
+    }, { quoted });
 
-        const downloadResponse = await dlyta(videoUrl);
-        const downloadLink = downloadResponse.dl_link;
+    const initialMessageId = initialMessage.key.id;
 
-        await bot.sendMessage(remoteJid, {
-          react: { text: '⬆️', key: newMessage.key }
-        });
+    // Listen for user response
+    bot.ev.on("messages.upsert", async (update) => {
+      const userMessage = update.messages[0];
+      if (!userMessage.message) return;
 
-        if (userReply === '1') {
-          await bot.sendMessage(remoteJid, {
-            audio: { url: downloadLink },
-            mimetype: "audio/mpeg",
-            contextInfo: {
-              externalAdReply: {
-                title: video.title,
-                body: video.videoId,
-                mediaType: 1,
-                sourceUrl: video.url,
-                thumbnailUrl: video.thumbnail,
-                renderLargerThumbnail: true,
-                showAdAttribution: true
-              }
-            }
-          }, { quoted: newMessage });
+      const userResponse = userMessage.message.conversation || userMessage.message.extendedTextMessage?.text;
+      const userJid = userMessage.key.remoteJid;
 
-          await bot.sendMessage(remoteJid, {
-            react: { text: '✅', key: newMessage.key }
-          });
+      // Check if the user's reply is to the bot's initial message
+      const isReplyToBot = userMessage.message.extendedTextMessage?.contextInfo?.stanzaId === initialMessageId;
+      if (!isReplyToBot) return;
 
-        } else if (userReply === '2') {
-          await bot.sendMessage(remoteJid, {
-            document: { url: downloadLink },
-            mimetype: 'audio/mp3',
-            fileName: video.title + ".mp3",
-            caption: "\n*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·*\n "
-          }, { quoted: newMessage });
+      // React to indicate processing
+      await bot.sendMessage(userJid, {
+        react: { text: "⬇️", key: userMessage.key },
+      });
 
-          await bot.sendMessage(remoteJid, {
-            react: { text: '✅', key: newMessage.key }
-          });
-        }
+      // Fetch the download link
+      const downloadResponse = await fetchJson(`https://api.giftedtech.my.id/api/download/ytmp3?apikey=gifted&url=${videoUrl}`);
+      const downloadUrl = downloadResponse.result.download_url;
+
+      // Delete the initial message
+      await bot.sendMessage(userJid, { delete: initialMessage.key });
+
+      // Send the requested format
+      if (userResponse === "1") {
+        // Send audio
+        await bot.sendMessage(userJid, {
+          audio: { url: downloadUrl },
+          mimetype: "audio/mpeg",
+          contextInfo: {
+            externalAdReply: {
+              title: video.title,
+              body: video.videoId,
+              mediaType: 1,
+              sourceUrl: video.url,
+              thumbnailUrl: video.thumbnail,
+              renderLargerThumbnail: true,
+              showAdAttribution: true,
+            },
+          },
+        }, { quoted: userMessage });
+
+      } else if (userResponse === "2") {
+        // Send document
+        await bot.sendMessage(userJid, {
+          document: { url: downloadUrl },
+          mimetype: "audio/mp3",
+          fileName: `${video.title}.mp3`,
+          caption: "© Created by Silent Lover · · · 432",
+        }, { quoted: userMessage });
       }
+
+      // React to indicate success
+      await bot.sendMessage(userJid, {
+        react: { text: "✅", key: userMessage.key },
+      });
     });
-  }catch(e){
-console.log(e)
-reply(`${e}`)
-}
-})
+  } catch (error) {
+    console.error(error);
+    reply(`Error: ${error.message}`);
+  }
+});
 
 //==========video download============================
 cmd({
