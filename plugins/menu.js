@@ -1,32 +1,26 @@
 const config = require('../config')
 const {cmd , commands} = require('../command')
-const os = require("os")
-const {runtime} = require('../lib/functions')
-
 cmd({
     pattern: "menu",
-    desc: "To get the menu.",
     react: "📜",
+    desc: "get cmd list",
     category: "main",
     filename: __filename
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-
 let menu = {
 main: '',
 download: '',
 group: '',
 owner: '',
 convert: '',
-search: '',
-fun: '',
-other: ''
+search: ''
 };
 
 for (let i = 0; i < commands.length; i++) {
 if (commands[i].pattern && !commands[i].dontAddCommandList) {
-menu[commands[i].category] += `.${commands[i].pattern}\n`;
+menu[commands[i].category] += `*┋* ${commands[i].pattern}\n`;
  }
 }
 
@@ -34,25 +28,14 @@ let madeMenu = `
 *╭─────────────────❒⁠⁠⁠⁠*
 
   👋 HELLO, ${pushname}!
-  
+
 *┕─────────────────❒*
 
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━
    *ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ*
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-*◆─〈 ${config.BOT_NAME} 〉─◆*
-*╭┈───────────────•* 
-*│  ◦*  *ʀᴜɴᴛɪᴍᴇ* : ${runtime(process.uptime())}
-*│  ◦*  *ᴍᴏᴅᴇ* : *[${config.MODE}]*
-*│  ◦*  *ᴘʀᴇғɪx* : *[${config.PREFIX}]*
-*│  ◦*  *ʀᴀᴍ ᴜsᴇ* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-*│  ◦*  *ɴᴀᴍᴇ ʙᴏᴛ* : *❖ᴍᴀʟᴀᴋᴀ-ᴍᴅ❖*
-*│  ◦*  *ᴄʀᴇᴀᴛᴏʀ* : *➺ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ࿐*
-*│  ◦*  *ᴠᴇʀsɪᴏɴs* : *ᴠ.2.0.0*
-*│  ◦*  *ᴍᴇɴᴜ ᴄᴍᴅ* : *ᴍᴇɴᴜ ʟɪsᴛ*
-*╰┈───────────────•*
-*♡︎•━━━━━━☻︎━━━━━━•♡︎*
+*ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅ👨🏻‍💻*
 
 *╭───────────────❒⁠⁠⁠⁠*
 *│* *❂ᴅᴏᴡɴʟᴏᴀᴅ ᴄᴏᴍᴍᴀɴᴅs❂*
@@ -102,16 +85,15 @@ ${menu.search}
 
 *❒⁠⁠⁠⁠▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭❒*⁠⁠⁠⁠
 
-> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅ*
+> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ*
 
 ╰━❁ ═══ ❃•⇆•❃ ═══ ❁━╯
 `
 
-return await conn.sendMessage(from,{image: {url: config.ALIVE_IMG},caption:madeMenu},{quoted: mek})
+await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek})
+
 }catch(e){
 console.log(e)
 reply(`${e}`)
 }
 })
-
-
