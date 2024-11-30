@@ -13,21 +13,21 @@ cmd({
 },
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        let desc = `┏━━━━━━━━━━━━━━━━━━━━━━━┓
-┃       ⚙ DARK_ALFHA_MD BOT SETTINGS ⚙
+        let desc = `
+┏━━━━━━━━━━━━━━━━━━━━━━━┓
+┃⚙ DARK_ALFHA_MD BOT SETTINGS ⚙
 ┃━━━━━━━━━━━━━━━━━━━━━━━┃
 ┣━💼 Work Mode : 𝙿𝚄𝙱𝙻𝙸𝙲🌎/𝙿𝚁𝙸𝚅𝙰𝚃𝙴/𝙸𝙽𝙱𝙾𝚇/𝙶𝚁𝙾𝚄𝙿
 ┣━🔊 Auto Voice : ♻ 𝙾𝙽/𝙾𝙵𝙵
 ┣━📝 Auto Status : ♻ 𝙾𝙽/𝙾𝙵𝙵
-┣━📋 Auto Bio : ♻ 𝙾𝙽/𝙾𝙵𝙵
-┣━⌨ Auto Typing : ♻ 𝙾𝙽/𝙾𝙵𝙵
-┣━🛠 Auto Read Command : ♻ 𝙾𝙽/𝙾𝙵𝙵
+┣━📋 Auto sticker : ♻ 𝙾𝙽/𝙾𝙵𝙵
+┣━⌨ Auto reply : ♻ 𝙾𝙽/𝙾𝙵𝙵
 ┃━━━━━━━━━━━━━━━━━━━━━━━┃
-┃      🔗  CUSTOMIZE YOUR SETTINGS ⤵
+┃🔗 CUSTOMIZE YOUR SETTINGS ⤵
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
 
 ┏━━━━━━━━━━━━━━━━━━━━━━━┓
-┃       🔧 OPTIONS MENU 🔧
+┃     🔧 OPTIONS MENU 🔧
 ┃━━━━━━━━━━━━━━━━━━━━━━━┃
 
 ┣━ WORK MODE ⤵
@@ -44,23 +44,15 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ┃   ┣ 3.1 👁‍🗨 Auto Read Status On
 ┃   ┗ 3.2 👁❌ Auto Read Status Off
 
-┣━ AUTO BIO ⤵
-┃   ┣ 4.1 ✍ Auto Bio On
-┃   ┗ 4.2 ✍❌ Auto Bio Off
+┣━ AUTO STICKER ⤵
+┃   ┣ 4.1 📰 Auto sticker On
+┃   ┗ 4.2 🛑 Auto sticker Off
 
-┣━ 24/7 NEWS SERVICE ⤵
-┃   ┣ 5.1 📰 Activate News Service
-┃   ┗ 5.2 🛑 Deactivate News Service
-
-┣━ AUTO TYPING ⤵
-┃   ┣ 6.1 📝 Activate Auto Typing
-┃   ┗ 6.2 📝❌ Deactivate Auto Typing
-
-┣━ AUTO COMMAND READ ⤵
-┃   ┣ 7.1 🖊 Activate Auto Command Read
-┃   ┗ 7.2 🖊❌ Deactivate Auto Command Read
+┣━ AUTO REPLY ⤵
+┃   ┣ 5.1 ✍ Auto reply On
+┃   ┗ 5.2 ✍❌ Auto reply Off
+┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━┛
-
 > *© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ*`;
 
         const vv = await conn.sendMessage(from, { image: { url: "https://ibb.co/F0ccn0P"}, caption: desc }, { quoted: mek });
@@ -104,7 +96,23 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
                     case '3.2':    
                         reply(".update AUTO_READ_STATUS:false");
                         reply(".restart");
+                    break;                    
+                    case '4.1':    
+                        reply(".update AUTO_STICKER:true");
+                        reply(".restart");
                     break;
+                    case '4.2':    
+                        reply(".update AUTO_STICKER:false");
+                        reply(".restart");
+                    break;                                        
+                    case '5.1':    
+                        reply(".update AUTO_REPLY:true");
+                        reply(".restart");
+                    break;
+                    case '5.2':    
+                        reply(".update AUTO_REPLY:false");
+                        reply(".restart");
+                    break;                        
             
                     default:
                         reply("Invalid option. Please select a valid option🔴");
