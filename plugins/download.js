@@ -297,43 +297,108 @@ cmd({
   }
 });
 
+const cheerio = require('cheerio');
+const fetch = require('node-fetch');
+
+// Command definition for downloading Instagram videos
 cmd({
-  pattern: 'ig2',
+  pattern: 'ig',
   alias: ["insta"],
   desc: "To download Instagram videos.",
   react: '🎥',
   category: "download",
   filename: __filename
-}, async (message, response, _, context) => {
+}, async (client, message, args, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
   try {
-    const { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply } = context;
-
+    // Check if a valid link is provided
     if (!q) {
-      return response.reply("Please provide a valid link...");
+      return reply("Please provide a valid link.");
     }
 
-    response.react('⬇️');
+    // React to indicate the download process has started
+    await message.react('⬇️');
 
-    const videoData = await igdl(q);
-    const videos = videoData.data;
+    // Fetch video data
+    let videoData = await igdl(q);
+    let videoUrls = videoData.data;
 
-    for (let i = 0; i < videos.length; i++) {
-      const video = videos[i];
-      const videoUrl = video.url;
+    // Loop through the video URLs and send each video
+    for (let i = 0; i < videoUrls.length; i++) {
+      let videoUrl = videoUrls[i].url;
 
-      response.react('⬆️');
-      await message.sendMessage(from, {
+      // React to indicate the upload process has started
+      await message.react('⬆️');
+
+      await client.sendMessage(from, {
         video: { url: videoUrl },
         mimetype: "video/mp4",
-        caption: "*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ*"
-      }, { quoted });
+        caption: "*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱɪʟᴇɴᴛ ʟᴏᴠᴇʀ · · ·⁴³²*"
+      }, {
+        quoted: quoted
+      });
 
-      response.react('✅');
+      // React to indicate the process is complete
+      await message.react('✅');
     }
   } catch (error) {
     console.log(error);
+    reply("An error occurred while processing your request.");
   }
 });
+
+// Function to extract video data from the given URL
+async function igdl(url) {
+  return new Promise((resolve, reject) => {
+    fetch(url, { method: "get" })
+      .then(response => response.text())
+      .then(html => {
+        const $ = cheerio.load(html, { xmlMode: false });
+        const videoData = {
+          title: $("meta[property='og:title']").attr('content'),
+          duration: $("meta[property='og:duration']").attr("content"),
+          image: $("meta[property='og:image']").attr("content"),
+          videoType: $("meta[property='og:video:type']").attr("content"),
+          videoWidth: $("meta[property='og:video:width']").attr("content"),
+          videoHeight: $("meta[property='og:video:height']").attr('content'),
+          info: $("span.metadata").text(),
+          files: {
+            low: (html.match("html5player.setVideoUrlLow\'(.*?)'\;") || [])[1],
+            high: (html.match("html5player.setVideoUrlHigh\'(.*?)'\;") || [])[1],
+            HLS: (html.match("html5player.setVideoHLS\'(.*?)'\;") || [])[1],
+            thumb: (html.match("html5player.setThumbUrl\'(.*?)'\;") || [])[1],
+            thumb69: (html.match("html5player.setThumbUrl169\'(.*?)'\;") || [])[1],
+            thumbSlide: (html.match("html5player.setThumbSlide\'(.*?)'\;") || [])[1],
+            thumbSlideBig: (html.match("html5player.setThumbSlideBig\'(.*?)'\;") || [])[1]
+          }
+        };
+        resolve({ status: true, data: videoData });
+      })
+      .catch(error => reject({ status: false, error }));
+  });
+}
 
 cmd({
   pattern: "baiscope",
