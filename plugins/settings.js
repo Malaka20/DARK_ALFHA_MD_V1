@@ -7,8 +7,9 @@ cmd({
     pattern: "settings",
     alias: ["setting"],
     desc: "settings the bot",
+    category: "owner",
     react: "⚙",
-    category: "owner"
+    filename: __filename
 
 
 },
