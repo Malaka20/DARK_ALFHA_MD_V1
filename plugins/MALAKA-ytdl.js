@@ -1,5 +1,6 @@
 const { cmd, commands } = require("../command");
 const yts = require("yt-search");
+const { ytsearch, ytmp3, ytmp4 } = require('@dark-yasiya/yt-dl.js'); // request package.json "@dark-yasiya/yt-dl.js": "latest"
 const axios = require('axios');
 
 // Function to download YouTube audio using a specific API
