@@ -1,6 +1,5 @@
 const { cmd, commands } = require("../command");
 const yts = require("yt-search");
-const fg = require("api-dylux");
 const axios = require('axios');
 
 // Function to download YouTube audio using a specific API
