@@ -206,145 +206,87 @@ cmd({
   react: '🎥',
   category: "download",
   filename: __filename
-}, async (client, message, _, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+}, async (client, message, args, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
   try {
-    // Check if URL or title is provided
     if (!q) {
       return reply("Please give me a URL or title.");
     }
-
-    // Convert input to YouTube link format
     q = convertYouTubeLink(q);
-
-    // Search for the YouTube video
     const searchResults = await yts(q);
-    const video = searchResults.videos[0];
-    const videoUrl = video.url;
-
-    // Construct the details message
-    let detailsMessage = `
-      ╭─────────────────❖
-      │𝘔𝘈𝘓𝘈𝘒𝘈 VIDEO DOWNLOADING
-      ╰─────────────────❖
-       ──────────────────❖
-      ╭────────────────❖
-      │ ℹ️ *DARK_ALFHA_MD* 
-      │
-      │☍ ⦁ *Title:* ${video.title}
-      │☍ ⦁ *Duration:* ${video.timestamp}
-      │☍ ⦁ *Views:* ${video.views}
-      │☍ ⦁ *Uploaded On:* ${video.ago}
-      ╰────────────────❖  
-       ──────────────────❖
-      ╭──────────────────
-      │ © 𝙏𝙤 𝙙𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙚𝙣𝙙: 🔢
-      │
-      │ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴠɪᴅᴇᴏ ꜰɪʟᴇ 📽️
-      │ _➀.➀ 360ᴘ
-      │ _➀.➁ 480ᴘ
-      │ _➀.➂ 720ᴘ
-      │ _➀.➃ 1080ᴘ
-      │ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ ᴅᴏᴄᴜᴍᴇɴᴛ 📂
-      │ _➁.➀ 360ᴘ
-      │ _➁.➁ 480ᴘ
-      │ _➁.➂ 720ᴘ
-      │ _➁.➃ 1080ᴘ
-      ╰──────────────────❖
-     > © ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
-    `;
-
-    // Send the image with the details message
+    const videoDetails = searchResults.videos[0];
+    const videoUrl = videoDetails.url;
     const sentMessage = await client.sendMessage(from, {
-      image: { url: video.thumbnail },
-      caption: detailsMessage
-    });
+      image: { url: videoDetails.thumbnail },
+      caption: `
+*◉SILENT-SOBX-MD◉* 
 
-    const messageId = sentMessage.key.id;
+┏━━━━━━━━━━━━━
+┃sɪʟᴇɴᴛ-sᴏʙx-ᴍᴅ ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ ✻
+┗━━━━━━━━━━━━━
+┏━━━━━━━━━━━━━━
 
-    // Listen for further messages in the conversation
-    client.ev.on("messages.upsert", async upsert => {
+🔢 *ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴛᴏ*
+*ᴅᴏᴡɴʟᴏᴀᴅ ꜰʀᴏᴍᴀᴛ*
+
+*ᴅᴏᴡɴʟᴏᴀᴅ ᴠɪᴅᴇᴏ 🎬*
+
+*1.1*     ┃  *360ᴘ*
+*1.2*     ┃  *480ᴘ*
+*1.3*     ┃  *720ᴘ*
+*1.4*     ┃  *1080ᴘ*
+
+*ᴅᴏᴡɴʟᴏᴀᴅ ᴅᴏᴄᴜᴍᴇɴᴛ 📁*
+
+*2.1*     ┃  *360ᴘ*
+*2.2*     ┃  *480ᴘ*
+*2.3*     ┃  *720ᴘ*
+*2.4*     ┃  *1080ᴘ*
+
+> sɪʟᴇɴᴛ-sᴏʙx-ᴍᴅ-ʙᴏᴛ ✻
+      `
+    }, { quoted });
+
+    const sentMessageId = sentMessage.key.id;
+
+    client.ev.on('messages.upsert', async upsert => {
       const receivedMessage = upsert.messages[0];
-      if (!receivedMessage.message) {
-        return;
-      }
+      if (!receivedMessage.message) return;
+      const receivedText = receivedMessage.message.conversation || receivedMessage.message.extendedTextMessage?.text;
+      const remoteJid = receivedMessage.key.remoteJid;
+      const isReplyToBot = receivedMessage.message.extendedTextMessage && receivedMessage.message.extendedTextMessage.contextInfo.stanzaId === sentMessageId;
 
-      const text = receivedMessage.message.conversation || receivedMessage.message.extendedTextMessage?.text;
-      const chatId = receivedMessage.key.remoteJid;
-      const isReply = receivedMessage.message.extendedTextMessage && receivedMessage.message.extendedTextMessage.contextInfo.stanzaId === messageId;
+      if (isReplyToBot) {
+        await client.sendMessage(remoteJid, { react: { text: '⬇️', key: receivedMessage.key } });
 
-      if (isReply) {
-        // React to the message
-        await client.sendMessage(chatId, {
-          react: {
-            text: '⬇️',
-            key: receivedMessage.key
-          }
-        });
-
-        // Download and send the video based on the user's choice
-        let resolution = '';
-        switch (text) {
+        let videoDownloadUrl;
+        switch (receivedText) {
           case "1.1":
-            resolution = "360p";
+            videoDownloadUrl = await ytmp4(videoUrl, "360p");
             break;
           case "1.2":
-            resolution = "480p";
+            videoDownloadUrl = await ytmp4(videoUrl, "480");
             break;
           case "1.3":
-            resolution = "720p";
+            videoDownloadUrl = await ytmp4(videoUrl, '720');
             break;
           case "1.4":
-            resolution = "1080p";
+            videoDownloadUrl = await ytmp4(videoUrl, "1080");
             break;
           case "2.1":
-            resolution = "360";
-            break;
           case "2.2":
-            resolution = "480";
-            break;
           case "2.3":
-            resolution = "720";
-            break;
           case "2.4":
-            resolution = "1080";
-            break;
-          default:
+            const quality = receivedText.split('.')[1] === "1" ? "360" : receivedText.split('.')[1] === "2" ? "480" : receivedText.split('.')[1] === "3" ? "720" : "1080";
+            videoDownloadUrl = await ytmp4(videoUrl, quality);
+            await client.sendMessage(remoteJid, { document: { url: videoDownloadUrl }, mimetype: "video/mp4", fileName: videoDetails.title + ".mp4", caption: "\n*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱɪʟᴇɴᴛ ʟᴏᴠᴇʀ · · ·⁴³²*\n" }, { quoted: receivedMessage });
+            await client.sendMessage(remoteJid, { react: { text: '✅', key: receivedMessage.key } });
             return;
         }
 
-        const videoUrlWithResolution = await ytmp4(videoUrl, resolution);
-
-        await client.sendMessage(chatId, {
-          react: {
-            text: '⬆️',
-            key: receivedMessage.key
-          }
-        });
-
-        if (text.startsWith("1.")) {
-          await client.sendMessage(chatId, {
-            video: { url: videoUrlWithResolution },
-            caption: "\n* © ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻*\n"
-          }, {
-            quoted: receivedMessage
-          });
-        } else {
-          await client.sendMessage(chatId, {
-            document: { url: videoUrlWithResolution },
-            mimetype: "video/mp4",
-            fileName: `${video.title}.mp4`,
-            caption: "\n* © ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻 *\n"
-          }, {
-            quoted: receivedMessage
-          });
-        }
-
-        await client.sendMessage(chatId, {
-          react: {
-            text: '✅',
-            key: receivedMessage.key
-          }
-        });
+        await client.sendMessage(remoteJid, { delete: sentMessage.key });
+        await client.sendMessage(remoteJid, { react: { text: '⬆️', key: receivedMessage.key } });
+        await client.sendMessage(remoteJid, { video: { url: videoDownloadUrl }, caption: "\n*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱɪʟᴇɴᴛ ʟᴏᴠᴇʀ · · ·⁴³²*\n" }, { quoted: receivedMessage });
+        await client.sendMessage(remoteJid, { react: { text: '✅', key: receivedMessage.key } });
       }
     });
   } catch (error) {
