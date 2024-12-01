@@ -103,73 +103,68 @@ cmd({
   alias: "play",
   desc: "To download songs.",
   react: '🎵',
-  category: 'download',
+  category: "download",
   filename: __filename
-}, async (bot, message, args, context) => {
+}, async (context) => {
+  const { from, quoted, body, reply } = context;
+  
   try {
-    const { from, q, reply } = context;
-    if (!q) {
+    let query = body;
+    if (!query) {
       return reply("Please give me a URL or title.");
     }
-    const searchQuery = convertYouTubeLink(q);
-    const searchResult = await yts(searchQuery);
-    const video = searchResult.videos[0];
+    query = convertYouTubeLink(query);
+    const searchResults = await yts(query);
+    const video = searchResults.videos[0];
     const videoUrl = video.url;
-
-    const caption = `
- ╭─────────────────────❖
- │𝘔𝘈𝘓𝘈𝘒𝘈 SONG DOWNLOADING 
- ╰─────────────────────❖
- ──────────────────❖
-╭────────────────❖
-│ ℹ️ *DARK_ALFHA_MD* 
-│
-│☍ ⦁ *Title:* ${video.title} 
-│☍ ⦁ *Duration:* ${video.timestamp}
-│☍ ⦁ *Views:* ${video.views} 
-│☍ ⦁ *Uploaded On:* ${video.ago} 
-╰────────────────❖
-❖──────────────────❖
-╭──────────────────❖
-│ © 𝙏𝙤 𝙙𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙚𝙣𝙙: 🔢
-│
-│ *➀*  ᴀᴜᴅɪᴏ ꜰɪʟᴇ 🎶
-│──────────────────❖
-│ *➁*  ᴅᴏᴄᴜᴍᴇɴᴛ ꜰɪʟᴇ 📂
-⁠⁠⁠⁠╰──────────────────❖
-> ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
-`;
-
-    const messageResponse = await bot.sendMessage(from, {
+    
+    const sentMessage = await context.sendMessage(from, {
       image: { url: video.thumbnail },
-      caption
-    });
+      caption: `
+*◉NETHU-MD◉* 
 
-    const messageId = messageResponse.key.id;
+┏━━━━━━━━━━━━━
+┃sɪʟᴇɴᴛ-sᴏʙx-ᴍᴅ ꜱᴏɴɢ ᴅᴏᴡɴʟᴏᴀᴅ ✻
+┗━━━━━━━━━━━━━
+┏━━━━━━━━━━━━━━
 
-    bot.ev.on("messages.upsert", async msg => {
-      const newMessage = msg.messages[0];
+🔢 *ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴛᴏ*
+*ᴅᴏᴡɴʟᴏᴀᴅ ꜰʀᴏᴍᴀᴛ*
+
+*ᴅᴏᴡɴʟᴏᴀᴅ ᴀᴜᴅɪᴏ 🎧*
+
+*1* ┃ *ᴀᴜᴅɪᴏ*
+
+*ᴅᴏᴡɴʟᴏᴀᴅ ᴅᴏᴄᴜᴍᴇɴᴛ 📁*
+
+*2* ┃ *ᴅᴏᴄᴜᴍᴇɴᴛ*
+
+> NETHU-MD ✻
+`,
+    }, { quoted });
+
+    const messageId = sentMessage.key.id;
+    
+    context.ev.on("messages.upsert", async (messageUpdate) => {
+      const newMessage = messageUpdate.messages[0];
       if (!newMessage.message) return;
 
-      const { conversation, extendedTextMessage } = newMessage.message;
-      const userReply = conversation || extendedTextMessage?.text;
+      const messageText = newMessage.message.conversation || newMessage.message.extendedTextMessage?.text;
       const remoteJid = newMessage.key.remoteJid;
+      const isReplyToBotMessage = newMessage.message.extendedTextMessage?.contextInfo.stanzaId === messageId;
 
-      if (extendedTextMessage?.contextInfo?.stanzaId === messageId) {
-        await bot.sendMessage(remoteJid, {
-          react: { text: '⬇️', key: newMessage.key }
-        });
+      if (isReplyToBotMessage) {
+        await context.sendMessage(remoteJid, { react: { text: '⬇️', key: newMessage.key } });
+        
+        const downloadData = await fetchJson(`https://api.giftedtech.my.id/api/download/ytmp3?apikey=gifted&url=${videoUrl}`);
+        const downloadUrl = downloadData.result.download_url;
 
-        const downloadResponse = await dlyta(videoUrl);
-        const downloadLink = downloadResponse.dl_link;
+        await context.sendMessage(remoteJid, { delete: sentMessage.key });
+        await context.sendMessage(remoteJid, { react: { text: '⬆️', key: newMessage.key } });
 
-        await bot.sendMessage(remoteJid, {
-          react: { text: '⬆️', key: newMessage.key }
-        });
-
-        if (userReply === '1') {
-          await bot.sendMessage(remoteJid, {
-            audio: { url: downloadLink },
+        if (messageText === '1') {
+          await context.sendMessage(remoteJid, {
+            audio: { url: downloadUrl },
             mimetype: "audio/mpeg",
             contextInfo: {
               externalAdReply: {
@@ -184,29 +179,25 @@ cmd({
             }
           }, { quoted: newMessage });
 
-          await bot.sendMessage(remoteJid, {
-            react: { text: '✅', key: newMessage.key }
-          });
-
-        } else if (userReply === '2') {
-          await bot.sendMessage(remoteJid, {
-            document: { url: downloadLink },
-            mimetype: 'audio/mp3',
-            fileName: video.title + ".mp3",
-            caption: "\n*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·*\n "
+          await context.sendMessage(remoteJid, { react: { text: '✅', key: newMessage.key } });
+        } else if (messageText === '2') {
+          await context.sendMessage(remoteJid, {
+            document: { url: downloadUrl },
+            mimetype: "audio/mp3",
+            fileName: `${video.title}.mp3`,
+            caption: "\n*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱɪʟᴇɴᴛ ʟᴏᴠᴇʀ · · ·⁴³²*\n "
           }, { quoted: newMessage });
 
-          await bot.sendMessage(remoteJid, {
-            react: { text: '✅', key: newMessage.key }
-          });
+          await context.sendMessage(remoteJid, { react: { text: '✅', key: newMessage.key } });
         }
       }
     });
-  }catch(e){
-console.log(e)
-reply(`${e}`)
-}
-})
+  } catch (error) {
+    console.log(error);
+    reply(`${error}`);
+  }
+});
+          
 
 //==========video download============================
 cmd({
