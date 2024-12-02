@@ -60,7 +60,7 @@ const _0xeb48bd = function () {
 const {
   cmd,
   commands
-} = require("../lib/command");
+} = require("../command");
 const axios = require("axios");
 const {
   getBuffer,
