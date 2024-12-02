@@ -701,50 +701,57 @@ cmd({
   }
 });
 
-const commandDetails = {
-  pattern: "sinhalasub",
+const _0x5bb3c4 = {
+  pattern: "sinhaladub",
   react: '🎥',
-  desc: "Download movie for sinhalasub.lk",
+  desc: "Download movie from isaidub9.com",
   category: "extra",
-  use: ".sinhalasub < Movie Name >",
+  use: ".sinhaladub <Movie Name>",
   filename: __filename
 };
 
-cmd(commandDetails, async (client, message, args, { from, sender, prefix, quoted, q, reply }) => {
+cmd(_0x5bb3c4, async (_0x464975, _0x887e33, _0x5dc3c7, { from, sender, prefix, quoted, q, reply }) => {
   try {
-    if (!q) {
-      return await reply("Movie name please!");
+    const apiUrl = `http://103.195.101.44:2662/api?apiKey=ardevfa6456bc09a877cb&plugin=sin&query=${q}`;
+    const apiResponse = await axios.get(apiUrl).then(response => response.data);
+
+    if (!apiResponse.status) {
+      return reply(`*ERROR:* Unable to fetch data for "${q}".`);
     }
 
-    const response = await fetchJson(`https://asitha-moviedl.vercel.app/api/sinhalasubs/search?q=${q}&apikey=asitha108`);
-    let movies = response.data.data.data;
-    let movieList = movies.map((movie, index) => ({
-      'title': index + 1,
-      'description': `${movie.title}\n`,
-      'rowId': `${prefix}mpp ${movie.link}`
-    }));
+    let movieResults = apiResponse.result;
+    const footerData = (await axios.get("https://raw.githubusercontent.com/athulakumara604/ASITHA-MD-DATABASE/refs/heads/main/ditels/ditels.json")).data;
+    let footerText = footerData.footer;
+    
+    let movieList = [];
+    for (let i = 0; i < movieResults.length; i++) {
+      movieList.push({
+        'title': i + 1,
+        'description': `${movieResults[i].title}\n`,
+        'rowId': `${prefix}dbl2 ${movieResults[i].finalDownloadLink} & ${movieResults[i].title} & ${movieResults[i].resolution} & ${movieResults[i].thumbnail}`
+      });
+    }
 
     const sections = [{
-      'title': "*[Results from sinhalasub.lk]*\n",
+      'title': "*[Results from sinhalamovie.com]*\n",
       'rows': movieList
     }];
 
-    const responseMessage = {
-      text: `\n*📽️ASITHA MD CINEMA📽️*\n\n👽 *Entered Name ||* ${q}`,
-      footer: "> *POWERED by ASITHA-MD*",
-      title: '',
-      buttonText: "*🔢 Reply below number*\n",
-      sections
+    const listMessage = {
+      'text': `📽 ASITHA MD CINEMA 📽\n\n👽 Entered Name || ${q}`,
+      'footer': footerText || "> POWERED by ASITHA-MD",
+      'title': '',
+      'buttonText': "🔢 Reply below number\n",
+      'sections': sections
     };
 
     const options = {
-      quoted: message
+      quoted: _0x887e33
     };
 
-    return await client.replyList(from, responseMessage, options);
+    return await _0x464975.replyList(from, listMessage, options);
   } catch (error) {
     console.error(error);
-    await reply(`*ERROR !!*\n\n🚩 *Details:*\n${error.message || error}\n\n📩 If this error persists, please check your API endpoints or input.`);
+    reply(`No Movie : ${error}`);
   }
 });
-
