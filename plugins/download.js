@@ -701,3 +701,50 @@ cmd({
   }
 });
 
+const commandDetails = {
+  pattern: "sinhalasub",
+  react: '🎥',
+  desc: "Download movie for sinhalasub.lk",
+  category: "extra",
+  use: ".sinhalasub < Movie Name >",
+  filename: __filename
+};
+
+cmd(commandDetails, async (client, message, args, { from, sender, prefix, quoted, q, reply }) => {
+  try {
+    if (!q) {
+      return await reply("Movie name please!");
+    }
+
+    const response = await fetchJson(`https://asitha-moviedl.vercel.app/api/sinhalasubs/search?q=${q}&apikey=asitha108`);
+    let movies = response.data.data.data;
+    let movieList = movies.map((movie, index) => ({
+      'title': index + 1,
+      'description': `${movie.title}\n`,
+      'rowId': `${prefix}mpp ${movie.link}`
+    }));
+
+    const sections = [{
+      'title': "*[Results from sinhalasub.lk]*\n",
+      'rows': movieList
+    }];
+
+    const responseMessage = {
+      text: `\n*📽️ASITHA MD CINEMA📽️*\n\n👽 *Entered Name ||* ${q}`,
+      footer: "> *POWERED by ASITHA-MD*",
+      title: '',
+      buttonText: "*🔢 Reply below number*\n",
+      sections
+    };
+
+    const options = {
+      quoted: message
+    };
+
+    return await client.replyList(from, responseMessage, options);
+  } catch (error) {
+    console.error(error);
+    await reply(`*ERROR !!*\n\n🚩 *Details:*\n${error.message || error}\n\n📩 If this error persists, please check your API endpoints or input.`);
+  }
+});
+
