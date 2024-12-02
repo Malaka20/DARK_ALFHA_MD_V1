@@ -704,54 +704,53 @@ cmd({
 const _0x5bb3c4 = {
   pattern: "sinhaladub",
   react: '🎥',
-  desc: "Download movie from isaidub9.com",
+  desc: "Download movie for isaidub9.com",
   category: "extra",
   use: ".sinhaladub <Movie Name>",
   filename: __filename
 };
-
-cmd(_0x5bb3c4, async (_0x464975, _0x887e33, _0x5dc3c7, { from, sender, prefix, quoted, q, reply }) => {
+cmd(_0x5bb3c4, async (_0x464975, _0x887e33, _0x5dc3c7, {
+  from: _0x266541,
+  sender: _0x162d7f,
+  prefix: _0x50e34a,
+  quoted: _0x43e694,
+  q: _0x16f989,
+  reply: _0x3a1f78
+}) => {
   try {
-    const apiUrl = `http://103.195.101.44:2662/api?apiKey=ardevfa6456bc09a877cb&plugin=sin&query=${q}`;
-    const apiResponse = await axios.get(apiUrl).then(response => response.data);
-
-    if (!apiResponse.status) {
-      return reply(`*ERROR:* Unable to fetch data for "${q}".`);
+    const _0x13f74b = "http://103.195.101.44:2662/api?apiKey=ardevfa6456bc09a877cb&plugin=sin&query=" + _0x16f989;
+    const _0x349ae5 = await axios.get(_0x13f74b).then(_0x1c9666 => _0x1c9666.data);
+    if (!_0x349ae5.status) {
+      return _0x3a1f78("*ERROR:* Unable to fetch data for \"" + _0x16f989 + "\".");
     }
-
-    let movieResults = apiResponse.result;
-    const footerData = (await axios.get("https://raw.githubusercontent.com/athulakumara604/ASITHA-MD-DATABASE/refs/heads/main/ditels/ditels.json")).data;
-    let footerText = footerData.footer;
-    
-    let movieList = [];
-    for (let i = 0; i < movieResults.length; i++) {
-      movieList.push({
-        'title': i + 1,
-        'description': `${movieResults[i].title}\n`,
-        'rowId': `${prefix}dbl2 ${movieResults[i].finalDownloadLink} & ${movieResults[i].title} & ${movieResults[i].resolution} & ${movieResults[i].thumbnail}`
+    let _0x2a8afd = _0x349ae5.result;
+    const _0x25f56b = (await axios.get("https://raw.githubusercontent.com/athulakumara604/ASITHA-MD-DATABASE/refs/heads/main/ditels/ditels.json")).data;
+    let _0x2750d7 = _0x25f56b.footer;
+    var _0x3b5793 = [];
+    for (var _0x5e5f5b = 0; _0x5e5f5b < _0x2a8afd.length; _0x5e5f5b++) {
+      _0x3b5793.push({
+        'title': _0x5e5f5b + 1,
+        'description': _0x2a8afd[_0x5e5f5b].title + "\n",
+        'rowId': _0x50e34a + "dbl2 " + _0x2a8afd[_0x5e5f5b].finalDownloadLink + " & " + _0x2a8afd[_0x5e5f5b].title + " & " + _0x2a8afd[_0x5e5f5b].resolution + " & " + _0x2a8afd[_0x5e5f5b].thumbnail
       });
     }
-
-    const sections = [{
+    const _0x256a54 = [{
       'title': "*[Results from sinhalamovie.com]*\n",
-      'rows': movieList
+      'rows': _0x3b5793
     }];
-
-    const listMessage = {
-      'text': `📽 ASITHA MD CINEMA 📽\n\n👽 Entered Name || ${q}`,
-      'footer': footerText || "> POWERED by ASITHA-MD",
+    const _0x2fa88b = {
+      'text': "📽 ASITHA MD CINEMA 📽\n\n👽 Entered Name || " + _0x16f989,
+      'footer': _0x2750d7 || "> POWERED by ASITHA-MD",
       'title': '',
       'buttonText': "🔢 Reply below number\n",
-      'sections': sections
+      'sections': _0x256a54
     };
-
-    const options = {
+    const _0x46a565 = {
       quoted: _0x887e33
     };
-
-    return await _0x464975.replyList(from, listMessage, options);
-  } catch (error) {
-    console.error(error);
-    reply(`No Movie : ${error}`);
+    return await _0x464975.replyList(_0x266541, _0x2fa88b, _0x46a565);
+  } catch (_0x5aebdd) {
+    console.error(_0x5aebdd);
+    _0x3a1f78("No Movie : " + _0x5aebdd);
   }
 });
