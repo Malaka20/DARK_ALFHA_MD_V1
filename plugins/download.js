@@ -8,8 +8,8 @@ const { cmd, commands } = require("../command");
 const { sinhalaSub } = require("mrnima-moviedl");
 
 cmd({
-  pattern: "sinhalasub",
-  alias: ["movie"],
+  pattern: "sinhalasub2",
+  alias: ["movie1"],
   react: '📑',
   category: "download",
   desc: "Search movies on sinhalasub and get download links",
