@@ -56,6 +56,7 @@ cmd({
 
       if (isReplyToMenu) {
         let responseText = '';
+        let responseImage = "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg";
         switch (userReply) {
           case '1':
             responseText = `
