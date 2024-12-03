@@ -1,74 +1,150 @@
 const config = require('../config')
 const {cmd , commands} = require('../command')
+const os = require("os")
+
 
 cmd({
-  pattern: "menu",
-  desc: "commands panel",
-  react: "🌸",
-  filename: __filename
-}, async (client, message, args, extras) => {
-  const { from, quoted, body, isCmd, command, args: arguments, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply } = extras;
+    pattern: ".menu",
+    alias: [".menu"],
+    desc: ".menu the bot",
+    react: "📜",
+    category: "owner"
 
-  try {
-    const menuMessage = `
-╒✦•··············•••••••••··············•··•✦
-│ *CREATOR* : *Sadeesha Tharumin*
-│ *VERSION* : *v2.0.0*
-│ *UPTIME*  : ${runtime(process.uptime())}
-│ *RAM USAGE*  : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require("os").totalmem() / 1024 / 1024)}MB
-│ *HOST NAME* : ${require("os").hostname()}
-╘✦•·············•••••••••··················•✦
-────────────────
-*⫷REPLY BELOW THE NUMBER⫸*
-────────────────
-╭──────────────
-│ *1* _(DOWNLOAD COMMANDS)_
-│ *2* _(SEARCH COMMANDS)_
-│ *3* _(ANIME COMMANDS)_
-│ *4* _(FUN COMMANDS)_
-│ *5* _(CONVERT COMMANDS)_
-│ *6* _(AI COMMANDS)_
-│ *7* _(GROUP COMMANDS)_
-│ *8* _(OWNER COMMANDS)_
-│ *9* _(SYSTEM COMMANDS)_
-╰─────────────
-*© CREATED BY SADEESHA CODER · · ·*
-> Alexa 👧🏻`;
+},
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    try {
+        let desc = `┏━━━━━━━━━━━━━━━━━━━━━━━┓
+┃       ⚙ QUEEN LITHU MD BOT SETTINGS ⚙
+┃━━━━━━━━━━━━━━━━━━━━━━━┃
+┣━💼 Work Mode : 𝙿𝚄𝙱𝙻𝙸𝙲🌎/𝙿𝚁𝙸𝚅𝙰𝚃𝙴/𝙸𝙽𝙱𝙾𝚇/𝙶𝚁𝙾𝚄𝙿
+┣━🔊 Auto Voice : ♻ 𝙾𝙽/𝙾𝙵𝙵
+┣━📝 Auto Status : ♻ 𝙾𝙽/𝙾𝙵𝙵
+┣━📋 Auto Bio : ♻ 𝙾𝙽/𝙾𝙵𝙵
+┣━⌨ Auto Typing : ♻ 𝙾𝙽/𝙾𝙵𝙵
+┣━🛠 Auto Read Command : ♻ 𝙾𝙽/𝙾𝙵𝙵
+┃━━━━━━━━━━━━━━━━━━━━━━━┃
+┃      🔗  CUSTOMIZE YOUR SETTINGS ⤵
+┗━━━━━━━━━━━━━━━━━━━━━━━┛
 
-    const imageUrl = "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg";
-    const sentMessage = await client.sendMessage(from, { image: { url: imageUrl }, caption: menuMessage }, { quoted });
+┏━━━━━━━━━━━━━━━━━━━━━━━┓
+┃       🔧 OPTIONS MENU 🔧
+┃━━━━━━━━━━━━━━━━━━━━━━━┃
 
-    const messageId = sentMessage.key.id;
+┣━ WORK MODE ⤵
+┃   ┣ 1.1 🔹 Public Work
+┃   ┣ 1.2 🔹 Private Work
+┃   ┣ 1.3 🔹 Group Only
+┃   ┗ 1.4 🔹 Inbox Only
 
-    client.ev.on("messages.upsert", async (event) => {
-      const receivedMessage = event.messages[0];
-      if (!receivedMessage.message) return;
+┣━ AUTO VOICE ⤵
+┃   ┣ 2.1 🔊 Auto Voice On
+┃   ┗ 2.2 🔕 Auto Voice Off
 
-      const userMessage = receivedMessage.message.conversation || receivedMessage.message.extendedTextMessage?.text;
-      const senderId = receivedMessage.key.remoteJid;
-      const isReplyToMenu = receivedMessage.message.extendedTextMessage?.contextInfo?.stanzaId === messageId;
+┣━ AUTO STATUS SEEN ⤵
+┃   ┣ 3.1 👁‍🗨 Auto Read Status On
+┃   ┗ 3.2 👁❌ Auto Read Status Off
 
-      if (isReplyToMenu) {
-        const responses = {
-          "1": "【 ALEXA DOWNLOAD COMMANDS 】 ...",
-          "2": "【 ALEXA SEARCH COMMANDS 】 ...",
-          "3": "【 ALEXA ANIME COMMANDS 】 ...",
-          "4": "【 ALEXA FUN COMMANDS 】 ...",
-          "5": "【 ALEXA CONVERT COMMANDS 】 ...",
-          "6": "【 ALEXA AI COMMANDS 】 ...",
-          "7": "【 ALEXA GROUP COMMANDS 】 ...",
-          "8": "【 ALEXA OWNER COMMANDS 】 ...",
-          "9": "【 ALEXA SYSTEM COMMANDS 】 ..."
-        };
+┣━ AUTO BIO ⤵
+┃   ┣ 4.1 ✍ Auto Bio On
+┃   ┗ 4.2 ✍❌ Auto Bio Off
 
-        const response = responses[userMessage];
-        if (response) {
-          await client.sendMessage(senderId, { image: { url: imageUrl }, caption: response }, { quoted: receivedMessage });
-        }
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    reply(`Error: ${error.message}`);
-  }
+┣━ 24/7 NEWS SERVICE ⤵
+┃   ┣ 5.1 📰 Activate News Service
+┃   ┗ 5.2 🛑 Deactivate News Service
+
+┣━ AUTO TYPING ⤵
+┃   ┣ 6.1 📝 Activate Auto Typing
+┃   ┗ 6.2 📝❌ Deactivate Auto Typing
+
+┣━ AUTO COMMAND READ ⤵
+┃   ┣ 7.1 🖊 Activate Auto Command Read
+┃   ┗ 7.2 🖊❌ Deactivate Auto Command Read
+┗━━━━━━━━━━━━━━━━━━━━━━━┛
+
+> *©ᴘᴏᴡᴇʀᴇᴅ Qᴜᴇᴇɴ-ʟɪᴛʜᴜ-ᴍᴅ*`;
+
+        const vv = await conn.sendMessage(from, { image: { url: "https://ibb.co/F0ccn0P"}, caption: desc }, { quoted: mek });
+
+        conn.ev.on('messages.upsert', async (msgUpdate) => {
+            const msg = msgUpdate.messages[0];
+            if (!msg.message || !msg.message.extendedTextMessage) return;
+
+            const selectedOption = msg.message.extendedTextMessage.text.trim();
+
+            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
+                switch (selectedOption) {
+                    case '1.1':
+                        reply(".😉😉update MODE:public" );
+                        break;
+                    case '1.2':               
+                        reply(".update MODE:private");
+                        reply(".restart");
+                        break;
+                    case '1.3':               
+                          reply(".update MODE:group");
+                        reply(".restart");
+                      break;
+                    case '1.4':     
+                        reply(".update MODE:inbox");
+                        reply(".restart");
+                      break;
+                    case '2.1':     
+                        reply(".update AUTO_VOICE:true");
+                        reply(".restart");
+                        break;
+                    case '2.2':     
+                        reply(".update AUTO_VOICE:false");
+                        reply(".restart");
+                    break;
+                    case '3.1':    
+                        reply(".update AUTO_READ_STATUS:true");
+                        reply(".restart");
+                    break;
+                    case '3.2':    
+                        reply(".update AUTO_READ_STATUS:false");
+                        reply(".restart");
+                    break;
+                    case '4.1': 
+                    reply(".update AUTO_BIO:true");
+                    reply(".restart");
+                    break;
+                    case '4.2': 
+                    reply(".update AUTO_BIO:false");
+                    reply(".restart");
+                    break;
+                    case '5.1': 
+                    reply(".startnews");
+                    break;
+                    case '5.2': 
+                    reply(".stopnews");
+                    break;
+                    case '6.1':      
+                        reply(".update AUTO_TYPING:true");
+                        reply(".restart");
+                        break;
+                    case '6.2':   
+                        reply(".update AUTO_TYPING:false");
+                        reply(".restart");
+                    break;
+                    case '7.1': 
+                        reply(".update AUTO_READ_CMD:true");
+                        reply(".restart");
+                    break;
+                    case '7.2':   
+                        reply(".update AUTO_READ_CMD:false");
+                        reply(".restart");
+                    
+                        break;
+                    default:
+                        reply("Invalid option. Please select a valid option🔴");
+                }
+
+            }
+        });
+
+    } catch (e) {
+        console.error(e);
+        await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
+        reply('An error occurred while processing your request.');
+    }
 });
