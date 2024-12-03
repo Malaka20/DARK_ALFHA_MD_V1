@@ -6,161 +6,146 @@ const axios = require('axios')
 
 cmd({
   pattern: "menu",
-  desc: "commands panel",
+  desc: "Commands panel",
   react: '🌸',
   filename: __filename
-}, async (client, message, args, {
-  from,
-  quoted,
-  body,
-  isCmd,
-  command,
-  argsArray,
-  q,
-  isGroup,
-  sender,
-  senderNumber,
-  botNumber2,
-  botNumber,
-  pushname,
-  isMe,
-  isOwner,
-  groupMetadata,
-  groupName,
-  participants,
-  groupAdmins,
-  isBotAdmins,
-  isAdmins,
-  reply
-}) => {
+}, async (bot, message, args, options) => {
+  const { from, quoted, body, reply } = options;
+
   try {
+    // Menu Text
     const menuText = `
-╒✦•··············•••••••••··············•··•✦
-│ *Creator* : *Sadeesha Tharumin*
-│ *Version* : *v.2.0.0*
-│ *Uptime*  :  ${runtime(process.uptime())}
-│ *RAM Usage*  : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem() / 1024 / 1024)}MB
-│ *Host Name* : ${os.hostname()}
-╘✦•·············•••••••••··················•✦
+╒✦•··············•••••••••··············•✦
+│ *Creator* : Sadeesha Tharumin
+│ *Version* : v2.0.0
+│ *Uptime*  : ${runtime(process.uptime())}
+│ *RAM Usage* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB
+│ *Host Name* : ${require('os').hostname()}
+╘✦•··············•••••••••··············•✦
 ────────────────
-*⫷ Reply below the number ⫸*
+*Reply below the number:*
 ────────────────
-╭──────────────
-│ *1* _(DOWNLOAD COMMANDS)_
-│ *2* _(SEARCH COMMANDS)_
-│ *3* _(ANIME COMMANDS)_
-│ *4* _(FUN COMMANDS)_
-│ *5* _(CONVERT COMMANDS)_
-│ *6* _(AI COMMANDS)_
-│ *7* _(GROUP COMMANDS)_
-│ *8* _(OWNER COMMANDS)_
-│ *9* _(SYSTEM COMMANDS)_
-╰─────────────
+1. Download Commands
+2. Search Commands
+3. Anime Commands
+4. Fun Commands
+5. Converted Commands
+6. AI Commands
+7. Group Commands
+8. Owner Commands
+9. System Commands
+────────────────
 *© Created by Sadeesha Coder*
-> Alexa 👧🏻 
 `;
 
-    const imageUrl = "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg";
-
-    const menuMessage = await client.sendMessage(from, {
-      image: { url: imageUrl },
+    // Send Menu Message
+    const sentMenuMessage = await bot.sendMessage(from, {
+      image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
       caption: menuText
-    }, { quoted });
+    }, { quoted: message });
 
-    const menuMessageId = menuMessage.key.id;
+    const menuMessageId = sentMenuMessage.key.id;
 
-    client.ev.on("messages.upsert", async event => {
-      const receivedMessage = event.messages[0];
-      if (!receivedMessage.message) return;
+    // Listen for replies to the menu message
+    bot.ev.on("messages.upsert", async event => {
+      const newMessage = event.messages[0];
+      if (!newMessage.message) return;
 
-      const userReply = receivedMessage.message.conversation || receivedMessage.message.extendedTextMessage?.text;
-      const chatId = receivedMessage.key.remoteJid;
-      const isReplyToMenu = receivedMessage.message.extendedTextMessage && receivedMessage.message.extendedTextMessage.contextInfo.stanzaId === menuMessageId;
+      const userReply = newMessage.message.conversation || newMessage.message.extendedTextMessage?.text;
+      const isReplyToMenu = newMessage.message.extendedTextMessage?.contextInfo.stanzaId === menuMessageId;
 
       if (isReplyToMenu) {
-        if (userReply === '1') {
-          await client.sendMessage(chatId, {
-            image: { url: imageUrl },
-            caption: `
-【 _*ALEXA DOWNLOAD COMMANDS 📥*_】
-
-╭━━━━━━━━━━━━━━━
-         *.song*
- (_Download YouTube song_) 
-
-- _🌸 Ex: .song lelena_
-╰━━━━━━━━━━━━━━━
-
-╭━━━━━━━━━━━━━━━
-         *.video*
- (_Download YouTube video_) 
-
-- _🌸 Ex: .video lelena_
-╰━━━━━━━━━━━━━━━
-
-╭━━━━━━━━━━━━━━━
-         *.fb*
- (_Download Facebook video_) 
-
-- _🌸 Ex: .fb <url>_
-╰━━━━━━━━━━━━━━━
-
-╭━━━━━━━━━━━━━━━
-         *.tiktok*
- (_Download TikTok video without watermark and audio_) 
-
-- _🌸 Ex: .tiktok <url>_
-╰━━━━━━━━━━━━━━━
-
-╭━━━━━━━━━━━━━━━
-         *.apk*
- (_Download APK_) 
-
-- _🌸 Ex: .apk whatsapp_
-╰━━━━━━━━━━━━━━━
-
-╭━━━━━━━━━━━━━━━
-         *.mfire*
- (_Download Mediafire link_) 
-
-- _🌸 Ex: .mfire <url>_
-╰━━━━━━━━━━━━━━━
-`
-          }, { quoted: receivedMessage });
-        } else if (userReply === '2') {
-          await client.sendMessage(chatId, {
-            image: { url: imageUrl },
-            caption: `
-【 _*🔎ALEXA SEARCH COMMANDS🔎*_】
-
-╭━━━━━━━━━━━━━━━
-         *.img*
- (_Google image search_) 
-
-- _🌸 Ex: .img cars_
-╰━━━━━━━━━━━━━━━
-
-╭━━━━━━━━━━━━━━━
-         *.movie*
- (_Search movie details_) 
-
-- _🌸 Ex: .movie spider man_
-╰━━━━━━━━━━━━━━━
-
-╭━━━━━━━━━━━━━━━
-         *.yts*
- (_Search YouTube links_) 
-
-- _🌸 Ex: .yts alexa whatsapp bot_
-╰━━━━━━━━━━━━━━━
-`
-          }, { quoted: receivedMessage });
+        let responseText = '';
+        switch (userReply) {
+          case '1':
+            responseText = `
+【 *ALEXA DOWNLOAD COMMANDS 📥* 】
+- .song <title> : Download song from YouTube
+- .video <title> : Download video from YouTube
+- .fb <url> : Download Facebook video
+- .tiktok <url> : Download TikTok video (no watermark)
+- .apk <app_name> : Download APK
+- .mfire <url> : Download Mediafire link
+- .xvdl <title> : Download Xvideos video
+`;
+            break;
+          case '2':
+            responseText = `
+【 *🔎 ALEXA SEARCH COMMANDS 🔎* 】
+- .img <query> : Search Google Images
+- .githubstalk <username> : Search GitHub profile
+- .movie <title> : Search movie details
+- .yts <query> : Search YouTube links
+`;
+            break;
+          case '3':
+            responseText = `
+【 *👯🏻 ALEXA ANIME COMMANDS 👯🏻* 】
+- .loli : Random loli image
+- .waifu : Random waifu image
+- .neko : Random neko image
+- .megumin : Random megumin image
+- .maid : Random maid image
+- .awoo : Random awoo image
+`;
+            break;
+          case '4':
+            responseText = `
+【 *🧙🏻 ALEXA FUN COMMANDS 🧙🏻* 】
+- .hack : Simulate a fun hacking animation
+`;
+            break;
+          case '5':
+            responseText = `
+【 *🪄 ALEXA CONVERT COMMANDS 🪄* 】
+- .sticker / .s : Convert photo to sticker
+- .tts <text> : Text-to-speech conversion
+`;
+            break;
+          case '6':
+            responseText = `
+【 *👾 ALEXA AI COMMANDS 👾* 】
+- .ai <query> : Chat with AI
+- .gpt <query> : ChatGPT-powered responses
+`;
+            break;
+          case '7':
+            responseText = `
+【 *🧣 ALEXA GROUP COMMANDS 🧣* 】
+- .mute : Close the group
+- .unmute : Open the group
+- .tagall <text> : Tag all group members
+`;
+            break;
+          case '8':
+            responseText = `
+【 *🧑🏻‍💻 ALEXA OWNER COMMANDS 🧑🏻‍💻* 】
+- .block : Block a user
+- .unblock : Unblock a user
+- .jid : Get chat JID
+- .gjid : Get group JID
+- .restart : Restart the bot
+`;
+            break;
+          case '9':
+            responseText = `
+【 *⚙️ ALEXA SYSTEM COMMANDS ⚙️* 】
+- .ping : Test bot speed
+- .system : Check bot status
+- .owner : Contact bot developer
+- .repo : Bot GitHub repository
+`;
+            break;
+          default:
+            responseText = "Invalid option! Please reply with a number from 1 to 9.";
         }
-        // More else-if branches for options 3, 4, etc. can be added similarly
+
+        // Send the appropriate response
+        await bot.sendMessage(from, { text: responseText }, { quoted: newMessage });
       }
     });
   } catch (error) {
-    console.log(error);
-    reply('Error: ' + error);
+    console.error(error);
+    reply(`Error: ${error.message}`);
   }
 });
