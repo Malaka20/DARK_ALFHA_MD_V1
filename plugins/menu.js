@@ -171,14 +171,11 @@ cmd({
 > ALEXA
 `;
             
-      default:
-        console.log("Unknown command");
-        return;
-    }
-
-            }
-        });
-
+      const response = responses[userMessage];
+        if (response) {
+          await client.sendMessage(senderId, { image: { url: imageUrl }, caption: response }, { quoted: receivedMessage });
+        }
+      }
     } catch (e) {
         console.error(e);
         await conn.sendMessage(from, { react: { text: '❌', key: mek.key } })
