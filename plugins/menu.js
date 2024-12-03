@@ -9,31 +9,41 @@ cmd({
   desc: "commands panel",
   react: '🌸',
   filename: __filename
-}, async (client, message, args, options) => {
+}, async (client, message, args, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  argsArray,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
   try {
-    const { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply } = options;
-    const os = require('os');
-    
-    // Build menu message
-    const runtime = (uptime) => {
-      let seconds = parseInt(uptime, 10);
-      let hours = Math.floor(seconds / 3600);
-      seconds = seconds % 3600;
-      let minutes = Math.floor(seconds / 60);
-      seconds = seconds % 60;
-      return `${hours}h ${minutes}m ${seconds}s`;
-    };
-
-    const menuMessage = `
+    const menuText = `
 ╒✦•··············•••••••••··············•··•✦
-│ *ᴄʀᴇᴀᴛᴏʀ* : *Sadeesha Tharumin*
-│ *ᴠᴇʀsɪᴏɴs* : *ᴠ.2.0.0*
-│ *ᴜᴘᴛɪᴍᴇ*  :  ${runtime(process.uptime())}
-│ *ʀᴀᴍ ᴜꜱᴀɢᴇ*  : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(os.totalmem() / 1024 / 1024)}MB
-│ *ʜᴏꜱᴛ ɴᴀᴍᴇ* : ${os.hostname()}
+│ *Creator* : *Sadeesha Tharumin*
+│ *Version* : *v.2.0.0*
+│ *Uptime*  :  ${runtime(process.uptime())}
+│ *RAM Usage*  : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem() / 1024 / 1024)}MB
+│ *Host Name* : ${os.hostname()}
 ╘✦•·············•••••••••··················•✦
 ────────────────
-*⫷ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ⫸*
+*⫷ Reply below the number ⫸*
 ────────────────
 ╭──────────────
 │ *1* _(DOWNLOAD COMMANDS)_
@@ -46,105 +56,111 @@ cmd({
 │ *8* _(OWNER COMMANDS)_
 │ *9* _(SYSTEM COMMANDS)_
 ╰─────────────
-*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·*
-> Aʅҽxα 👧🏻 
+*© Created by Sadeesha Coder*
+> Alexa 👧🏻 
 `;
 
-    const menuImage = 'https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg';
+    const imageUrl = "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg";
 
-    // Send the menu message
-    const menuMsg = await client.sendMessage(from, { image: { url: menuImage }, caption: menuMessage }, { quoted });
+    const menuMessage = await client.sendMessage(from, {
+      image: { url: imageUrl },
+      caption: menuText
+    }, { quoted });
 
-    // Capture the menu message ID
-    const menuMsgId = menuMsg.key.id;
+    const menuMessageId = menuMessage.key.id;
 
-    // Listen for user responses
-    client.ev.on('messages.upsert', async (upsert) => {
-      const msg = upsert.messages[0];
-      if (!msg.message) return;
+    client.ev.on("messages.upsert", async event => {
+      const receivedMessage = event.messages[0];
+      if (!receivedMessage.message) return;
 
-      const text = msg.message.conversation || msg.message.extendedTextMessage?.text;
-      const isReplyToMenu = msg.message.extendedTextMessage?.contextInfo.stanzaId === menuMsgId;
-      const chatId = msg.key.remoteJid;
+      const userReply = receivedMessage.message.conversation || receivedMessage.message.extendedTextMessage?.text;
+      const chatId = receivedMessage.key.remoteJid;
+      const isReplyToMenu = receivedMessage.message.extendedTextMessage && receivedMessage.message.extendedTextMessage.contextInfo.stanzaId === menuMessageId;
 
       if (isReplyToMenu) {
-        let responseMessage;
-
-        switch (text) {
-          case '1':
-            responseMessage = `
+        if (userReply === '1') {
+          await client.sendMessage(chatId, {
+            image: { url: imageUrl },
+            caption: `
 【 _*ALEXA DOWNLOAD COMMANDS 📥*_】
+
 ╭━━━━━━━━━━━━━━━
          *.song*
- (_Downloading YouTube song)_
- - _🌸 Ex: .song lelena_
+ (_Download YouTube song_) 
+
+- _🌸 Ex: .song lelena_
 ╰━━━━━━━━━━━━━━━
+
 ╭━━━━━━━━━━━━━━━
          *.video*
- (_Downloading YouTube video)_
- - _🌸 Ex: .video lelena_
+ (_Download YouTube video_) 
+
+- _🌸 Ex: .video lelena_
 ╰━━━━━━━━━━━━━━━
+
 ╭━━━━━━━━━━━━━━━
          *.fb*
- (_Downloading Facebook video)_
- - _🌸 Ex: .fb <url>_
+ (_Download Facebook video_) 
+
+- _🌸 Ex: .fb <url>_
 ╰━━━━━━━━━━━━━━━
+
 ╭━━━━━━━━━━━━━━━
          *.tiktok*
- (_Downloading TikTok no-watermark and audio)_
- - _🌸 Ex: .tiktok <url>_
+ (_Download TikTok video without watermark and audio_) 
+
+- _🌸 Ex: .tiktok <url>_
 ╰━━━━━━━━━━━━━━━
+
 ╭━━━━━━━━━━━━━━━
          *.apk*
- (_Downloading APK)_
- - _🌸 Ex: .apk WhatsApp_
+ (_Download APK_) 
+
+- _🌸 Ex: .apk whatsapp_
 ╰━━━━━━━━━━━━━━━
+
 ╭━━━━━━━━━━━━━━━
          *.mfire*
- (_Downloading MediaFire)_
- - _🌸 Ex: .mfire <url>_
+ (_Download Mediafire link_) 
+
+- _🌸 Ex: .mfire <url>_
 ╰━━━━━━━━━━━━━━━
-╭━━━━━━━━━━━━━━━
-         *.xvdl*
- (_Downloading xvideos.com video)_
- - _🌸 Ex: .xvdl Mia Khalifa_
-╰━━━━━━━━━━━━━━━
-> ALEXA-MD
-`;
-            break;
-          case '2':
-            responseMessage = `
+`
+          }, { quoted: receivedMessage });
+        } else if (userReply === '2') {
+          await client.sendMessage(chatId, {
+            image: { url: imageUrl },
+            caption: `
 【 _*🔎ALEXA SEARCH COMMANDS🔎*_】
+
 ╭━━━━━━━━━━━━━━━
          *.img*
- (_Searching Google Images)_
- - _🌸 Ex: .img cars_
+ (_Google image search_) 
+
+- _🌸 Ex: .img cars_
 ╰━━━━━━━━━━━━━━━
-╭━━━━━━━━━━━━━━━
-         *.githubstalk*
- (_Searching GitHub profile)_
- - _🌸 Ex: .githubstalk sadiyamin_
-╰━━━━━━━━━━━━━━━
+
 ╭━━━━━━━━━━━━━━━
          *.movie*
- (_Searching movie details)_
- - _🌸 Ex: .movie Spider-Man_
+ (_Search movie details_) 
+
+- _🌸 Ex: .movie spider man_
 ╰━━━━━━━━━━━━━━━
+
 ╭━━━━━━━━━━━━━━━
          *.yts*
- (_Searching YouTube links)_
- - _🌸 Ex: .yts alexa WhatsApp bot_
+ (_Search YouTube links_) 
+
+- _🌸 Ex: .yts alexa whatsapp bot_
 ╰━━━━━━━━━━━━━━━
-> ALEXA
-`;
-      const response = responses[userMessage];
-        if (response) {
-          await client.sendMessage(senderId, { image: { url: imageUrl }, caption: response }, { quoted: receivedMessage });
+`
+          }, { quoted: receivedMessage });
         }
+        // More else-if branches for options 3, 4, etc. can be added similarly
       }
     });
   } catch (error) {
-    console.error(error);
-    reply(`Error: ${error.message}`);
+    console.log(error);
+    reply('Error: ' + error);
   }
-});    
+});
