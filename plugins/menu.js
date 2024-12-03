@@ -35,12 +35,12 @@ cmd({
 │ _7_ *❂sᴇᴀʀᴄʜ menu❂*
 ╰─────────────●●►
 *🌟 Reply the Number you want to select*
-> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅ 🧑🏻‍💻
+> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅ 👧🏻
 `;
 
     // Send Menu Message
     const sentMenuMessage = await bot.sendMessage(from, {
-      image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+      image: { url: "https://i.ibb.co/QNwLWTN/20241201-230018.jpg" },
       caption: menuText
     }, { quoted: message });
 
@@ -56,7 +56,7 @@ cmd({
 
       if (isReplyToMenu) {
         let responseText = '';
-        let responseImage = "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg";
+        let responseImage = "https://i.ibb.co/QNwLWTN/20241201-230018.jpg";
         switch (userReply) {
           case '1':
             responseText = `
@@ -121,7 +121,7 @@ cmd({
 │       
 │ ♡︎_Downloading xvideos videos_♡︎
 ╰┈───────────────•
-> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅ 🧑🏻‍💻
+> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅ 👧🏻
 `;
             break;
           case '2':
