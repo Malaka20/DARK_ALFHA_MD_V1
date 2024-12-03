@@ -56,8 +56,6 @@ cmd({
 
       if (isReplyToMenu) {
         let responseText = '';
-        let responseImage = "https://i.ibb.co/QNwLWTN/20241201-230018.jpg";
-       if (text === '1') {
           await sendMessage(senderId, {
             image: { url: "https://i.ibb.co/QNwLWTN/20241201-230018.jpg" },
         switch (userReply) {
