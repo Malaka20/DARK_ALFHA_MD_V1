@@ -6,203 +6,105 @@ const axios = require('axios')
 
 cmd({
   pattern: "menu",
-  desc: "Commands panel",
-  react: '📜',
+  desc: "commands panel",
+  react: '🌸',
   filename: __filename
-}, async (bot, message, args, options) => {
-  const { from, quoted, body, reply } = options;
-
+}, async (context, args, user, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
   try {
-    // Menu Text
-    const menuText = `
-╒✦•··············•••••••••··············•✦
-│ *Creator* : Sadeesha Tharumin
-│ *Version* : v2.0.0
-│ *Uptime*  : ${runtime(process.uptime())}
-│ *RAM Usage* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB
-│ *Host Name* : ${require('os').hostname()}
-╘✦•··············•••••••••··············•✦
-*♡︎•━━━━━━☻︎━━━━━━•♡︎*
-╭────────────●●►
-│⛵ *LIST MENU*
-│   ───────
-│ _1_ *❂ᴅᴏᴡɴʟᴏᴀᴅ menu❂*
-│ _2_ *❂ᴍᴀɪɴ menu❂*
-│ _3_ *AI menu*
-│ _4_ *❂ᴍᴀɪɴ menu❂*
-│ _5_ *❂ᴏᴡɴᴇʀ menu❂*
-│ _6_ *❂ᴄᴏɴᴠᴇʀᴛ menu❂*
-│ _7_ *❂sᴇᴀʀᴄʜ menu❂*
-╰─────────────●●►
-*🌟 Reply the Number you want to select*
-> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅ 👧🏻
+    const menuMessage = `
+╒✦•··············•••••••••··············•··•✦
+│ *ᴄʀᴇᴀᴛᴏʀ* : *Sadeesha Tharumin*
+│ *ᴠᴇʀsɪᴏɴs* : *ᴠ.2.0.0*
+│ *ᴜᴘᴛɪᴍᴇ*  :  ${runtime(process.uptime())}
+│ *ʀᴀᴍ ᴜꜱᴀɢᴇ*  : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(os.totalmem() / 1024 / 1024)}MB
+│ *ʜᴏꜱᴛ ɴᴀᴍᴇ* : ${os.hostname()}
+╘✦•·············•••••••••··················•✦
+────────────────
+*⫷ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ⫸*
+────────────────
+╭──────────────
+│ *1* _(DOWNLOAD COMMANDS)_
+│ *2* _(SEARCH COMMANDS)_
+│ *3* _(ANIME COMMANDS)_
+│ *4* _(FUN COMMANDS)_
+│ *5* _(CONVERTED COMMANDS)_
+│ *6* _(AI COMMANDS)_
+│ *7* _(GROUP COMMANDS)_
+│ *8* _(OWNER COMMANDS)_
+│ *9* _(SYSTEM COMMANDS)_
+╰─────────────
+*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·*
+> Aʅҽxα 👧🏻 
 `;
 
-    // Send Menu Message
-    const sentMenuMessage = await bot.sendMessage(from, {
-      image: { url: "https://i.ibb.co/QNwLWTN/20241201-230018.jpg" },
-      caption: menuText
-    }, { quoted: message });
+    const message = await sendMessage(from, {
+      image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+      caption: menuMessage
+    }, { quoted });
 
-    const menuMessageId = sentMenuMessage.key.id;
-
-    // Listen for replies to the menu message
-    bot.ev.on("messages.upsert", async event => {
-      const newMessage = event.messages[0];
+    const menuMessageId = message.key.id;
+    
+    // Event listener for new messages
+    sendMessage.ev.on("messages.upsert", async msg => {
+      const newMessage = msg.messages[0];
       if (!newMessage.message) return;
 
-      const userReply = newMessage.message.conversation || newMessage.message.extendedTextMessage?.text;
+      const text = newMessage.message.conversation || newMessage.message.extendedTextMessage?.text;
+      const senderId = newMessage.key.remoteJid;
       const isReplyToMenu = newMessage.message.extendedTextMessage?.contextInfo.stanzaId === menuMessageId;
 
       if (isReplyToMenu) {
-        let responseText = '';
-        const sentMenuMessage = await bot.sendMessage(from, {
-      image: { url: "https://i.ibb.co/QNwLWTN/20241201-230018.jpg" },
-      caption: menuText
-        switch (userReply) {
-          case '1':
-            responseText = `
- ♡︎*❂ ᴅᴏᴡɴʟᴏᴀᴅ menu ❂ 📥*♡︎
-
-╭┈───────────────•
-│  ✑ *.song*
-│  
-│ ♡︎_Download YouTube song_♡︎
-╰┈───────────────●●►
-
-╭┈───────────────•
-│  ✑ *.video*
-│       
-│ ♡︎_Download YouTube video_♡︎
-╰┈───────────────•
-
-╭┈───────────────•
-│   ✑ *.fb*
-│  
-│ ♡︎_Download Facebook video_♡︎
-╰┈───────────────•
-
-╭┈───────────────•
-│   ✑ *.tiktok*
-│  
-│ ♡︎_Download TikTok video without watermark and audio_♡︎
-╰┈───────────────•
-
-╭┈───────────────•
-│   ✑ *.apk*
-│  
-│ ♡︎_Download APK_♡︎
-╰┈───────────────•
-
-╭┈───────────────•
-│   ✑ *.mfire*
-│  
-│ ♡︎_Download Mediafire link_♡︎
-╰┈───────────────•
-
-╭┈───────────────•
-│   ✑ *.gdrive*
-│
-│ ♡︎_Downloading google drive file_♡︎
-╰┈───────────────•
-
-╭┈───────────────•
-│   ✑ *.tg*    
-│       
-│ ♡︎_Downloading instagrm_♡︎
-╰┈───────────────•
-
-╭┈───────────────•
-│   ✑ *.movie*
-│   
-│ ♡︎_Downloading sinhala sub movie_♡︎
-╰┈───────────────•
-
-╭┈───────────────•
-│   ✑ *.xvdl*    
-│       
-│ ♡︎_Downloading xvideos videos_♡︎
-╰┈───────────────•
-> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴀʟᴀᴋᴀ-ᴍᴅ 👧🏻
-`;
-            break;
-          case '2':
-            responseText = `
-【 *🔎 ALEXA SEARCH COMMANDS 🔎* 】
-- .img <query> : Search Google Images
-- .githubstalk <username> : Search GitHub profile
-- .movie <title> : Search movie details
-- .yts <query> : Search YouTube links
-`;
-            break;
-          case '3':
-            responseText = `
-【 *👯🏻 ALEXA ANIME COMMANDS 👯🏻* 】
-- .loli : Random loli image
-- .waifu : Random waifu image
-- .neko : Random neko image
-- .megumin : Random megumin image
-- .maid : Random maid image
-- .awoo : Random awoo image
-`;
-            break;
-          case '4':
-            responseText = `
-【 *🧙🏻 ALEXA FUN COMMANDS 🧙🏻* 】
-- .hack : Simulate a fun hacking animation
-`;
-            break;
-          case '5':
-            responseText = `
-【 *🪄 ALEXA CONVERT COMMANDS 🪄* 】
-- .sticker / .s : Convert photo to sticker
-- .tts <text> : Text-to-speech conversion
-`;
-            break;
-          case '6':
-            responseText = `
-【 *👾 ALEXA AI COMMANDS 👾* 】
-- .ai <query> : Chat with AI
-- .gpt <query> : ChatGPT-powered responses
-`;
-            break;
-          case '7':
-            responseText = `
-【 *🧣 ALEXA GROUP COMMANDS 🧣* 】
-- .mute : Close the group
-- .unmute : Open the group
-- .tagall <text> : Tag all group members
-`;
-            break;
-          case '8':
-            responseText = `
-【 *🧑🏻‍💻 ALEXA OWNER COMMANDS 🧑🏻‍💻* 】
-- .block : Block a user
-- .unblock : Unblock a user
-- .jid : Get chat JID
-- .gjid : Get group JID
-- .restart : Restart the bot
-`;
-            break;
-          case '9':
-            responseText = `
-【 *⚙️ ALEXA SYSTEM COMMANDS ⚙️* 】
-- .ping : Test bot speed
-- .system : Check bot status
-- .owner : Contact bot developer
-- .repo : Bot GitHub repository
-`;
-            break;
-          default:
-            responseText = "Invalid option! Please reply with a number from 1 to 9.";
+        if (text === '1') {
+          await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+            
+            caption: "【 _*ALEXA DOWNLOAD COMMANDS 📥*_】\n\n<Commands here>\n"
+          }, { quoted: newMessage });
+        } else if (text === '2') {
+          await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+            caption: "【 _*🔎ALEXA SEARCH COMMANDS🔎*_】\n\n<Commands here>\n"
+          }, { quoted: newMessage });
+        } else if (text === '3') {
+          await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+            caption: "【 _*👯🏻ALEXA ANIME COMMANDS👯🏻*_】\n\n<Commands here>\n"
+          }, { quoted: newMessage });
+        } else if (text === '4') {
+          await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+            caption: "【 _*🧙🏻ALEXA FUN COMMANDS🧙🏻*_】\n\n<Commands here>\n"
+          }, { quoted: newMessage });
+        } else if (text === '5') {
+          await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+            caption: "【 _*🪄ALEXA CONVERT COMMANDS🪄*_】\n\n<Commands here>\n"
+          }, { quoted: newMessage });
+        } else if (text === '6') {
+          await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+            caption: "【 _*👾ALEXA AI COMMANDS👾*_】\n\n<Commands here>\n"
+          }, { quoted: newMessage });
+        } else if (text === '7') {
+          await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+            caption: "【 _*🧣ALEXA GROUP COMMANDS🧣*_】\n\n<Commands here>\n"
+          }, { quoted: newMessage });
+        } else if (text === '8') {
+          await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+            caption: "【 _*🧑🏻‍💻ALEXA OWNER COMMANDS🧑🏻‍💻*_】\n\n<Commands here>\n"
+          }, { quoted: newMessage });
+        } else if (text === '9') {
+          await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
+            caption: "【 _*⚙️ALEXA SYSTEM COMMANDS⚙️*_】\n\n<Commands here>\n"
+          }, { quoted: newMessage });
         }
-
-        // Send the appropriate response
-        await bot.sendMessage(from, { text: responseText }, { quoted: newMessage });
       }
     });
   } catch (error) {
     console.error(error);
-    reply(`Error: ${error.message}`);
+    reply(`${error}`);
   }
 });
