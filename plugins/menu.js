@@ -56,10 +56,7 @@ cmd({
 
       if (isReplyToMenu) {
         let responseText = '';
-        const sentMenuMessage = await bot.sendMessage(from, {
-      image: { url: "https://i.ibb.co/QNwLWTN/20241201-230018.jpg" },
-      caption: menuText
-    }, { quoted: message });
+        await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek})
         switch (userReply) {
           case '1':
             responseText = `
