@@ -161,3 +161,78 @@ cmd({
     console.log(error);
   }
 });
+
+cmd({
+  pattern: "demote",
+  react: "🥏",
+  alias: ["removeadmin"],
+  desc: "To Demote Admin to Member",
+  category: "group",
+  use: ".demote",
+  filename: __filename
+}, async (bot, message, args, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  mentionByTag,
+  args: cmdArgs,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isCreator,
+  isDev,
+  isAdmins,
+  reply
+}) => {
+  try {
+    // Check if command is used in a group
+    if (!isGroup) {
+      return reply("This is a Group only command.");
+    }
+
+    // Check if the sender is an admin
+    if (!isAdmins) {
+      if (!isMe) {
+        return bot.sendMessage(from, { text: "🚫 *This is an admin-only command*" }, { quoted: message });
+      }
+    }
+
+    // Check if the bot is an admin
+    if (!isBotAdmins) {
+      return reply("*Bot must be admin first ❗*");
+    }
+
+    // Get the mentioned user
+    const mentionedUsers = await mentionByTag;
+    let targetUser = (await mentionedUsers) || message.msg.contextInfo.participant;
+
+    if (!targetUser) {
+      return reply("🚫 *Couldn't find any user in context*");
+    }
+
+    // Check if the target user is an admin
+    const currentGroupAdmins = await getGroupAdmins(participants);
+    if (!currentGroupAdmins.includes(targetUser)) {
+      return reply("*User is already not an admin ✅*");
+    }
+
+    // Demote the user
+    await bot.groupParticipantsUpdate(from, [targetUser], 'demote');
+    await bot.sendMessage(from, { text: "*User is no longer an admin ✔️*" }, { quoted: message });
+  } catch (error) {
+    reply("🚫 *An error occurred !!*\n\n" + error);
+    console.error(error);
+  }
+});
