@@ -56,7 +56,8 @@ cmd({
 
       if (isReplyToMenu) {
         let responseText = '';
-        await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek})
+        await sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
         switch (userReply) {
           case '1':
             responseText = `
