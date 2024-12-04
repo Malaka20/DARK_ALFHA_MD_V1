@@ -56,7 +56,10 @@ cmd({
 
       if (isReplyToMenu) {
         let responseText = '';
-        const vv = await conn.sendMessage(from, { image: { url: "https://ibb.co/F0ccn0P"}, caption: desc }, { quoted: mek });
+        const sentMenuMessage = await bot.sendMessage(from, {
+      image: { url: "https://i.ibb.co/QNwLWTN/20241201-230018.jpg" },
+      caption: menuText
+    }, { quoted: message });
         switch (userReply) {
           case '1':
             responseText = `
