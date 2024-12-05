@@ -99,76 +99,112 @@ function convertYouTubeLink(url) {
 // Command to download songs
 cmd({
   pattern: "song",
-  alias: "play",
+  alias: 'play',
   desc: "To download songs.",
   react: '🎵',
-  category: 'download',
+  category: "download",
   filename: __filename
-}, async (bot, message, args, context) => {
+}, async (client, message, args, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
   try {
-    const { from, q, reply } = context;
     if (!q) {
       return reply("Please give me a URL or title.");
     }
-    const searchQuery = convertYouTubeLink(q);
-    const searchResult = await yts(searchQuery);
+    q = convertYouTubeLink(q);
+    const searchResult = await yts(q);
     const video = searchResult.videos[0];
     const videoUrl = video.url;
+    let messageCaption = `
+◉┏━┫*⚬Lααɾα-ꜱᴏɴɢ⚬*┣━✾
+◉┃            *ᴸ  ͣ  ͣ  ͬ  ͣ  ✻  ᴸ  ͣ  ͣ  ͬ  ͣ*
+┏┻━━━━━━━━━━━━━
+┃*Lααɾα-ᴍᴅ ꜱᴏɴɢ ᴅᴏᴡɴʟᴏᴀᴅ ✻*
+┗━━━━━━━━━━━━━━
+┏━━━━━━━━━━━━━━
+❍*ᴛɪᴛʟᴇ :* ${video.title}
+❍*ᴅᴜʀᴀᴛɪᴏɴ :* ${video.timestamp}
+❍*ᴠɪᴇᴡꜱ :* ${video.views}
+❍*ᴜᴘʟᴏᴀᴅ ᴏɴ :* ${video.ago}
+┗━━━━━━━━━━━━━━━
+╭──┬┬┬┬┬┬┬┬┬┬┬──
+│        *ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀͨᴅͦᴇͩᴇͤꜱͬʜᴀ*
+╰──┴┴┴┴┴┴┴┴┴┴┴──
 
-    const caption = `
- ╭─────────────────────❖
- │𝘔𝘈𝘓𝘈𝘒𝘈 SONG DOWNLOADING 
- ╰─────────────────────❖
- ──────────────────❖
-╭────────────────❖
-│ ℹ️ *DARK_ALFHA_MD* 
-│
-│☍ ⦁ *Title:* ${video.title} 
-│☍ ⦁ *Duration:* ${video.timestamp}
-│☍ ⦁ *Views:* ${video.views} 
-│☍ ⦁ *Uploaded On:* ${video.ago} 
-╰────────────────❖
-❖──────────────────❖
-╭──────────────────❖
-│ © 𝙏𝙤 𝙙𝙤𝙬𝙣𝙡𝙤𝙖𝙙 𝙨𝙚𝙣𝙙: 🔢
-│
-│ *➀*  ᴀᴜᴅɪᴏ ꜰɪʟᴇ 🎶
-│──────────────────❖
-│ *➁*  ᴅᴏᴄᴜᴍᴇɴᴛ ꜰɪʟᴇ 📂
-⁠⁠⁠⁠╰──────────────────❖
-> ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ . . . 👩‍💻
+🔢 *ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴛᴏ*
+*ᴅᴏᴡɴʟᴏᴀᴅ ꜰʀᴏᴍᴀᴛ*
+
+*ᴅᴏᴡɴʟᴏᴀᴅ ᴀᴜᴅɪᴏ 🎧*
+
+*1*     ┃  *ᴀᴜᴅɪᴏ*
+
+*ᴅᴏᴡɴʟᴏᴀᴅ ᴅᴏᴄᴜᴍᴇɴᴛ 📁*
+
+*2*     ┃  *ᴅᴏᴄᴜᴍᴇɴᴛ*
+
+> Lααɾα-ᴍᴅ ✻
 `;
-
-    const messageResponse = await bot.sendMessage(from, {
-      image: { url: video.thumbnail },
-      caption
+    const sentMessage = await client.sendMessage(from, {
+      image: {
+        url: video.thumbnail
+      },
+      caption: messageCaption
+    }, {
+      quoted: message
     });
-
-    const messageId = messageResponse.key.id;
-
-    bot.ev.on("messages.upsert", async msg => {
-      const newMessage = msg.messages[0];
-      if (!newMessage.message) return;
-
-      const { conversation, extendedTextMessage } = newMessage.message;
-      const userReply = conversation || extendedTextMessage?.text;
+    const messageId = sentMessage.key.id;
+    client.ev.on("messages.upsert", async update => {
+      const newMessage = update.messages[0];
+      if (!newMessage.message) {
+        return;
+      }
+      const conversation = newMessage.message.conversation || newMessage.message.extendedTextMessage?.["text"];
       const remoteJid = newMessage.key.remoteJid;
-
-      if (extendedTextMessage?.contextInfo?.stanzaId === messageId) {
-        await bot.sendMessage(remoteJid, {
-          react: { text: '⬇️', key: newMessage.key }
+      const isReplyToMessage = newMessage.message.extendedTextMessage && newMessage.message.extendedTextMessage.contextInfo.stanzaId === messageId;
+      if (isReplyToMessage) {
+        await client.sendMessage(remoteJid, {
+          react: {
+            text: '⬇️',
+            key: newMessage.key
+          }
         });
-
-        const downloadResponse = await dlyta(videoUrl);
-        const downloadLink = downloadResponse.dl_link;
-
-        await bot.sendMessage(remoteJid, {
-          react: { text: '⬆️', key: newMessage.key }
+        const downloadResponse = await fetchJson("https://www.dark-yasiya-api.site/download/ytmp3?url=" + videoUrl);
+        const downloadLink = downloadResponse.result.dl_link;
+        await client.sendMessage(remoteJid, {
+          delete: sentMessage.key
         });
-
-        if (userReply === '1') {
-          await bot.sendMessage(remoteJid, {
-            audio: { url: downloadLink },
+        await client.sendMessage(remoteJid, {
+          react: {
+            text: '⬆️',
+            key: newMessage.key
+          }
+        });
+        if (conversation === '1') {
+          await client.sendMessage(remoteJid, {
+            audio: {
+              url: downloadLink
+            },
             mimetype: "audio/mpeg",
             contextInfo: {
               externalAdReply: {
@@ -181,31 +217,40 @@ cmd({
                 showAdAttribution: true
               }
             }
-          }, { quoted: newMessage });
-
-          await bot.sendMessage(remoteJid, {
-            react: { text: '✅', key: newMessage.key }
+          }, {
+            quoted: newMessage
           });
-
-        } else if (userReply === '2') {
-          await bot.sendMessage(remoteJid, {
-            document: { url: downloadLink },
-            mimetype: 'audio/mp3',
+          await client.sendMessage(remoteJid, {
+            react: {
+              text: '✅',
+              key: newMessage.key
+            }
+          });
+        } else if (conversation === '2') {
+          await client.sendMessage(remoteJid, {
+            document: {
+              url: downloadLink
+            },
+            mimetype: "audio/mp3",
             fileName: video.title + ".mp3",
-            caption: "\n*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·*\n "
-          }, { quoted: newMessage });
-
-          await bot.sendMessage(remoteJid, {
-            react: { text: '✅', key: newMessage.key }
+            caption: "\n*© ᴄʀᴇᴀᴛᴇᴅ ʙʏ ꜱᴀᴅᴇᴇꜱʜᴀ ᴄᴏᴅᴇʀ · · ·*\n "
+          }, {
+            quoted: newMessage
+          });
+          await client.sendMessage(remoteJid, {
+            react: {
+              text: '✅',
+              key: newMessage.key
+            }
           });
         }
       }
     });
-  }catch(e){
-console.log(e)
-reply(`${e}`)
-}
-})
+  } catch (error) {
+    console.log(error);
+    reply('' + error);
+  }
+});          
 
 //==========video download============================
 cmd({
