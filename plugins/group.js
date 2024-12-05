@@ -236,3 +236,747 @@ cmd({
     console.error(error);
   }
 });
+
+cmd({
+  pattern: "requests",
+  desc: "View pending join requests",
+  use: ".requests",
+  react: '📝',
+  category: "group",
+  filename: __filename
+}, async (bot, message, args, { from, isGroup, reply }) => {
+  if (!isGroup) {
+    return await reply("This command can only be used in groups.");
+  }
+
+  const botJid = bot.user.jid;
+  const groupMetadata = await bot.groupMetadata(from);
+  const isAdmin = groupMetadata.participants.some(participant => participant.jid === botJid && participant.admin);
+
+  if (!isAdmin) {
+    return await reply("I'm not an admin in this group.");
+  }
+
+  try {
+    const pendingRequests = await bot.groupRequestParticipantsList(from);
+
+    if (pendingRequests.length === 0) {
+      return await reply("No pending join requests.");
+    }
+
+    let messageText = "Pending Join Requests:\n\n";
+    pendingRequests.forEach((request, index) => {
+      messageText += `${index + 1}. @${request.jid.split('@')[0]}\n`;
+    });
+
+    return await reply(messageText, {
+      mentions: pendingRequests.map(request => request.jid)
+    });
+  } catch (error) {
+    console.error("Error retrieving join requests:", error);
+    return await reply("Failed to retrieve join requests. Please try again later.");
+  }
+});
+
+cmd({
+  pattern: "accept",
+  desc: "Accept group join request(s)",
+  use: ".accept <request numbers>",
+  react: '✔️',
+  category: "group",
+  filename: __filename
+}, async (bot, message, args, { from, isGroup, reply, match }) => {
+  if (!isGroup) {
+    return await reply("This command can only be used in groups.");
+  }
+
+  const userJid = bot.user.jid;
+  const groupMetadata = await bot.groupMetadata(from);
+  const isAdmin = groupMetadata.participants.some(participant => participant.jid === userJid && participant.admin);
+
+  if (!isAdmin) {
+    return await reply("I'm not an admin in this group.");
+  }
+
+  try {
+    const joinRequests = await bot.groupRequestParticipantsList(from);
+
+    if (joinRequests.length === 0) {
+      return await reply("No pending join requests.");
+    }
+
+    if (!match) {
+      return await reply("Provide the number(s) of the request(s) to accept, separated by commas.");
+    }
+
+    const requestIndices = match.split(',').map(num => parseInt(num.trim()) - 1);
+    const validRequests = requestIndices.filter(index => index >= 0 && index < joinRequests.length);
+
+    if (validRequests.length === 0) {
+      return await reply("Invalid request number(s).");
+    }
+
+    for (let index of validRequests) {
+      await bot.groupRequestParticipantsUpdate(from, [joinRequests[index].jid], "accept");
+    }
+
+    return await reply(`Accepted ${validRequests.length} join request(s).`);
+  } catch (error) {
+    console.error("Error accepting join requests:", error);
+
+    await bot.sendMessage(from, {
+      react: {
+        text: '❌',
+        key: message.key
+      }
+    });
+
+    return await reply("Failed to accept join requests. Please try again later.");
+  }
+});
+
+cmd({
+  pattern: 'reject',
+  desc: "Reject group join request(s)",
+  use: ".reject <request numbers>",
+  react: '❌',
+  category: 'group',
+  filename: __filename
+}, async (client, message, args, { from, isGroup, reply, match }) => {
+  if (!isGroup) {
+    return await reply("This command can only be used in groups.");
+  }
+
+  const userJid = client.user.jid;
+  const groupMetadata = await client.groupMetadata(from);
+  const isAdmin = groupMetadata.participants.some(participant => 
+    participant.jid === userJid && participant.admin
+  );
+
+  if (!isAdmin) {
+    return await reply("I'm not an admin in this group.");
+  }
+
+  try {
+    const pendingRequests = await client.groupRequestParticipantsList(from);
+
+    if (pendingRequests.length === 0) {
+      return await reply("No pending join requests.");
+    }
+
+    if (!match) {
+      return await reply("Provide the number(s) of the request(s) to reject, separated by commas.");
+    }
+
+    const requestIndexes = match.split(',')
+      .map(num => parseInt(num.trim()) - 1)
+      .filter(index => index >= 0 && index < pendingRequests.length);
+
+    if (requestIndexes.length === 0) {
+      return await reply("_Invalid request number(s)._");
+    }
+
+    for (let index of requestIndexes) {
+      await client.groupRequestParticipantsUpdate(from, [pendingRequests[index].jid], "reject");
+    }
+
+    return await reply(`_Rejected ${requestIndexes.length} join request(s)._`);
+  } catch (error) {
+    console.error("Error rejecting join requests:", error);
+
+    await client.sendMessage(from, {
+      react: {
+        text: '❌',
+        key: message.key
+      }
+    });
+
+    return await reply("Failed to reject join requests. Please try again later.");
+  }
+});
+
+cmd({
+  pattern: "hidetag",
+  react: '📢',
+  alias: ["htag"],
+  desc: "Tags everyone in the group without mentioning their numbers",
+  category: "group",
+  filename: __filename,
+  use: "<text>"
+}, async (bot, message, context, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  query,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumberSecondary,
+  botNumberPrimary,
+  pushName,
+  isSelf,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  isSpecialBot,
+  groupAdmins,
+  botIsAdmin,
+  userIsAdmin,
+  reply
+}) => {
+  if (!isOwner || !userIsAdmin) {
+    return; // Exit if the user is neither the owner nor an admin
+  }
+
+  try {
+    if (!isGroup) {
+      return reply("This command can only be used in groups.");
+    }
+
+    if (!botIsAdmin) {
+      return reply("The bot must be an admin to perform this action.");
+    }
+
+    // Send a message tagging all participants
+    bot.sendMessage(context.chat, {
+      text: query || '',
+      mentions: participants.map(member => member.id) // Mention all participants
+    }, {
+      quoted: message // Include the quoted message
+    });
+  } catch (error) {
+    reply("An error occurred!"); // Notify the user of the error
+    console.error(error); // Log the error to the console
+  }
+});
+
+cmd({
+  pattern: "kick2",
+  alias: ["remove"],
+  desc: "To remove a participant from the group",
+  category: 'group',
+  use: '.kick',
+  filename: __filename
+}, async (bot, message, userContext, options) => {
+  const {
+    from, 
+    quoted, 
+    isGroup, 
+    isAdmins, 
+    isBotAdmins, 
+    isMe, 
+    mentionByTag, 
+    reply
+  } = options;
+
+  try {
+    if (!isGroup) {
+      return reply("This command can only be used in groups.");
+    }
+
+    if (!isAdmins && !isMe) {
+      return bot.sendMessage(from, { text: "🚫 This command is for admins only." }, { quoted: message });
+    }
+
+    if (!isBotAdmins) {
+      return reply("❌ Bot must be an admin first!");
+    }
+
+    // Identify user to remove
+    const mentionedUsers = mentionByTag || quoted?.msg.contextInfo.participant;
+    if (!mentionedUsers) {
+      return reply("🚫 Couldn't find any user to remove.");
+    }
+
+    // Remove the participant
+    await bot.groupParticipantsUpdate(from, [mentionedUsers], "remove");
+    await bot.sendMessage(from, { text: "User has been removed 🚫" }, { quoted: message });
+
+  } catch (error) {
+    reply("🚫 An error occurred:\n" + error.message);
+    console.error(error);
+  }
+});
+
+cmd({
+  'pattern': "join",
+  'desc': "joins group by link",
+  'category': 'main',
+  'use': "<group link.>"
+}, async (client, message, args, {
+  from,
+  l,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args: parsedArgs,
+  q: query,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isSachintha,
+  isSavi,
+  isSadas,
+  isMani,
+  isMe,
+  isOwner,
+  isDev,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
+  // Check if the user has permission to execute this command
+  if (!isOwner && !isSachintha && !isSavi && !isDev && !isMani && !isMe) {
+    return;
+  }
+
+  try {
+    // Check if the query (link) is provided
+    if (!query) {
+      return reply("Please give me Query");
+    }
+
+    // Validate the link
+    const link = query.split(" ")[0];
+    if (!link || !link.includes("whatsapp.com")) {
+      return reply("Link Invalid, Please Send a valid WhatsApp Group Link!");
+    }
+
+    // Extract the invite code from the link
+    let inviteCode = link.split("https://chat.whatsapp.com/")[1];
+
+    // Attempt to join the group using the invite code
+    await client.groupAcceptInvite(inviteCode)
+      .then(() => reply("*Joined group ✔️*"))
+      .catch(() => reply("Error in Joining Group"));
+
+  } catch (error) {
+    reply("🚩 Not Found!");
+    console.log(error);
+  }
+});
+
+cmd({
+  pattern: "del",
+  react: '⛔',
+  alias: [','],
+  desc: "delete message",
+  category: "main",
+  use: ".del",
+  filename: __filename
+}, async (client, chat, message, {
+  from,
+  l,
+  quoted,
+  body,
+  isCmd,
+  isDev,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isSachintha,
+  isSavi,
+  isSadas,
+  isMani,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
+  try {
+    const deleteMessage = {
+      remoteJid: message.chat,
+      fromMe: false,
+      id: message.quoted.id,
+      participant: message.quoted.sender
+    };
+    await client.sendMessage(message.chat, {
+      delete: deleteMessage
+    });
+  } catch (error) {
+    reply("*Error !!*");
+    l(error);
+  }
+});
+
+cmd({
+  'pattern': 'leave',
+  'react': '🔓',
+  'alias': ["left", "kickme"],
+  'desc': "To leave from the group",
+  'category': 'group',
+  'use': '.leave',
+  'filename': __filename
+}, async (client, message, args, {
+  from,
+  l,
+  quoted,
+  body,
+  isCmd,
+  command,
+  argsArray,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isCreator,
+  isDev,
+  isAdmins,
+  reply
+}) => {
+  try {
+    if (!isGroup) {
+      return reply("🚫 *This is Group command*");
+    }
+    if (!isMe) {
+      return reply("🚫 *This is Group command*");
+    }
+    await client.sendMessage(from, {
+      'text': "🔓 *Good Bye All*"
+    }, {
+      'quoted': message
+    });
+    await client.groupLeave(from);
+  } catch (error) {
+    reply("*Error !!*");
+    console.log(error);
+  }
+});
+
+cmd({
+  'pattern': 'invite',
+  'react': '🖇️',
+  'alias': ["grouplink", "glink"],
+  'desc': "To Get the Group Invite link",
+  'category': "group",
+  'use': ".invite",
+  'filename': __filename
+}, async (bot, message, chat, {
+  from: groupId,
+  l,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isCreator,
+  isDev,
+  isAdmins,
+  reply
+}) => {
+  try {
+    if (!isGroup) {
+      return reply("🚫 *This is a Group command*");
+    }
+    if (!isBotAdmins) {
+      return reply("🚫 *Bot must be an Admin first*");
+    }
+    if (!isAdmins) {
+      if (!isMe) {
+        return reply("🚫 *You must be an admin first*");
+      }
+    }
+    const inviteCode = await bot.groupInviteCode(groupId);
+    await bot.sendMessage(groupId, {
+      'text': "🖇️ *Group Link*\n\nhttps://chat.whatsapp.com/" + inviteCode
+    }, {
+      'quoted': message
+    });
+  } catch (error) {
+    reply("*Error !!*");
+    console.log(error);
+  }
+});
+
+cmd({
+  pattern: "ginfo",
+  react: "🥏",
+  alias: ["groupinfo"],
+  desc: "Get group information.",
+  category: "group",
+  use: ".ginfo",
+  filename: __filename
+}, async (
+  botInstance,
+  quotedMessage,
+  additionalData,
+  {
+    from: groupId,
+    body: messageBody,
+    isGroup: isInGroup,
+    sender: senderId,
+    senderNumber,
+    botNumber,
+    isBotAdmins: isBotAdmin,
+    isAdmins: isUserAdmin,
+    reply: sendReply,
+    groupMetadata: groupDetails
+  }
+) => {
+  try {
+    if (!isInGroup) {
+      return sendReply("⛔ *This is a Group-only Command*");
+    }
+
+    if (!isBotAdmin) {
+      return sendReply("⛔ *Bot must be Admin First*");
+    }
+
+    if (!isUserAdmin) {
+      return sendReply("🚫 *You must be an admin first*");
+    }
+
+    const groupInfo = await botInstance.groupMetadata(groupId);
+    const groupProfilePic = await botInstance.profilePictureUrl(groupId, "image");
+    const groupInfoMessage =
+      `\n*${groupInfo.subject}*\n\n` +
+      `🐉 *Group JID* - ${groupInfo.id}\n` +
+      `📬 *Participants* - ${groupInfo.size}\n` +
+      `👤 *Group Creator* - ${groupInfo.owner}\n` +
+      `📃 *Description* - ${groupInfo.desc || "No description"}\n`;
+
+    await botInstance.sendMessage(
+      groupId,
+      {
+        image: { url: groupProfilePic },
+        caption: groupInfoMessage
+      },
+      { quoted: quotedMessage }
+    );
+  } catch (error) {
+    sendReply("⛔ *An error occurred!!*\n\n" + error.message);
+    console.error(error);
+  }
+});
+
+cmd({
+  pattern: "block",
+  react: '🥏',
+  alias: ['groupinfo'],
+  desc: "Get group information.",
+  category: "group",
+  use: '.ginfo',
+  filename: __filename
+}, async (client, chat, message, options) => {
+  const {
+    from,
+    l,
+    quoted,
+    body,
+    isCmd,
+    command,
+    args,
+    q,
+    isGroup,
+    sender,
+    senderNumber,
+    botNumber2,
+    botNumber,
+    pushname,
+    isMe,
+    isOwner,
+    groupMetadata,
+    groupName,
+    participants,
+    groupAdmins,
+    isBotAdmins,
+    isCreator,
+    isDev,
+    isAdmins,
+    reply
+  } = options;
+
+  try {
+    // Check if the command is executed by the bot owner
+    if (!isMe) {
+      return reply("⛔ *OWNER ONLY COMMAND*");
+    }
+
+    // Update block status of the group or user
+    await client.updateBlockStatus(from, 'block');
+  } catch (error) {
+    // Handle errors and notify the user
+    reply("⛔ *An error occurred!!*\n\n" + error);
+    console.error(error);
+  }
+});
+
+cmd({
+  pattern: "add",
+  desc: "Add a member to the group.",
+  category: "group",
+  react: '➕',
+  filename: __filename
+}, async (bot, chat, message, {
+  from: groupId,
+  quoted: quotedMessage,
+  body: messageBody,
+  isCmd: isCommand,
+  command: commandName,
+  args: argumentsList,
+  q: query,
+  isGroup: isGroupChat,
+  sender: senderId,
+  senderNumber: senderPhoneNumber,
+  botNumber2: botSecondaryNumber,
+  botNumber: botPrimaryNumber,
+  pushname: senderName,
+  isMe: isBotOwner,
+  isOwner: isGroupOwner,
+  groupMetadata: groupData,
+  groupName: groupName,
+  participants: groupParticipants,
+  groupAdmins: groupAdmins,
+  isBotAdmins: isBotAdmin,
+  isAdmins: isAdmin,
+  reply: sendReply
+}) => {
+  try {
+    if (!isGroupChat) {
+      return sendReply("*🚨 This command can only be used in a group.*");
+    }
+    if (!isBotAdmin) {
+      return sendReply("*🚨 Please give me admin rights.*");
+    }
+    if (!isAdmin && !isBotOwner) {
+      return sendReply("*🚨 Only group admins can use this command.*");
+    }
+
+    const phoneNumberToAdd = query.split(" ")[0];
+    if (!phoneNumberToAdd) {
+      return sendReply("Please provide a phone number to add.");
+    }
+
+    await bot.groupParticipantsUpdate(groupId, [`${phoneNumberToAdd}@s.whatsapp.net`], "add");
+    await sendReply(`@${phoneNumberToAdd} has been added to the group.`, {
+      mentions: [`${phoneNumberToAdd}@s.whatsapp.net`]
+    });
+  } catch (error) {
+    console.error(error);
+    sendReply(`Error: ${error.message}`);
+  }
+});
+
+cmd({
+  pattern: "end",
+  desc: "Remove all members from the group (except bot and group creator).",
+  category: "group",
+  filename: __filename,
+  react: "🚫"
+}, async (botInstance, message, args, { 
+  from, 
+  isGroup, 
+  isAdmins, 
+  isOwner, 
+  isBotAdmins, 
+  isMe, 
+  groupMetadata, 
+  reply 
+}) => {
+  try {
+    // Check permissions: Only owner, admin, or bot admin can use this command
+    if (!isOwner && !isMe && !isAdmins && !isBotAdmins) {
+      return reply("This command can only be used by the bot owner.");
+    }
+
+    const groupOwnerId = groupMetadata.owner; // Group creator's ID
+    const botId = botInstance.user.id; // Bot's ID
+
+    // Filter out group owner and bot from the participants to remove
+    const membersToRemove = groupMetadata.participants.filter(participant => 
+      participant.id !== groupOwnerId && participant.id !== botId
+    );
+
+    // Remove all other participants
+    await botInstance.groupParticipantsUpdate(from, membersToRemove.map(member => member.id), "remove");
+    reply("*🚫 All members have been removed from the group (except the bot and group creator).*");
+  } catch (error) {
+    console.error(error);
+    reply("❌ Error: " + error);
+  }
+});
+
+cmd({
+  pattern: "tagadmin",
+  desc: "Tags all the admins in the group.",
+  category: "group",
+  use: ".tagadmin",
+  filename: __filename
+}, async (bot, message, args, { from, isGroup, groupMetadata, groupAdmins, reply }) => {
+  try {
+    // Check if the command is being used in a group
+    if (!isGroup) {
+      return reply("This command is only for groups.");
+    }
+
+    // Check if there are any admins in the group
+    if (groupAdmins.length === 0) {
+      return reply("There are no admins in this group.");
+    }
+
+    // Construct a message tagging all admins
+    let adminMessage = "*Tagging all admins in the group:*\n\n";
+    for (let admin of groupAdmins) {
+      adminMessage += `@${admin.split('@')[0]}\n`;
+    }
+
+    // Send the message to the group with mentions
+    await bot.sendMessage(from, {
+      text: adminMessage,
+      mentions: groupAdmins
+    }, {
+      quoted: message
+    });
+  } catch (error) {
+    console.error("Error tagging admins:", error);
+    reply("An error occurred while trying to tag all admins. Please try again.");
+  }
+});
+
