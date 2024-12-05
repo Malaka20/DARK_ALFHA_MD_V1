@@ -3,141 +3,143 @@ const yts = require("yt-search");
 const { fetchJson } = require("../lib/functions");
 const axios = require("axios");
 
-// Function to download YouTube video in MP4 format
+// YouTube MP4 download function
 async function ytmp4(url, format) {
   try {
     if (!url || !format) {
       throw new Error("URL and format parameters are required.");
     }
 
-    const formatNumber = parseInt(format.replace('p', ''), 10);
-    const params = {
+    const resolution = parseInt(format.replace('p', ''), 10); // Convert format (e.g. '720p') to an integer (720)
+    const requestParams = {
       button: 1,
       start: 1,
       end: 1,
-      format: formatNumber,
-      url: url,
+      format: resolution,
+      url: url
     };
 
-    const headers = {
+    const requestHeaders = {
       Accept: '*/*',
-      'Accept-Encoding': "gzip, deflate, br",
-      'Accept-Language': "en-GB,en-US;q=0.9,en;q=0.8",
-      Origin: "https://loader.to",
-      Referer: "https://loader.to",
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+      Origin: 'https://loader.to',
+      Referer: 'https://loader.to',
       'Sec-Ch-Ua': '"Not-A.Brand";v="99", "Chromium";v="124"',
       'Sec-Ch-Ua-Mobile': '?1',
       'Sec-Ch-Ua-Platform': '"Android"',
-      'Sec-Fetch-Dest': "empty",
+      'Sec-Fetch-Dest': 'empty',
       'Sec-Fetch-Mode': 'cors',
       'Sec-Fetch-Site': 'cross-site',
-      'User-Agent': "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
+      'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
     };
 
-    // Fetch download ID
-    const response = await axios.get("https://ab.cococococ.com/ajax/download.php", {
-      params,
-      headers,
+    const downloadResponse = await axios.get('https://ab.cococococ.com/ajax/download.php', {
+      params: requestParams,
+      headers: requestHeaders
     });
-    const downloadId = response.data.id;
 
-    // Function to check progress and get download URL
+    const downloadId = downloadResponse.data.id;
+
+    // Check download progress
     const checkProgress = async () => {
+      const progressParams = { id: downloadId };
       try {
         const progressResponse = await axios.get('https://p.oceansaver.in/ajax/progress.php', {
-          params: { id: downloadId },
-          headers,
+          params: progressParams,
+          headers: requestHeaders
         });
-        const { progress, download_url: downloadUrl, text } = progressResponse.data;
+        const { progress, download_url, text } = progressResponse.data;
 
-        return text === 'Finished' 
-          ? downloadUrl 
-          : (await new Promise(resolve => setTimeout(resolve, 1000)), checkProgress());
+        // If download is finished, return the download URL, otherwise retry after 1 second
+        return text === 'Finished' ? download_url : (await new Promise(resolve => setTimeout(resolve, 1000)), checkProgress());
       } catch (error) {
-        throw new Error("Error in progress check: " + error.message);
+        throw new Error('Error in progress check: ' + error.message);
       }
     };
 
     return await checkProgress();
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
     return { error: error.message };
   }
 }
 
 module.exports = { ytmp4 };
 
-// Utility function to extract YouTube video ID
+// Function to extract YouTube video ID from URL
 function extractYouTubeId(link) {
   const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|playlist\?list=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
   const match = link.match(regex);
   return match ? match[1] : null;
 }
 
-// Utility function to convert shortened YouTube links to full URLs
+// Function to convert partial YouTube links to full URL
 function convertYouTubeLink(link) {
   const videoId = extractYouTubeId(link);
-  return videoId ? `https://www.youtube.com/watch?v=${videoId}` : link;
+  if (videoId) {
+    return 'https://www.youtube.com/watch?v=' + videoId;
+  }
+  return link;
 }
 
-// Register the "song" command
+// Command handler for downloading songs
 cmd({
-  pattern: "song",
+  pattern: 'song',
   alias: 'play',
-  desc: "To download songs.",
+  desc: 'To download songs.',
   react: '🎵',
-  category: "download",
+  category: 'download',
   filename: __filename
-}, async (bot, message, options, context) => {
+}, async (bot, message, args, context) => {
+  const {
+    from, quoted, body, isCmd, command, args: commandArgs, q, isGroup, sender, senderNumber, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply
+  } = context;
+
   try {
-    const { from, quoted, q, reply } = context;
-
     if (!q) {
-      return reply("Please provide a URL or title.");
+      return reply('Please provide a URL or title.');
     }
 
+    // Convert partial link to full YouTube link if necessary
     const searchQuery = convertYouTubeLink(q);
-    const searchResult = await yts(searchQuery);
-    const video = searchResult.videos[0];
-
-    if (!video) {
-      return reply("No results found.");
-    }
-
+    const searchResults = await yts(searchQuery);
+    const video = searchResults.videos[0];
     const videoUrl = video.url;
-    const caption = `
-◉ *Lααɾα-ꜱᴏɴɢ* ⚬
-━━━━━━━━━━━━━━
-🎵 *Title:* ${video.title}
-⏱ *Duration:* ${video.timestamp}
-👀 *Views:* ${video.views}
-📅 *Uploaded On:* ${video.ago}
-━━━━━━━━━━━━━━
 
-🔢 Reply with the number to select a format:
+    let messageText = `\n◉┏━┫*⚬Lααɾα-ꜱᴏɴɢ⚬*┣━✾\n◉┃            *ᴸ  ͣ  ͣ  ͬ  ͣ  ✻  ᴸ  ͣ  ͣ  ͬ  ͣ*\n┏┻━━━━━━━━━━━━━\n┃*Lααɾα-ᴍᴅ ꜱᴏɴɢ ᴅᴏᴡɴʟᴏᴀᴅ ✻*\n┗━━━━━━━━━━━━━━\n┏━━━━━━━━━━━━━━\n❍*Title :* ${video.title}\n❍*Duration :* ${video.timestamp}\n❍*Views :* ${video.views}\n❍*Uploaded on :* ${video.ago}\n┗━━━━━━━━━━━━━━━\n╭──┬┬┬┬┬┬┬┬┬┬┬──\n│        *Created by Sadeesha*\n╰──┴┴┴┴┴┴┴┴┴┴┴──\n\n🔢 *Reply with the number below to*\n*download in format*\n\n*Download Audio 🎧*\n\n*1*     ┃  *Audio*\n\n*Download Document 📁*\n\n*2*     ┃  *Document*\n\n> Lααɾα-ᴍᴅ ✻\n`;
 
-1️⃣ Download as *Audio 🎧*
-2️⃣ Download as *Document 📁*
-    `;
+    // Send initial message with video details and options
+    const sentMessage = await bot.sendMessage(from, {
+      image: { url: video.thumbnail },
+      caption: messageText
+    }, { quoted: message });
 
-    const messageId = (await bot.sendMessage(from, { image: { url: video.thumbnail }, caption }, { quoted })).key.id;
+    const sentMessageId = sentMessage.key.id;
 
-    bot.ev.on("messages.upsert", async event => {
-      const incomingMessage = event.messages[0];
+    bot.ev.on('messages.upsert', async (newMessage) => {
+      const userResponse = newMessage.messages[0];
+      if (!userResponse.message) return;
 
-      if (!incomingMessage.message) return;
+      const userText = userResponse.message.conversation || userResponse.message.extendedTextMessage?.text;
+      const userChatId = userResponse.key.remoteJid;
 
-      const userResponse = incomingMessage.message.conversation;
-      const isReplyToMessage = incomingMessage.message.extendedTextMessage?.contextInfo?.stanzaId === messageId;
+      const isReplyToOriginal = userResponse.message.extendedTextMessage && userResponse.message.extendedTextMessage.contextInfo.stanzaId === sentMessageId;
+      if (isReplyToOriginal) {
+        await bot.sendMessage(userChatId, { react: { text: '⬇️', key: userResponse.key } });
 
-      if (isReplyToMessage) {
-        const audioDownload = await fetchJson(`https://www.dark-yasiya-api.site/download/ytmp3?url=${videoUrl}`);
-        const downloadLink = audioDownload.result.dl_link;
+        const downloadResponse = await fetchJson(`https://www.dark-yasiya-api.site/download/ytmp3?url=${videoUrl}`);
+        const downloadUrl = downloadResponse.result.dl_link;
 
-        if (userResponse === '1') {
-          await bot.sendMessage(from, {
-            audio: { url: downloadLink },
-            mimetype: "audio/mpeg",
+        // Delete the original message
+        await bot.sendMessage(userChatId, { delete: sentMessage.key });
+        await bot.sendMessage(userChatId, { react: { text: '⬆️', key: userResponse.key } });
+
+        // Handle user response to download either audio or document
+        if (userText === '1') {
+          await bot.sendMessage(userChatId, {
+            audio: { url: downloadUrl },
+            mimetype: 'audio/mpeg',
             contextInfo: {
               externalAdReply: {
                 title: video.title,
@@ -149,19 +151,21 @@ cmd({
                 showAdAttribution: true
               }
             }
-          }, { quoted: incomingMessage });
-        } else if (userResponse === '2') {
-          await bot.sendMessage(from, {
-            document: { url: downloadLink },
-            mimetype: "audio/mp3",
+          }, { quoted: userResponse });
+          await bot.sendMessage(userChatId, { react: { text: '✅', key: userResponse.key } });
+        } else if (userText === '2') {
+          await bot.sendMessage(userChatId, {
+            document: { url: downloadUrl },
+            mimetype: 'audio/mp3',
             fileName: `${video.title}.mp3`,
-            caption: "© Created by Sadeesha Coder"
-          }, { quoted: incomingMessage });
+            caption: "\n*© Created by Sadeesha Coder · · ·*\n "
+          }, { quoted: userResponse });
+          await bot.sendMessage(userChatId, { react: { text: '✅', key: userResponse.key } });
         }
       }
     });
   } catch (error) {
-    console.error(error);
-    reply(String(error));
+    console.log(error);
+    reply('' + error);
   }
 });
