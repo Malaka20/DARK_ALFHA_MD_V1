@@ -395,55 +395,6 @@ cmd({
   }
 });
 
-
-cmd({
-  pattern: "kick2",
-  alias: ["remove"],
-  desc: "To remove a participant from the group",
-  category: 'group',
-  use: '.kick',
-  filename: __filename
-}, async (bot, message, userContext, options) => {
-  const {
-    from, 
-    quoted, 
-    isGroup, 
-    isAdmins, 
-    isBotAdmins, 
-    isMe, 
-    mentionByTag, 
-    reply
-  } = options;
-
-  try {
-    if (!isGroup) {
-      return reply("This command can only be used in groups.");
-    }
-
-    if (!isAdmins && !isMe) {
-      return bot.sendMessage(from, { text: "🚫 This command is for admins only." }, { quoted: message });
-    }
-
-    if (!isBotAdmins) {
-      return reply("❌ Bot must be an admin first!");
-    }
-
-    // Identify user to remove
-    const mentionedUsers = mentionByTag || quoted?.msg.contextInfo.participant;
-    if (!mentionedUsers) {
-      return reply("🚫 Couldn't find any user to remove.");
-    }
-
-    // Remove the participant
-    await bot.groupParticipantsUpdate(from, [mentionedUsers], "remove");
-    await bot.sendMessage(from, { text: "User has been removed 🚫" }, { quoted: message });
-
-  } catch (error) {
-    reply("🚫 An error occurred:\n" + error.message);
-    console.error(error);
-  }
-});
-
 cmd({
   pattern: "del",
   react: '⛔',
