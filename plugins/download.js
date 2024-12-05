@@ -642,115 +642,60 @@ cmd({
   }
 });
 
+//download fb
+
 cmd({
-  pattern: 'apk2',
-  desc: "Download APK.",
-  category: "download",
-  filename: __filename,
-}, async (client, message, chatData, options) => {
-  const { from, quoted, q: query, reply } = options;
+    pattern: "fb2",
+    desc: "To download facebook videos.",
+    category: "download",
+    filename: __filename
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
 
-  if (!query) {
-    return reply("Please provide the name of the APK you want to download.");
+ await conn.sendMessage(from, { text: '📥 *ᴍᴀʟᴀᴋᴀ-ᴍᴅ ιѕ ᴅᴏᴡɴʟᴏᴅɪɴɢ...* 📥' }, { quoted: mek });
+
+
+  if (!args[0]) {
+    return reply('*`Please give a waild Facebook link`*');
   }
 
+  await m.react('🕒');
+  let res;
   try {
-    await chatData.react('⬇'); // Indicate processing started
-
-    // Aptoide API URL with the user-provided query
-    const apiUrl = `http://ws75.aptoide.com/api/7/apps/search/query=${query}/limit=1`;
-
-    // Fetch data from Aptoide API
-    const response = await axios.get(apiUrl);
-    const data = response.data;
-
-    // Ensure the data contains the necessary information
-    if (!data || !data.datalist || !data.datalist.list || data.datalist.list.length === 0) {
-      return reply("No results found for your query.");
-    }
-
-    const app = data.datalist.list[0];
-    const appSizeMB = (app.size / (1024 * 1024)).toFixed(2); // Convert bytes to MB
-
-    // Format the APK details
-    const apkDetails = `
-*⚬ DARK_ALFHA_MD APK ⚬*
-*🏷️ Name:* ${app.name}
-*📦 Size:* ${appSizeMB} MB
-*🔖 Package:* ${app.package}
-*📆 Last Update:* ${app.updated}
-*👤 Developer:* ${app.developer.name}
-
-> DARK_ALFHA_MD ✻
-`;
-
-    await chatData.react('⬆'); // Indicate processing finished
-
-    // Send the APK as a document with the formatted details
-    await client.sendMessage(from, {
-      document: { url: app.file.path_alt },
-      fileName: app.name + ".apk",
-      mimetype: "application/vnd.android.package-archive",
-      caption: apkDetails,
-    }, { quoted });
-
-    await chatData.react('✅'); // Indicate success
+    res = await igdl(args[0]);
   } catch (error) {
-    console.error(error);
-    reply("An error occurred while processing your request.");
+    return reply('*`Error obtaining data.`*');
   }
-});
 
-const _0x5bb3c4 = {
-  pattern: "sinhaladub",
-  react: '🎥',
-  desc: "Download movie for isaidub9.com",
-  category: "extra",
-  use: ".sinhaladub <Movie Name>",
-  filename: __filename
-};
-cmd(_0x5bb3c4, async (_0x464975, _0x887e33, _0x5dc3c7, {
-  from: _0x266541,
-  sender: _0x162d7f,
-  prefix: _0x50e34a,
-  quoted: _0x43e694,
-  q: _0x16f989,
-  reply: _0x3a1f78
-}) => {
-  try {
-    const _0x13f74b = "http://103.195.101.44:2662/api?apiKey=ardevfa6456bc09a877cb&plugin=sin&query=" + _0x16f989;
-    const _0x349ae5 = await axios.get(_0x13f74b).then(_0x1c9666 => _0x1c9666.data);
-    if (!_0x349ae5.status) {
-      return _0x3a1f78("*ERROR:* Unable to fetch data for \"" + _0x16f989 + "\".");
-    }
-    let _0x2a8afd = _0x349ae5.result;
-    const _0x25f56b = (await axios.get("https://raw.githubusercontent.com/athulakumara604/ASITHA-MD-DATABASE/refs/heads/main/ditels/ditels.json")).data;
-    let _0x2750d7 = _0x25f56b.footer;
-    var _0x3b5793 = [];
-    for (var _0x5e5f5b = 0; _0x5e5f5b < _0x2a8afd.length; _0x5e5f5b++) {
-      _0x3b5793.push({
-        'title': _0x5e5f5b + 1,
-        'description': _0x2a8afd[_0x5e5f5b].title + "\n",
-        'rowId': _0x50e34a + "dbl2 " + _0x2a8afd[_0x5e5f5b].finalDownloadLink + " & " + _0x2a8afd[_0x5e5f5b].title + " & " + _0x2a8afd[_0x5e5f5b].resolution + " & " + _0x2a8afd[_0x5e5f5b].thumbnail
-      });
-    }
-    const _0x256a54 = [{
-      'title': "*[Results from sinhalamovie.com]*\n",
-      'rows': _0x3b5793
-    }];
-    const _0x2fa88b = {
-      'text': "📽 ASITHA MD CINEMA 📽\n\n👽 Entered Name || " + _0x16f989,
-      'footer': _0x2750d7 || "> POWERED by ASITHA-MD",
-      'title': '',
-      'buttonText': "🔢 Reply below number\n",
-      'sections': _0x256a54
-    };
-    const _0x46a565 = {
-      quoted: _0x887e33
-    };
-    return await _0x464975.replyList(_0x266541, _0x2fa88b, _0x46a565);
-  } catch (_0x5aebdd) {
-    console.error(_0x5aebdd);
-    _0x3a1f78("No Movie : " + _0x5aebdd);
+  let result = res.data;
+  if (!result || result.length === 0) {
+    return reply('*`No resalt found.`*');
   }
+
+  let data;
+  try {
+    data = result.find(i => i.resolution === "720p (HD)") || result.find(i => i.resolution === "360p (SD)");
+  } catch (error) {
+    return reply('*`Error data loss.`*');
+  }
+
+  if (!data) {
+    return reply('*`No data found.`*');
+  }
+
+  await m.react('✅');
+  let video = data.url;
+  let dev = '© 2024 𝘔𝘢𝘭𝘢𝘬𝘢 FB DOWNLOAD HD.'
+  
+  try {
+    await conn.sendMessage(m.chat, { video: { url: video }, caption: dev, fileName: 'fb.mp4', mimetype: 'video/mp4' }, { quoted: m });
+  } catch (error) {
+    return reply('*`Error download video.`*');
+  await m.react('❌');
+  }
+}catch(e){
+console.log(e)
+  reply(`${e}`)
+}
 });
