@@ -6,10 +6,12 @@ const { igdl } = require("ruhend-scraper");
 const axios = require('axios');
 const { cmd, commands } = require("../command");
 const { sinhalaSub } = require("mrnima-moviedl");
+const { ytsearch, ytmp3, ytmp4 } = require('@dark-yasiya/yt-dl.js'); // request package.json "@dark-yasiya/yt-dl.js": "latest"
+
 
 cmd({
-  pattern: "sinhalasub2",
-  alias: ["movie1"],
+  pattern: "sinhalasub",
+  alias: ["movie"],
   react: '📑',
   category: "download",
   desc: "Search movies on sinhalasub and get download links",
