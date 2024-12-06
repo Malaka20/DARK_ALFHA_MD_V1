@@ -13,7 +13,10 @@ cmd({
 
 
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, isOwner, quoted, reply }) => {
+    if (!isOwner) return reply("❌ You are not the owner!");
+    if (!quoted || !quoted.message.imageMessage) return reply("❌ Please reply to an image.");
+
     try {
         let desc = `
 ┏━━━━━━━━━━━━━━━━━━━━━━━┓
