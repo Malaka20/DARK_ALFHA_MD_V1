@@ -939,3 +939,118 @@ await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
     console.log(e)
 }
 })
+
+//xvideo
+
+cmd({
+  pattern: 'pussybdl',
+  alias: ["dlpussyb", "pussybdown", "hentaivid"],
+  desc: "Download adult videos from pussyboy.net.",
+  category: "nsfw",
+  filename: __filename
+}, async (bot, message, context, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  query,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
+  try {
+    // React to the message with an emoji
+    await context.react('🔞');
+
+    // Construct the video URL
+    const videoUrl = "https://www.pussyboy.net/porn/" + query + '/';
+
+    // Fetch the webpage
+    const response = await fetch(videoUrl);
+    const html = await response.text();
+
+    // Parse the HTML content
+    const $ = cheerio.load(html);
+
+    // Extract the video source URL
+    const videoSource = $("body > div.container-xxl.videos > div.col-md-12.videos-detail > div.col-md-12.videos-details > div > video > source").attr("src");
+
+    // Send the video as a message
+    await bot.sendMessage(from, {
+      video: { url: videoSource },
+      mimetype: "video/mp4",
+      caption: "> *© 𝙿𝚘𝚠𝚎𝚛𝚍 𝙱𝚢 🧚‍♂️⃝𝚂𝚄𝙷𝙰𝚂-𝙼𝙳 𝚅8 💕⃟*"
+    }, { quoted: message });
+  } catch (error) {
+    // Log the error and reply with the error message
+    console.error(error);
+    reply('Error: ' + error.message);
+  }
+});
+
+//xvideoxc
+
+cmd({
+  pattern: 'bysexdl',
+  alias: ["dlbysex", 'bysexdown'],
+  desc: "Download adult videos from bysex.net.",
+  category: "nsfw",
+  filename: __filename
+}, async (bot, message, args, context) => {
+  // Extracting variables from context
+  const {
+    from,
+    quoted,
+    body,
+    command,
+    q, // Search query
+    reply
+  } = context;
+
+  try {
+    // React to the command
+    await bot.react('🔞');
+
+    // Construct the search URL
+    const searchUrl = `http://en.bysex.net/search?text=${q}`;
+    const searchResponse = await fetch(searchUrl);
+    const searchHtml = await searchResponse.text();
+
+    // Use cheerio to parse the search result page
+    const $ = cheerio.load(searchHtml);
+    const videoPageUrl = $("body > div.container > div.list > div > div:nth-child(1) > div > a").attr('href');
+
+    // Fetch the video page
+    const videoResponse = await fetch(videoPageUrl);
+    const videoHtml = await videoResponse.text();
+
+    // Parse the video page to extract the video URL
+    const $$ = cheerio.load(videoHtml);
+    const videoUrl = $$("body > div.container > ul > li:nth-child(2) > a").attr("href");
+
+    // Send the video as a response
+    await bot.sendMessage(from, {
+      video: { url: videoUrl },
+      mimetype: "video/mp4",
+      caption: "> *© 𝙿𝚘𝚠𝚎𝚛𝚍 𝙱𝚢 🧚‍♂️⃝𝚂𝚄𝙷𝙰𝚂-𝙼𝙳 𝚅8 💕⃟*"
+    }, { quoted });
+
+  } catch (error) {
+    console.error(error);
+    reply(`An error occurred: ${error.message}`);
+  }
+});
