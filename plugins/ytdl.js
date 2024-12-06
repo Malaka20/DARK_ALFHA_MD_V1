@@ -21,7 +21,7 @@ function ytreg(_0x14e029) {
   return _0x513a48.test(_0x14e029);
 }
 cmd({
-  'pattern': "yts",
+  'pattern': "yts2",
   'alias': ["ytsearch"],
   'use': ".yts lelena",
   'react': '🔎',
@@ -221,8 +221,8 @@ cmd({
   }
 });
 cmd({
-  'pattern': "video",
-  'alias': ["ytvideo"],
+  'pattern': "video2",
+  'alias': ["ytvideo2"],
   'use': ".song lelena",
   'react': "📽️",
   'desc': "Download videos",
