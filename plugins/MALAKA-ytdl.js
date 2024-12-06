@@ -407,7 +407,7 @@ cmd({
   alias: ["video2", "ytmp2"],
   desc: "Download video",
   category: "download",
-  react: '📩',
+  react: '🎬',
   filename: __filename
 }, async (bot, message, options, {
   from,
@@ -444,17 +444,21 @@ cmd({
     const videoUrl = video.url;
     
     // Create message with video details
-    let caption = `*🎥 SUHAS-MD VIDEO DOWNLOADER..📩*\n\n` +
-                  `🧚‍♂️ Title - ${video.title}\n` +
-                  `🧚‍♂️ Views - ${video.views}\n` +
-                  `🧚‍♂️ Description - ${video.description}\n` +
-                  `🧚‍♂️ Duration - ${video.timestamp}\n` +
-                  `🧚‍♂️ Published - ${video.ago}\n\n` +
-                  `*🧬 Don't Forget To Subscribe My YouTube Channel*\n` +
-                  `www.youtube.com/@suhasbro\n\n` +
-                  `*🧬 Follow Your WhatsApp Channel*\n` +
-                  `https://www.whatsapp.com/channel/0029VagKNUe96H4IdMbr9f2o\n\n` +
-                  `> *© Powered By 🧚‍♂️⃝SUHAS-MD V8 💕⃟*`;
+    let caption = `
+    ╭─────────────────❖
+    │𝘔𝘈𝘓𝘈𝘒𝘈 VIDEO2 DOWNLOADING
+    ╰─────────────────❖
+       ──────────────────❖
+      ╭────────────────❖
+      │ ℹ️ *DARK_ALFHA_MD* 
+      │
+      │☍ ⦁ *Title:* ${video.title}
+      │☍ ⦁ *Duration:* ${video.timestamp}
+      │☍ ⦁ *Views:* ${video.views}
+      │☍ ⦁ *Uploaded On:* ${video.ago}
+      ╰────────────────❖  
+     > *© 𝙿𝚘𝚠𝚎𝚛𝚍 𝙱𝚢 🧚‍♂️⃝𝙼𝙰𝙻𝙰𝙺𝙰-𝙼𝙳 𝚅1💕⃟*
+    `;
 
     // Send video thumbnail as an image
     await bot.sendMessage(from, {
@@ -477,7 +481,7 @@ cmd({
       document: { url: videoDownloadUrl },
       mimetype: "video/mp4",
       fileName: `${video.title}.mp4`,
-      caption: "MADE BY SUHAS-MD 🎬"
+      caption: "> *© 𝙿𝚘𝚠𝚎𝚛𝚍 𝙱𝚢 𝙼𝙰𝙻𝙰𝙺𝙰-𝙼𝙳 🎬"
     }, { quoted: message });
 
     // React to the completion
