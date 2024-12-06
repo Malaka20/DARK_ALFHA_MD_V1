@@ -399,4 +399,98 @@ function formatNumber(num) {
     return num.toString();
 }
 
+//video2
+
+cmd({
+  pattern: "video2",
+  alias: ["video2", "ytmp2"],
+  desc: "Download video",
+  category: "download",
+  react: '📩',
+  filename: __filename
+}, async (bot, message, options, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
+  try {
+    if (!q) {
+      return reply("*Please provide a link or a name💫*");
+    }
+    
+    // Search YouTube for the query
+    const searchResults = await yts(q);
+    const video = searchResults.videos[0]; // Get the first video
+    const videoUrl = video.url;
+    
+    // Create message with video details
+    let caption = `*🎥 SUHAS-MD VIDEO DOWNLOADER..📩*\n\n` +
+                  `🧚‍♂️ Title - ${video.title}\n` +
+                  `🧚‍♂️ Views - ${video.views}\n` +
+                  `🧚‍♂️ Description - ${video.description}\n` +
+                  `🧚‍♂️ Duration - ${video.timestamp}\n` +
+                  `🧚‍♂️ Published - ${video.ago}\n\n` +
+                  `*🧬 Don't Forget To Subscribe My YouTube Channel*\n` +
+                  `www.youtube.com/@suhasbro\n\n` +
+                  `*🧬 Follow Your WhatsApp Channel*\n` +
+                  `https://www.whatsapp.com/channel/0029VagKNUe96H4IdMbr9f2o\n\n` +
+                  `> *© Powered By 🧚‍♂️⃝SUHAS-MD V8 💕⃟*`;
+
+    // Send video thumbnail as an image
+    await bot.sendMessage(from, {
+      image: { url: video.thumbnail },
+      caption: caption
+    }, { quoted: message });
+
+    // Download the video
+    const downloadResult = await fg.ytv(videoUrl);
+    const videoDownloadUrl = downloadResult.dl_url;
+
+    // Send the video file
+    await bot.sendMessage(from, {
+      video: { url: videoDownloadUrl },
+      mimetype: "video/mp4"
+    }, { quoted: message });
+
+    // Send the video as a document
+    await bot.sendMessage(from, {
+      document: { url: videoDownloadUrl },
+      mimetype: "video/mp4",
+      fileName: `${video.title}.mp4`,
+      caption: "MADE BY SUHAS-MD 🎬"
+    }, { quoted: message });
+
+    // React to the completion
+    await options.react('✅');
+  } catch (error) {
+    reply(`${error}`);
+  }
+});
+
+// Utility function
+function hi() {
+  console.log("Hello World!");
+}
+hi();
+
+
 
