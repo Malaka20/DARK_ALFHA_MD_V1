@@ -42,10 +42,6 @@
     "@mrnima/tiktok-downloader":"1.0.0",
     "@mrnima/facebook-downloader":"1.0.0",
     "mrnima-moviedl":"1.0.0",
-    "btch-downloader": "^2.2.9",
-    "yt-search": "^2.10.4",
-    "yargs": "^17.6.0",
-    "youtube-yts": "^2.0.0",
-    "youtubedl-core": "^4.11.7"
+    "btch-downloader": "^2.2.9"
   }
 }
