@@ -1003,59 +1003,59 @@ cmd({
 });
 
 cmd({
-  'pattern': "gdrive2",
-  'alias': ["googledrive'"],
+  'pattern': 'ig2',
+  'desc': "To get the Instagram.",
   'react': '📑',
-  'desc': "Download googledrive files.",
+  'use': ".ig <Link>",
   'category': "download",
-  'use': ".gdrive <googledrive link>",
   'filename': __filename
-}, async (_0x52d9b0, _0x2c1ba0, _0x10e2a0, {
-  from: _0x28aedc,
-  l: _0xaa705f,
-  quoted: _0x442b05,
-  body: _0x4b137a,
-  isCmd: _0x24f077,
-  command: _0x2a904e,
-  args: _0xae8f3c,
-  q: _0x1bb461,
-  isGroup: _0x16491b,
-  sender: _0x564acc,
-  senderNumber: _0x2154f4,
-  botNumber2: _0x3b49c2,
-  botNumber: _0x4326e1,
-  pushname: _0x46844f,
-  isMe: _0x23ba58,
-  isOwner: _0xb5a8f4,
-  groupMetadata: _0x5807c5,
-  groupName: _0x132979,
-  participants: _0x8cf994,
-  groupAdmins: _0x4efb72,
-  isBotAdmins: _0x126df5,
-  isAdmins: _0x448bb9,
-  reply: _0x355a5a
+}, async (botInstance, message, context, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
 }) => {
   try {
-    if (!_0x1bb461) {
-      return await _0x355a5a("*Please give me googledrive url !!*");
+    if (!q) {
+      return context.reply("Please Give Me a valid Link...");
     }
-    let _0x482747 = await GDriveDl(_0x1bb461);
-    let _0x28cfbe = "*[ Downloading file ]*\n\n";
-    _0x28cfbe += "*Name :* " + _0x482747.fileName + "\n";
-    _0x28cfbe += "*Size :* " + _0x482747.fileSize + "\n";
-    _0x28cfbe += "*Type :* " + _0x482747.downloadUrl;
-    await _0x355a5a(_0x28cfbe);
-    const _0x3f5901 = {
-      'document': _0x482747.downloadUrl,
-      'caption': "\n     \n   *ＤＡＲＫ ＳＨＵＴＥＲ ＭＤ Ｖ2*",
-      'mimetype': 'video/mp4',
-      'fileName': "🎬DARK SHUTER🎬.mp4"
-    };
-    await _0x52d9b0.sendMessage(_0x28aedc, _0x3f5901);
-  } catch (_0xe76559) {
-    console.error("Error fetching or sending", _0xe76559);
-    await _0x52d9b0.sendMessage(_0x28aedc, "*Error fetching or sending *", {
-      'quoted': _0x2c1ba0
-    });
+    context.react('⬇️');
+    let igData = await igdl(q);
+    let igVideos = await igData.data;
+    for (let i = 0; i < igVideos.length; i++) {
+      let videoData = igVideos[i];
+      let videoUrl = videoData.url;
+      context.react('⬆️');
+      await botInstance.sendMessage(from, {
+        'video': {
+          'url': videoUrl
+        },
+        'mimetype': "video/mp4",
+        'caption': config.FOOTER
+      }, {
+        'quoted': message
+      });
+      context.react('✅');
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
