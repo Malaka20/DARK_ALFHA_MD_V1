@@ -87,7 +87,7 @@ function convertYouTubeLink(link) {
 // Command handler for downloading songs
 cmd({
   pattern: 'song',
-  alias: 'play',
+  alias: 'play21',
   desc: 'To download songs.',
   react: '🎵',
   category: 'download',
