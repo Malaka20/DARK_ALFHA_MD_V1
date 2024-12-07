@@ -1,4 +1,4 @@
-import yts from "yt-search";
+
 import { youtube } from "btch-downloader";
 
 let handler = async (m, { conn, text, usedPrefix, command }) => {
