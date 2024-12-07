@@ -10,8 +10,6 @@ const { ytsearch, ytmp3, ytmp4 } = require('@dark-yasiya/yt-dl.js'); // request 
 const apilink = 'https://www.dark-yasiya-api.site' // API LINK ( DO NOT CHANGE THIS!! )
 const apkdl = require('../lib/apkdl')
 var { getMovies, getMovieDL, getMoviesSearch }  = require('dark-yasiya-sinhalasub.lk')
-const { sinhalaSub } = require("dark-yasiya-sinhalasub.lk");
-
 
 cmd({
   pattern: "sinhalasub",
