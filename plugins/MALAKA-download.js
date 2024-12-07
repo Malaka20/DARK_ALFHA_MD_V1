@@ -11,8 +11,8 @@ const apilink = 'https://www.dark-yasiya-api.site' // API LINK ( DO NOT CHANGE T
 const apkdl = require('../lib/apkdl')
 
 cmd({
-  pattern: "sinhalasub",
-  alias: ["movie"],
+  pattern: "sinhalasub2",
+  alias: ["movie2"],
   react: '📑',
   category: "download",
   desc: "Search movies on sinhalasub and get download links",
