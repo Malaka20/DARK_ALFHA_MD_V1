@@ -41,7 +41,6 @@
     "@dark-yasiya/yt-dl.js": "latest",
     "@mrnima/tiktok-downloader":"1.0.0",
     "@mrnima/facebook-downloader":"1.0.0",
-    "mrnima-moviedl":"1.0.0",
-    "btch-downloader": "^2.2.9"
+    "mrnima-moviedl":"1.0.0"
   }
 }
