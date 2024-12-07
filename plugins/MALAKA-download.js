@@ -12,7 +12,7 @@ const apkdl = require('../lib/apkdl')
 
 cmd({
   pattern: "sinhalasub2",
-  alias: ["movie2"],
+  alias: ["movie"],
   react: '📑',
   category: "download",
   desc: "Search movies on sinhalasub and get download links",
@@ -334,7 +334,7 @@ cmd({
       await _0x386562.sendMessage(_0x2b1245, {
         video: { url: video.url },
         mimetype: "video/mp4",
-        caption: "*© ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·*"
+        caption: "> © ᴍᴀʟᴀᴋᴀ-ᴍᴅ ʙʏ ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ · · ·*"
       }, { quoted: _0x1b4817 });
     }
 
@@ -999,63 +999,5 @@ cmd({
     // Log the error and reply with the error message
     console.error(error);
     reply('Error: ' + error.message);
-  }
-});
-
-cmd({
-  'pattern': 'ig2',
-  'desc': "To get the Instagram.",
-  'react': '📑',
-  'use': ".ig <Link>",
-  'category': "download",
-  'filename': __filename
-}, async (botInstance, message, context, {
-  from,
-  quoted,
-  body,
-  isCmd,
-  command,
-  args,
-  q,
-  isGroup,
-  sender,
-  senderNumber,
-  botNumber2,
-  botNumber,
-  pushname,
-  isMe,
-  isOwner,
-  groupMetadata,
-  groupName,
-  participants,
-  groupAdmins,
-  isBotAdmins,
-  isAdmins,
-  reply
-}) => {
-  try {
-    if (!q) {
-      return context.reply("Please Give Me a valid Link...");
-    }
-    context.react('⬇️');
-    let igData = await igdl(q);
-    let igVideos = await igData.data;
-    for (let i = 0; i < igVideos.length; i++) {
-      let videoData = igVideos[i];
-      let videoUrl = videoData.url;
-      context.react('⬆️');
-      await botInstance.sendMessage(from, {
-        'video': {
-          'url': videoUrl
-        },
-        'mimetype': "video/mp4",
-        'caption': config.FOOTER
-      }, {
-        'quoted': message
-      });
-      context.react('✅');
-    }
-  } catch (error) {
-    console.log(error);
   }
 });
