@@ -57,8 +57,6 @@ cmd({
       if (isReplyToMenu) {
         let responseText = '';
         switch (userReply) {
-        await bot.sendMessage(chatId, {
-              image: { url: "https://i.ibb.co/zQg9dzm/IMG-20241025-WA0018.jpg" },
           case '1':
             responseText = `
  ♡︎*❂ ᴅᴏᴡɴʟᴏᴀᴅ menu ❂ 📥*♡︎
