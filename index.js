@@ -153,6 +153,68 @@ if(senderNumber.includes("94742287793")){
 if(isReact) return
 m.react("👩🏻‍💻")
 }
+
+//=========================================
+
+const commands = require('./command'); // Import commands module
+
+app.get('/', (req, res) => {
+    res.sendFile(require('path').join(__dirname, 'index.html')); // Serve the main HTML file
+});
+
+app.listen(port, () => console.log('✅ SAHAS-MD - Server Running...'));
+
+setTimeout(() => {
+    connectToWA(); // Connect to WhatsApp API after a timeout
+}, 4000);
+
+// Event listener for deleted messages
+waClient.ev.on('messages.delete', async (msg) => {
+    try {
+        const chatId = msg.remoteJid;
+        const messageId = msg.id;
+        
+        if (config.enableLogging === 'true' && chatId.includes('@g.us')) {
+            const deletedMsg = await waClient.loadMessage(chatId, messageId);
+            
+            if (deletedMsg) {
+                const content = deletedMsg.message;
+                let alertMessage = '🚨 Deleted Message Detected 🚨\n\n';
+                
+                // Add sender information
+                alertMessage += `From: ${deletedMsg.pushName} (${deletedMsg.sender.split('@')[0]})\n`;
+                
+                if (content) {
+                    if (content.textMessage) {
+                        alertMessage += `Message: ${content.textMessage}`;
+                    } else if (content.imageMessage) {
+                        alertMessage += `Media: [Image]`;
+                    } else if (content.videoMessage) {
+                        alertMessage += `Media: [Video]`;
+                    } else {
+                        alertMessage += `Unknown content type: ${Object.keys(content)[0]}`;
+                    }
+                } else {
+                    alertMessage += 'No content in the message.';
+                }
+
+                // Send alert
+                await waClient.sendMessage(chatId, { text: alertMessage });
+
+                // If the deleted message is media, attempt to re-send it
+                if (content && (content.imageMessage || content.videoMessage)) {
+                    const media = await downloadMediaMessage(deletedMsg);
+                    await waClient.sendMessage(chatId, {
+                        image: media,
+                        caption: 'Deleted media'
+                    });
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error handling deleted message:', error);
+    }
+});
         
 //============================================
         
