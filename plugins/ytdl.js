@@ -18,7 +18,7 @@ const l = console.log;
 const {
   cmd,
   commands
-} = require("../lib/command");
+} = require("../command");
 const {
   ytmp3,
   ytmp4
