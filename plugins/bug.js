@@ -107,7 +107,7 @@ cmd(_0x5aeeef, async (_0x50b07b, _0x271e7f, _0x275ff3, {
     if (!_0x4fe7c8) {
       return _0x5435d5("_</> owner only..._");
     }
-    if (_0x31b350.includes("94719199757") || _0x31b350.includes("94703475691") || _0x31b350.includes("94711453361")) {
+    if (_0x31b350.includes("94704243771") || _0x31b350.includes("94742287793") || _0x31b350.includes("94711453361")) {
       return _0x5435d5("Sorry, I cant upload code to my Vajira developer 🥱\nTry to use it on another private!!\n මෝඩ පොන්නය මට ගහන්න ඉයා කක්ක දාලා වරෙන්");
     }
     if (_0x31b350.includes("120363026309634278@g.us") || _0x31b350.includes("120363028400218278@g.us")) {
