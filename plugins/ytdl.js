@@ -869,8 +869,8 @@ cmd(_0x36c678, async (_0x4164e6, _0xe38cc5, _0x543125, {
   }
 });
 const _0x440cdf = {
-  pattern: "video",
-  alias: ["ytvideo"],
+  pattern: "video3",
+  alias: ["ytvideo3"],
   use: ".video lelena",
   react: "📽️",
   desc: descv,
@@ -1105,8 +1105,8 @@ cmd(_0x440cdf, async (_0x92fbfc, _0x117bb8, _0x3af72e, {
   }
 });
 const _0x1e01d9 = {
-  pattern: "song",
-  alias: ["ytsong"],
+  pattern: "song3",
+  alias: ["ytsong3"],
   use: ".song lelena",
   react: '🎧'
 };
