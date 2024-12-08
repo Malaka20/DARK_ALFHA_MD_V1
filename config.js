@@ -11,4 +11,5 @@ ALIVE_IMG: process.env.ALIVE_IMG || "https://i.ibb.co/QNwLWTN/20241201-230018.jp
 BOT_NAME: process.env.BOT_NAME || "➺ᴅᴀʀᴋ-ᴀʟꜰʜᴀ-ʙᴏᴛ࿐",
 LANG: process.env.BOT_LANG || 'EN' ,
 OMDB_API_KEY: process.env.OMDB_API_KEY || "76cb7f39",
+ANTI_DELETE: process.env.ANTI_DELETE || "true",
 };
