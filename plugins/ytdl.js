@@ -13,7 +13,7 @@
     }
   }
 })(_0x5664, 661433);
-const config = require("../settings");
+const config = require("../config");
 const l = console.log;
 const {
   cmd,
