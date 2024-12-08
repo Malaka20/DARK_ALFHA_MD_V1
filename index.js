@@ -153,6 +153,51 @@ if(senderNumber.includes("94742287793")){
 if(isReact) return
 m.react("👩🏻‍💻")
 }
+        
+//============================================
+        
+if (config.enableDeletedMessageDetection === 'true' && deletedMessageEvent.key.remoteJid.endsWith('@g.us')) {
+    try {
+        const deletedMessage = await messageStore.getMessage(deletedMessageEvent.key.remoteJid, deletedMessageEvent.key.id);
+        if (deletedMessage) {
+            const messageContent = deletedMessage.message;
+            let notification = '🚨 Deleted Message Detected 🚨\n\n';
+            notification += `Sender: ${deletedMessage.pushName} (${deletedMessage.key.participant.split('@')[0]})\n`;
+
+            if (messageContent) {
+                if (messageContent.conversation) {
+                    notification += `Message: ${messageContent.conversation}`;
+                } else if (messageContent.extendedTextMessage) {
+                    notification += `Message: ${messageContent.extendedTextMessage.text}`;
+                } else if (messageContent.imageMessage) {
+                    notification += `Image: [Media not previewable]`;
+                } else if (messageContent.videoMessage) {
+                    notification += `Video: [Media not previewable]`;
+                } else {
+                    notification += `Unknown content type: ${Object.keys(messageContent)[0]}`;
+                }
+            } else {
+                notification += 'Message content could not be retrieved.';
+            }
+
+            await messagingClient.sendMessage(deletedMessageEvent.key.remoteJid, {
+                text: notification
+            });
+
+            // If the message has media, attempt to resend it.
+            if (messageContent && (messageContent.imageMessage || messageContent.videoMessage)) {
+                const mediaData = await downloadMediaMessage(deletedMessage);
+                await messagingClient.sendMessage(deletedMessageEvent.key.remoteJid, {
+                    image: messageContent.imageMessage ? mediaData : undefined,
+                    video: messageContent.videoMessage ? mediaData : undefined,
+                    caption: 'Deleted media'
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error handling deleted message event:', error);
+    }
+}
 
 //=================================WORKTYPE=========================================== 
 if(!isOwner && config.MODE === "private") return
