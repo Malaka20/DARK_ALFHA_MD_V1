@@ -497,5 +497,260 @@ function hi() {
 }
 hi();
 
+//video3
+
+const videoCommand = {
+  pattern: "video3",
+  alias: ["ytvideo3"],
+  use: ".video lelena",
+  react: "📽️",
+  desc: descv, // Description variable (assumed defined elsewhere)
+  category: "download",
+  filename: __filename
+};
+
+cmd(videoCommand, async (bot, message, args, context) => {
+  const {
+    from,
+    prefix,
+    reply,
+    quoted,
+    body,
+    isCmd,
+    command,
+    args: commandArgs,
+    q: query,
+    isGroup,
+    sender,
+    senderNumber,
+    botNumber,
+    pushname,
+    isMe,
+    isOwner,
+    groupMetadata,
+    groupName,
+    participants,
+    groupAdmins,
+    isBotAdmins,
+    isAdmins
+  } = context;
+
+  try {
+    if (!query) {
+      return await reply("Please provide a video link.");
+    }
+
+    if (isUrl(query) && !ytreg(query)) {
+      return await reply("Invalid YouTube link.");
+    }
+
+    if (isUrl(query) && query.includes("/shorts")) {
+      const sections = [
+        {
+          title: "Normal Quality 🎶",
+          rows: [
+            { title: "240p", rowId: `${prefix}240p ${query}`, description: "240p" },
+            { title: "360p", rowId: `${prefix}360p ${query}`, description: "360p" },
+            { title: "480p", rowId: `${prefix}480p ${query}`, description: "480p" },
+            { title: "720p", rowId: `${prefix}720p ${query}`, description: "720p" },
+            { title: "1080p", rowId: `${prefix}1080p ${query}`, description: "1080p" }
+          ]
+        },
+        {
+          title: "Document Quality 📂",
+          rows: [
+            { title: "240p", rowId: `${prefix}24p ${query}`, description: "240p" },
+            { title: "360p", rowId: `${prefix}36p ${query}`, description: "360p" },
+            { title: "480p", rowId: `${prefix}48p ${query}`, description: "480p" },
+            { title: "720p", rowId: `${prefix}72p ${query}`, description: "720p" },
+            { title: "1080p", rowId: `${prefix}108p ${query}`, description: "1080p" }
+          ]
+        }
+      ];
+
+      return await bot.replyList(from, {
+        caption: "👨‍💻 Select Video Type",
+        footer: "Footer text here",
+        sections,
+        buttonText: "Reply with a number"
+      }, { quoted: message });
+    }
+
+    if (ytreg(query)) {
+      // Handle normal YouTube video processing
+      const videoSearch = require("yt-search");
+      const searchResults = await videoSearch(query);
+      const video = searchResults.videos[0];
+      const videoInfo = `
+        📽️ *Video Downloader* 📽️
+        Title: ${video.title}
+        Views: ${video.views}
+        Duration: ${video.timestamp}
+        URL: ${video.url}
+      `;
+
+      const sections = [
+        {
+          title: "Normal Quality 🎶",
+          rows: [
+            { title: "240p", rowId: `${prefix}240p ${video.url}`, description: "240p" },
+            { title: "360p", rowId: `${prefix}360p ${video.url}`, description: "360p" },
+            { title: "480p", rowId: `${prefix}480p ${video.url}`, description: "480p" },
+            { title: "720p", rowId: `${prefix}720p ${video.url}`, description: "720p" },
+            { title: "1080p", rowId: `${prefix}1080p ${video.url}`, description: "1080p" }
+          ]
+        },
+        {
+          title: "Document Quality 📂",
+          rows: [
+            { title: "240p", rowId: `${prefix}24p ${video.url}`, description: "240p" },
+            { title: "360p", rowId: `${prefix}36p ${video.url}`, description: "360p" },
+            { title: "480p", rowId: `${prefix}48p ${video.url}`, description: "480p" },
+            { title: "720p", rowId: `${prefix}72p ${video.url}`, description: "720p" },
+            { title: "1080p", rowId: `${prefix}108p ${video.url}`, description: "1080p" }
+          ]
+        }
+      ];
+
+      return await bot.replyList(from, {
+        caption: videoInfo,
+        footer: "Footer text here",
+        sections,
+        buttonText: "Reply with a number"
+      }, { quoted: message });
+    }
+  } catch (error) {
+    reply("An error occurred.");
+    console.error(error);
+  }
+});
+
+//song3
+
+const songCommand = {
+  pattern: "song3",
+  alias: ["ytsong3"],
+  use: ".song lelena",
+  react: '🎧',
+  category: "download",
+  filename: __filename,
+  desc: descs
+};
+
+cmd(songCommand, async (bot, message, args, {
+  from,
+  prefix,
+  quoted,
+  body,
+  isCmd,
+  command,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
+  try {
+    // If no query is provided
+    if (!q) {
+      return await reply("Please provide a YouTube link or search query.");
+    }
+
+    // Validate the URL and check if it's a YouTube Shorts URL
+    if (isUrl(q) && !ytreg(q)) {
+      return await reply("Invalid YouTube URL.");
+    }
+
+    if (isUrl(q) && q.includes("/shorts")) {
+      const options = [{
+        title: '',
+        rows: [
+          { title: '1', rowId: prefix + "ytmp3 " + q, description: "Normal type song 🎶" },
+          { title: '2', rowId: prefix + "ytdocs " + q, description: "Document type song 📂" }
+        ]
+      }];
+
+      const response = {
+        text: "[👨‍💻 VAJIRA - MD 👨‍💻]\n\n*SELECT SONG TYPE*",
+        footer: "*Powered by Technical Cybers*",
+        buttonText: "🔢 Reply below number to select song type.",
+        sections: options
+      };
+
+      return await bot.replyList(from, response, { quoted: message });
+    }
+
+    // Handle normal YouTube links
+    if (ytreg(q)) {
+      const options = [{
+        title: '',
+        rows: [
+          { title: '1', rowId: prefix + "ytmp3 " + q, description: "Normal type song 🎶" },
+          { title: '2', rowId: prefix + "ytdocs " + q, description: "Document type song 📂" }
+        ]
+      }];
+
+      const response = {
+        text: "[👨‍💻 VAJIRA - MD 👨‍💻]\n\n*SELECT SONG TYPE*",
+        footer: "*Powered by Technical Cybers*",
+        buttonText: "🔢 Reply below number to select song type.",
+        sections: options
+      };
+
+      return await bot.replyList(from, response, { quoted: message });
+    }
+
+    // Convert YouTube search query into a link
+    q = convertYouTubeLink(q);
+    const searchResults = await yts(q);
+    const video = searchResults.videos[0];
+
+    const videoInfo = `
+📽️ *VAJIRA-MD VIDEO-DOWNLOADER* 📽️
+
+┌──────────────────
+
+*ℹ️ Title:* ${video.title}
+*👁️‍🗨️ Views:* ${video.views}
+*🕘 Duration:* ${video.timestamp}
+*📌 Ago:* ${video.ago}
+*🔗 Url:* ${video.url}
+
+└──────────────────`;
+
+    const options = [{
+      title: '',
+      rows: [
+        { title: '1', rowId: prefix + "ytmp3 " + video.url, description: "Normal type song 🎶" },
+        { title: '2', rowId: prefix + "ytdocs " + video.url, description: "Document type song 📂" }
+      ]
+    }];
+
+    const response = {
+      image: { url: video.thumbnail },
+      caption: videoInfo,
+      footer: config.FOOTER,
+      title: '',
+      buttonText: "🔢 Reply below number",
+      sections: options
+    };
+
+    return await bot.replyList(from, response, { quoted: message });
+  } catch (error) {
+    reply("ERROR !!");
+    console.error(error);
+  }
+});
+
 
 
