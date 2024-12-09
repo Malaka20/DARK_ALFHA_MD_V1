@@ -318,65 +318,76 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
     }
 })
 
-
 cmd({
-  'pattern': "alive",
-  'desc': 'about',
-  'react': '🌸',
-  'filename': __filename
-}, async (client, message, args, {
-  from,
-  quoted,
-  body,
-  isCmd,
-  command,
-  args,
-  q,
-  isGroup,
-  sender,
-  senderNumber,
-  botNumber2,
-  botNumber,
-  pushname,
-  isMe,
-  isOwner,
-  groupMetadata,
-  groupName,
-  participants,
-  groupAdmins,
-  isBotAdmins,
-  isAdmins,
-  reply
-}) => {
+  pattern: "alive",
+  desc: 'about',
+  react: '🌸',
+  filename: __filename
+}, async (client, message, options, context) => {
   try {
-    let text = "\n◉┏━┫*⚬Lααɾα-ᴍᴅ-ᴀʟɪᴠᴇ⚬*┣━✾\n◉┃            *ᴸ  ͣ  ͣ  ͬ  ͣ  ✻  ᴸ  ͣ  ͣ  ͬ  ͣ*\n┏┻━━━━━━━━━\n┃*ʜɪ Lααɾα-ᴍᴅ ᴀʟɪᴠᴇ ✻*\n┗┳━━━━━━━━━\n◉┃*ɪᴍ ʟᴀʀᴀ-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ*\n◉┃*ꜱɪᴍᴘʟᴇ ᴊᴀᴠᴀꜱᴄʀɪᴘᴛ ʙᴏᴛ*\n◉┃*ꜱᴀᴅᴇᴇꜱʜᴀ ɪꜱ ᴍʏ ᴄʀᴇᴀᴛᴏʀ*\n◉┃*ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ ᴛᴏ ᴜꜱᴇ*\n◉┃             *.ᴍᴇɴᴜ*\n◉┗━━━━━━━━━━━━━━\n━━┬┬┬┬┬┬┬┬┬┬┬━━\n       *Lααɾα-ᴍᴅ ꜱʏꜱᴛᴇᴍ ɪɴꜰᴏ*\n━━┴┴┴┴┴┴┴┴┴┴┴━━\n┏━━━━━━━━━━━━━━\n❍*ʀᴜɴ ᴛɪᴍᴇ :* " + runtime(process.uptime()) + "\n❍*ʀᴀᴍ ᴜꜱᴇ :* " + (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + "MB / " + Math.round(require('os').totalmem() / 1024 / 1024) + "MB\n❍*ᴘʟᴀᴛꜰᴏʀᴍ :* " + os.hostname() + "\n❍*ᴏᴡɴᴇʀ :* ꜱᴀᴅᴇᴇꜱʜᴀ ᴛʜᴀʀᴜᴍɪɴ\n┗━━━━━━━━━━━━━━\n\n*ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ*\n\n *1*  ┃    *ᴍᴇɴᴜ*\n *2*  ┃    *ʟᴀʀᴀ-ᴍᴅ ɢɪᴛ ʀᴇᴘᴏ*\n\n> Lααɾα-ᴍᴅ ✻\n";
+    const { from, quoted } = context;
+    let aliveMessage = `
+      ◉┏━┫*⚬Lααɾα-ᴍᴅ-ᴀʟɪᴠᴇ⚬*┣━✾
+      ◉┃            *ᴸ  ͣ  ͣ  ͬ  ͣ  ✻  ᴸ  ͣ  ͣ  ͬ  ͣ*
+      ┏┻━━━━━━━━━
+      ┃*ʜɪ Lααɾα-ᴍᴅ ᴀʟɪᴠᴇ ✻*
+      ┗┳━━━━━━━━━
+      ◉┃*ɪᴍ ʟᴀʀᴀ-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ*
+      ◉┃*ꜱɪᴍᴘᴀʟᴇ ᴊᴀᴠᴀ ꜱᴄʀɪᴘᴛ ʙᴏᴛ*
+      ◉┃*ꜱᴀᴅᴇᴇꜱʜᴀ ɪꜱ ᴍʏ ᴄʀᴇᴀᴛᴏʀ*
+      ◉┃*ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ ᴛᴏ ᴜꜱᴇ*
+      ◉┃             *.ᴍᴇɴᴜ*
+      ◉┗━━━━━━━━━━━━━━
+      ━━┬┬┬┬┬┬┬┬┬┬┬━━
+             *Lααɾα-ᴍᴅ ꜱʏꜱᴛᴇᴍ ɪɴꜰᴏ*
+      ━━┴┴┴┴┴┴┴┴┴┴┴━━
+      ┏━━━━━━━━━━━━━━
+      ❍*ʀᴜɴ ᴛɪᴍᴇ :* ${runtime(process.uptime())}
+      ❍*ʀᴀᴍ ᴜꜱᴇ :* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(os.totalmem() / 1024 / 1024)}MB
+      ❍*ᴘʟᴀᴛꜰᴏʀᴍ :* ${os.hostname()}
+      ❍*ᴏᴡɴᴇʀ :* ꜱᴀᴅᴇᴇꜱʜᴀ ᴛʜᴀʀᴜᴍɪɴ
+      ┗━━━━━━━━━━━━━━
+      
+      *ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ*
+      
+      *1*  ┃    *ᴍᴇɴᴜ*
+      *2*  ┃    *ʟᴀʀᴀ-ᴍᴅ ɢɪᴛ ʀᴇᴘᴏ*
+      
+      > Lααɾα-ᴍᴅ ✻
+    `;
 
     const sentMessage = await client.sendMessage(from, {
-      image: { url: "https://i.ibb.co/7rzBcxq/20241127-140559.jpg" },
-      caption: text
+      image: {
+        url: "https://i.ibb.co/7rzBcxq/20241127-140559.jpg"
+      },
+      caption: aliveMessage
     }, { quoted });
 
     const messageId = sentMessage.key.id;
+    
+    client.ev.on("messages.upsert", async msgEvent => {
+      const newMessage = msgEvent.messages[0];
+      if (!newMessage.message) return;
 
-    client.ev.on("messages.upsert", async event => {
-      const message = event.messages[0];
-      if (!message.message) return;
-
-      const text = message.message.conversation || message.message.extendedTextMessage?.text;
-      const senderId = message.key.remoteJid;
-      const isReply = message.message.extendedTextMessage?.contextInfo.stanzaId === messageId;
-
-      if (isReply) {
-        if (text === '1') {
-          await client.sendMessage(senderId, {
-            image: { url: 'https://i.ibb.co/gzDsLsb/IMG-20241127-WA0023.jpg' },
-            caption: "Your menu here"
-          }, { quoted: message });
-        } else if (text === '2') {
-          await client.sendMessage(senderId, {
-            image: { url: "https://i.ibb.co/GQ6JdpF/20241127-133421.jpg" },
-            caption: "https://github.com/sadiyamin/Lara-MD"
-          }, { quoted: message });
+      const messageText = newMessage.message.conversation || newMessage.message.extendedTextMessage?.text;
+      const remoteJid = newMessage.key.remoteJid;
+      const isContextMessage = newMessage.message.extendedTextMessage?.contextInfo.stanzaId === messageId;
+      
+      if (isContextMessage) {
+        if (messageText === '1') {
+          await client.sendMessage(remoteJid, {
+            image: {
+              url: 'https://i.ibb.co/gzDsLsb/IMG-20241127-WA0023.jpg'
+            },
+            caption: "Your menu details here..."
+          }, { quoted: newMessage });
+        } else if (messageText === '2') {
+          await client.sendMessage(remoteJid, {
+            image: {
+              url: "https://i.ibb.co/GQ6JdpF/20241127-133421.jpg"
+            },
+            caption: "Your repo details here..."
+          }, { quoted: newMessage });
         }
       }
     });
