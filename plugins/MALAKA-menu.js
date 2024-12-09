@@ -236,53 +236,67 @@ reply(`${e}`)
 }
 })
 
-cmd({
-    pattern: "alive",
-    desc: "Check bot online or no.",
-    category: "main",
-    react: "👋",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-
-let des = `*👋 Hello ${pushname} I'm alive now*
-*😉🇱🇰 I'm 𝗜 𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝗠𝗗 Whatsapp Bot* ✓
-
-> *Version:* 8.0.0
-> *Ram usage:* 43.46MB / 15981MB
-> *Runtime:* 3 hours, 7 minutes, 35 seconds
-> *HostName:* fv-az984-882
-
-*🪀 𝙈𝘼𝙇𝘼𝙆𝘼 𝘽𝙔 𝘿𝘼𝙍𝙆-𝘼𝙇𝙁𝙃𝘼-𝙈𝘿
-
-`
-
-return await conn.sendMessage(from,{image: {url: config.ALIVE_IMG},caption: des},{quoted: mek})
-}catch(e){
-console.log(e)
-reply(`${e}`)
-}
-})
-
-cmd({
+cmd(
+  {
     pattern: "restart",
-    desc: "restart the bot",
+    desc: "Restart the bot",
     category: "owner",
     react: "💢",
-    filename: __filename
-},
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-const {exec} = require("child_process")
-reply("restarting...")
-await sleep(1500)
-exec("pm2 restart all")
-}catch(e){
-console.log(e)
-reply(`${e}`)
-}
-})
+    filename: __filename,
+  },
+  async (
+    conn,
+    mek,
+    m,
+    {
+      from,
+      quoted,
+      body,
+      isCmd,
+      command,
+      args,
+      q,
+      isGroup,
+      sender,
+      senderNumber,
+      botNumber2,
+      botNumber,
+      pushname,
+      isMe,
+      isOwner,
+      groupMetadata,
+      groupName,
+      participants,
+      groupAdmins,
+      isBotAdmins,
+      isAdmins,
+      reply,
+    }
+  ) => {
+    try {
+      const { exec } = require("child_process");
+      reply("Restarting...");
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Sleep function
+      exec("pm2 restart all", (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error: ${error.message}`);
+          reply(`Error: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.error(`Stderr: ${stderr}`);
+          reply(`Stderr: ${stderr}`);
+          return;
+        }
+        console.log(`Stdout: ${stdout}`);
+        reply("Bot restarted successfully.");
+      });
+    } catch (e) {
+      console.error(e);
+      reply(`An error occurred: ${e.message}`);
+    }
+  }
+);
 
 cmd({
     pattern: "ping",
@@ -303,3 +317,70 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         reply(`${e}`)
     }
 })
+
+
+cmd({
+  'pattern': "alive",
+  'desc': 'about',
+  'react': '🌸',
+  'filename': __filename
+}, async (client, message, args, {
+  from,
+  quoted,
+  body,
+  isCmd,
+  command,
+  args,
+  q,
+  isGroup,
+  sender,
+  senderNumber,
+  botNumber2,
+  botNumber,
+  pushname,
+  isMe,
+  isOwner,
+  groupMetadata,
+  groupName,
+  participants,
+  groupAdmins,
+  isBotAdmins,
+  isAdmins,
+  reply
+}) => {
+  try {
+    let text = "\n◉┏━┫*⚬Lααɾα-ᴍᴅ-ᴀʟɪᴠᴇ⚬*┣━✾\n◉┃            *ᴸ  ͣ  ͣ  ͬ  ͣ  ✻  ᴸ  ͣ  ͣ  ͬ  ͣ*\n┏┻━━━━━━━━━\n┃*ʜɪ Lααɾα-ᴍᴅ ᴀʟɪᴠᴇ ✻*\n┗┳━━━━━━━━━\n◉┃*ɪᴍ ʟᴀʀᴀ-ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ*\n◉┃*ꜱɪᴍᴘʟᴇ ᴊᴀᴠᴀꜱᴄʀɪᴘᴛ ʙᴏᴛ*\n◉┃*ꜱᴀᴅᴇᴇꜱʜᴀ ɪꜱ ᴍʏ ᴄʀᴇᴀᴛᴏʀ*\n◉┃*ɢᴇᴛ ᴍʏ ᴄᴏᴍᴍᴀɴᴅ ʟɪꜱᴛ ᴛᴏ ᴜꜱᴇ*\n◉┃             *.ᴍᴇɴᴜ*\n◉┗━━━━━━━━━━━━━━\n━━┬┬┬┬┬┬┬┬┬┬┬━━\n       *Lααɾα-ᴍᴅ ꜱʏꜱᴛᴇᴍ ɪɴꜰᴏ*\n━━┴┴┴┴┴┴┴┴┴┴┴━━\n┏━━━━━━━━━━━━━━\n❍*ʀᴜɴ ᴛɪᴍᴇ :* " + runtime(process.uptime()) + "\n❍*ʀᴀᴍ ᴜꜱᴇ :* " + (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + "MB / " + Math.round(require('os').totalmem() / 1024 / 1024) + "MB\n❍*ᴘʟᴀᴛꜰᴏʀᴍ :* " + os.hostname() + "\n❍*ᴏᴡɴᴇʀ :* ꜱᴀᴅᴇᴇꜱʜᴀ ᴛʜᴀʀᴜᴍɪɴ\n┗━━━━━━━━━━━━━━\n\n*ʀᴇᴘʟʏ ʙᴇʟᴏᴡ ᴛʜᴇ ɴᴜᴍʙᴇʀ*\n\n *1*  ┃    *ᴍᴇɴᴜ*\n *2*  ┃    *ʟᴀʀᴀ-ᴍᴅ ɢɪᴛ ʀᴇᴘᴏ*\n\n> Lααɾα-ᴍᴅ ✻\n";
+
+    const sentMessage = await client.sendMessage(from, {
+      image: { url: "https://i.ibb.co/7rzBcxq/20241127-140559.jpg" },
+      caption: text
+    }, { quoted });
+
+    const messageId = sentMessage.key.id;
+
+    client.ev.on("messages.upsert", async event => {
+      const message = event.messages[0];
+      if (!message.message) return;
+
+      const text = message.message.conversation || message.message.extendedTextMessage?.text;
+      const senderId = message.key.remoteJid;
+      const isReply = message.message.extendedTextMessage?.contextInfo.stanzaId === messageId;
+
+      if (isReply) {
+        if (text === '1') {
+          await client.sendMessage(senderId, {
+            image: { url: 'https://i.ibb.co/gzDsLsb/IMG-20241127-WA0023.jpg' },
+            caption: "Your menu here"
+          }, { quoted: message });
+        } else if (text === '2') {
+          await client.sendMessage(senderId, {
+            image: { url: "https://i.ibb.co/GQ6JdpF/20241127-133421.jpg" },
+            caption: "https://github.com/sadiyamin/Lara-MD"
+          }, { quoted: message });
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
